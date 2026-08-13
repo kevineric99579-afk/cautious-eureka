@@ -1,568 +1,767 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>憭批飛???閰摯?銵冽</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { plex: ['"IBM Plex Sans"','Helvetica Neue','Arial','sans-serif'] },
-          colors: {
-            primary: '#0f62fe', 'primary-hover': '#0353e9',
-            ink: '#161616', 'ink-muted': '#525252', 'ink-subtle': '#8c8c8c',
-            s1: '#f4f4f4', hairline: '#e0e0e0',
-            green: { 600: '#198038', 100: '#defbe6' },
-            yellow: { 600: '#b28600', 100: '#fdf6dd' },
-            red: { 600: '#da1e28', 100: '#fff1f1' },
-          }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>大學生存成本評估</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { plex: ['"IBM Plex Sans"','Helvetica Neue','Arial','sans-serif'] },
+        colors: {
+          primary: '#0f62fe', 'primary-hover': '#0353e9',
+          ink: '#161616', 'ink-muted': '#525252', 'ink-subtle': '#8d8d8d',
+          s1: '#f4f4f4', hairline: '#e0e0e0',
+          'c-green': '#198038', 'c-green-bg': '#defbe6', 'c-green-border': '#a7f0ba',
+          'c-yellow': '#b28600', 'c-yellow-bg': '#fdf6dd', 'c-yellow-border': '#f5cc00',
+          'c-red': '#da1e28', 'c-red-bg': '#fff1f1', 'c-red-border': '#ffb3b8',
         }
       }
     }
-  </script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    body { font-family: 'IBM Plex Sans','Helvetica Neue',Arial,sans-serif; letter-spacing:.16px; background:#f4f4f4; color:#161616; margin:0; }
+  }
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'IBM Plex Sans','Helvetica Neue',Arial,sans-serif; letter-spacing:.16px; background:#f4f4f4; color:#161616; }
 
-    /* Carbon select */
-    .c-select {
-      width:100%; background:#ffffff; border:none; border-bottom:1px solid #8c8c8c;
-      padding:13px 40px 13px 16px; font-family:inherit; font-size:16px; color:#161616;
-      letter-spacing:.16px; outline:none; border-radius:0; appearance:none;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M8 10L3 5h10z' fill='%23161616'/%3E%3C/svg%3E");
-      background-repeat:no-repeat; background-position:right 12px center; cursor:pointer;
-    }
-    .c-select:focus { border-bottom:2px solid #0f62fe; }
+  /* Carbon number input */
+  .c-number {
+    background:#ffffff; border:none; border-bottom:2px solid #8d8d8d;
+    padding:11px 16px; font-family:inherit; font-size:14px; color:#161616;
+    letter-spacing:.16px; outline:none; border-radius:0; width:140px;
+  }
+  .c-number:focus { border-bottom-color:#0f62fe; outline:2px solid #0f62fe; outline-offset:-2px; }
 
-    /* Carbon range slider */
-    .c-range { width:100%; accent-color:#0f62fe; height:4px; cursor:pointer; }
+  /* Carbon range */
+  .c-range { width:100%; accent-color:#0f62fe; height:4px; cursor:pointer; }
 
-    /* Card */
-    .card { background:#ffffff; border:1px solid #e0e0e0; }
+  /* Carbon card */
+  .c-card { background:#ffffff; border:1px solid #e0e0e0; }
 
-    /* Stat box */
-    .stat-box { background:#f4f4f4; border:1px solid #e0e0e0; padding:16px 20px; }
+  /* Stat tile */
+  .stat-tile { background:#f4f4f4; border:1px solid #e0e0e0; padding:16px 20px; }
 
-    /* Rating badge */
-    .badge-green  { background:#defbe6; color:#198038; border:1px solid #a7f0ba; }
-    .badge-yellow { background:#fdf6dd; color:#b28600; border:1px solid #f5cc00; }
-    .badge-red    { background:#fff1f1; color:#da1e28; border:1px solid #ffb3b8; }
+  /* Rating badge */
+  .badge-green  { background:#defbe6; color:#198038; border:1px solid #a7f0ba; }
+  .badge-yellow { background:#fdf6dd; color:#b28600; border:1px solid #f5cc00; }
+  .badge-red    { background:#fff1f1; color:#da1e28; border:1px solid #ffb3b8; }
 
-    /* Progress bar */
-    .bar-track { background:#e0e0e0; height:6px; width:100%; }
-    .bar-fill  { height:6px; transition:width .4s ease; }
+  /* Progress bar */
+  .bar-track { background:#e0e0e0; height:8px; width:100%; }
+  .bar-fill  { height:8px; transition:width .35s ease; }
 
-    /* Fade-in */
-    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
-    .fade-up { animation:fadeUp .25s ease both; }
+  /* Pie */
+  #pie-svg { transform:rotate(-90deg); }
+  .pie-dot { width:10px; height:10px; display:inline-block; flex-shrink:0; }
 
-    /* Pie chart */
-    #pie-svg { transform:rotate(-90deg); }
-    .pie-legend-dot { width:10px; height:10px; border-radius:0; display:inline-block; }
-  </style>
+  /* Aid item */
+  .aid-item { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid #e0e0e0; }
+  .aid-item:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+  .aid-name { font-size:13px; font-weight:600; color:#161616; }
+  .aid-amount { font-size:11px; color:#525252; margin-top:2px; }
+  .aid-link { font-size:12px; color:#0f62fe; text-decoration:none; border-bottom:1px solid #0f62fe; white-space:nowrap; }
+  .aid-link:hover { color:#0353e9; }
+
+  /* Tool card */
+  .tool-card { border:1px solid #e0e0e0; padding:12px 14px; text-decoration:none; color:#161616; background:#f4f4f4; display:flex; flex-direction:column; gap:3px; transition:border-color .15s,background .15s; }
+  .tool-card:hover { border-color:#0f62fe; background:#edf4ff; }
+  .tool-card .tc-name { font-size:12px; font-weight:600; color:#161616; }
+  .tool-card .tc-type { font-size:11px; color:#525252; }
+  .tool-card .tc-url  { font-size:11px; color:#0f62fe; }
+
+  /* Tools grid */
+  .tools-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  @media(max-width:560px){ .tools-grid{ grid-template-columns:1fr 1fr; } }
+
+  /* Work hours */
+  .wh-box { background:#edf4ff; border-left:4px solid #0f62fe; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+
+  /* Fade in */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .fade-up { animation:fadeUp .2s ease both; }
+
+  /* Stat grid */
+  .stat-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:#e0e0e0; border:1px solid #e0e0e0; }
+  @media(max-width:600px){ .stat-grid{ grid-template-columns:1fr 1fr; } }
+
+  /* Two col */
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:560px){ .two-col{ grid-template-columns:1fr; } }
+
+  /* Y4 grid */
+  .y4-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#e0e0e0; border:1px solid #e0e0e0; }
+  @media(max-width:560px){ .y4-grid{ grid-template-columns:1fr; } }
+
+  /* Copy button */
+  .btn-copy { display:inline-flex; align-items:center; gap:6px; background:#f4f4f4; border:1px solid #e0e0e0; padding:8px 16px; font-size:13px; font-family:inherit; color:#525252; cursor:pointer; letter-spacing:.16px; transition:border-color .15s,color .15s; }
+  .btn-copy:hover { border-color:#0f62fe; color:#0f62fe; }
+  .btn-copy.copied { border-color:#198038; color:#198038; }
+
+  /* School link */
+  .school-link { display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#0f62fe; text-decoration:none; border-bottom:1px solid #0f62fe; margin-top:8px; }
+  .school-link:hover { color:#0353e9; border-color:#0353e9; }
+
+  /* 搜尋框 */
+  .c-search-input {
+    width:100%; border:none; border-bottom:2px solid #8d8d8d;
+    background:#f4f4f4; padding:11px 0 8px; font-size:14px; color:#161616;
+    font-family:inherit; outline:none;
+  }
+  .c-search-input:focus { border-bottom-color:#0f62fe; }
+
+  /* 數字輸入（全寬版） */
+  .c-num-full {
+    width:100%; border:none; border-bottom:2px solid #8d8d8d;
+    background:#f4f4f4; padding:11px 0 8px; font-size:14px; color:#161616;
+    font-family:inherit; outline:none;
+  }
+  .c-num-full:focus { border-bottom-color:#0f62fe; }
+
+  /* Pie legend */
+  .pie-legend-item { display:flex; align-items:center; gap:6px; }
+
+  /* Rating badge (result area) */
+  .rating-badge { font-size:15px; font-weight:600; padding:8px 20px; border:1px solid; text-align:center; min-width:90px; }
+</style>
 </head>
 <body>
+<!-- NAV -->
+<header class="bg-white border-b border-hairline sticky top-0 z-50">
+  <div class="max-w-4xl mx-auto px-4 h-12 flex items-center gap-3">
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M10 2L2 7v11h6v-5h4v5h6V7z" fill="#0f62fe"/>
+    </svg>
+    <span class="font-semibold text-ink text-sm">大學生存成本評估</span>
+    <span class="ml-auto text-xs text-ink-subtle hidden sm:inline">College Survival Cost Calculator</span>
+  </div>
+</header>
 
-  <!-- NAV -->
-  <header class="bg-white border-b border-hairline sticky top-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 h-12 flex items-center gap-3">
-      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-        <path d="M10 2L2 7v11h6v-5h4v5h6V7z" fill="#0f62fe"/>
-      </svg>
-      <span class="font-semibold text-ink text-sm sm:text-base">憭批飛???閰摯?銵冽</span>
-      <span class="ml-auto text-xs text-ink-subtle hidden sm:inline">College Survival Cost Calculator</span>
-    </div>
-  </header>
+<!-- HERO -->
+<section class="bg-white border-b border-hairline">
+  <div class="max-w-4xl mx-auto px-4 py-8 sm:py-10">
+    <p class="text-xs text-primary font-semibold mb-2 uppercase" style="letter-spacing:.08em;">免費工具 · 資訊透明</p>
+    <h1 class="text-3xl sm:text-4xl font-light text-ink mb-3" style="letter-spacing:-0.2px;">上大學，你準備好了嗎？</h1>
+    <p class="text-sm text-ink-muted max-w-xl" style="line-height:1.6;">
+      選擇學校、設定每月工讀收入與雜費，系統自動計算四年財務壓力，幫你做出更好的升學決策。
+    </p>
+  </div>
+</section>
 
-  <!-- HERO -->
-  <section class="bg-white border-b border-hairline">
-    <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
-      <p class="text-xs text-primary font-medium mb-2 uppercase" style="letter-spacing:.08em;">?祥撌亙 繚 鞈???</p>
-      <h1 class="text-3xl sm:text-4xl font-light text-ink mb-3" style="letter-spacing:-0.2px;">銝之摮賂?雿??末鈭?嚗?/h1>
-      <p class="text-base text-ink-muted max-w-xl" style="line-height:1.6;">
-        ?豢?摮豢?身摰????極霈?嗅嚗頂蝯梯??蝞?撟渲瓷????撟思???游末??摮豢捱蝑?
-      </p>
-    </div>
-  </section>
+<!-- MAIN -->
+<main class="max-w-4xl mx-auto px-4 py-6 flex flex-col gap-5">
 
-  <!-- MAIN -->
-  <main class="max-w-4xl mx-auto px-4 py-8 flex flex-col gap-6">
+  <!-- ① 輸入區 -->
+  <div class="c-card p-6 fade-up">
+    <h2 class="text-sm font-semibold text-ink mb-5 uppercase" style="letter-spacing:.08em;">① 選擇學校與收入設定</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
 
-    <!-- ?? 頛詨? ?? -->
-    <div class="card p-6 fade-up" style="animation-delay:0ms">
-      <h2 class="text-base font-semibold text-ink mb-5">???豢?摮豢??亥身摰?/h2>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <!-- 摮豢?? -->
-        <div style="position:relative;">
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="school-input">?豢?憭批飛</label>
-          <input type="text" id="school-input" autocomplete="off" placeholder="頛詨摮豢?迂????
-            oninput="filterSchools()" onfocus="filterSchools()" onblur="setTimeout(hideDropdown,180)"
-            style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
-            onfocusin="this.style.borderBottom='2px solid #0f62fe'" onfocusout="this.style.borderBottom='1px solid #8c8c8c'" />
-          <div id="school-dropdown"
-            style="display:none;position:absolute;z-index:100;left:0;right:0;top:100%;max-height:220px;overflow-y:auto;background:#fff;border:1px solid #e0e0e0;border-top:none;box-shadow:0 4px 12px rgba(0,0,0,.08);">
-          </div>
-          <p id="school-chosen" class="text-xs text-primary mt-1" style="min-height:1.2em;"></p>
+      <!-- 學校搜尋框 -->
+      <div style="position:relative;">
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="school-input">選擇大學</label>
+        <input type="text" id="school-input" class="c-search-input" autocomplete="off" placeholder="輸入學校名稱搜尋…"
+          oninput="filterSchools()" onfocus="filterSchools()" onblur="setTimeout(hideDropdown,180)" />
+        <div id="school-dropdown"
+          style="display:none;position:absolute;z-index:100;left:0;right:0;top:100%;max-height:240px;overflow-y:auto;background:#fff;border:1px solid #e0e0e0;border-top:none;box-shadow:0 4px 12px rgba(0,0,0,.1);">
         </div>
+        <p id="school-chosen" class="text-xs text-primary mt-1" style="min-height:1.2em;"></p>
+        <a id="school-website" class="school-link" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">↗ 前往學校官網</a>
+      </div>
 
-        <!-- 雿挪?孵? -->
-        <div>
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;">雿挪?孵?</label>
-          <div class="flex gap-3 mt-1">
-            <label class="flex items-center gap-2 cursor-pointer text-sm text-ink">
-              <input type="radio" name="dorm" value="dorm" checked onchange="calculate()" style="accent-color:#0f62fe;" /> 雿挪??
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer text-sm text-ink">
-              <input type="radio" name="dorm" value="rent" onchange="calculate()" style="accent-color:#0f62fe;" /> 蝘?憭?
-            </label>
-          </div>
-          <p id="dorm-note" class="text-xs text-ink-subtle mt-2"></p>
-        </div>
-
-        <!-- 瘥??航???憌祥 -->
-        <div>
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="food-input">
-            瘥?隡?鞎駁?蝞???
+      <!-- 住宿方式 -->
+      <div>
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;">住宿方式</label>
+        <div class="flex gap-5 mt-1">
+          <label id="label-dorm" class="flex items-center gap-2 cursor-pointer text-sm text-ink">
+            <input type="radio" name="dorm" value="dorm" checked onchange="onDormChange()" style="accent-color:#0f62fe;" /> 住宿舍
           </label>
-          <input type="number" id="food-input" min="0" step="100" value="5000" oninput="calculate()"
-            style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
-            onfocus="this.style.borderBottom='2px solid #0f62fe'" onblur="this.style.borderBottom='1px solid #8c8c8c'" />
-        </div>
-
-        <!-- 瘥?撌亥??嗅 -->
-        <div>
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="income-input">
-            瘥?撌亥??嗅 ??
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-ink">
+            <input type="radio" name="dorm" value="rent" onchange="onDormChange()" style="accent-color:#0f62fe;" /> 租屋外住
           </label>
-          <input type="number" id="income-input" min="0" step="100" value="6000" oninput="calculate()"
-            style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
-            onfocus="this.style.borderBottom='2px solid #0f62fe'" onblur="this.style.borderBottom='1px solid #8c8c8c'" />
+        </div>
+        <div id="rent-input-wrap" style="margin-top:10px; display:none;">
+          <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="rent-input">月租金（元）</label>
+          <input type="number" id="rent-input" class="c-num-full" min="0" step="500" value="8000" oninput="calculate()" />
+        </div>
+        <p id="dorm-note" class="text-xs text-ink-subtle mt-2"></p>
+      </div>
+
+      <!-- 每月伙食費 -->
+      <div>
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="food-input">每月伙食費（元）</label>
+        <input type="number" id="food-input" class="c-num-full" min="0" step="100" value="5000" oninput="calculate()" />
+      </div>
+
+      <!-- 每月工讀收入 -->
+      <div>
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="income-input">每月工讀收入（元）</label>
+        <input type="number" id="income-input" class="c-num-full" min="0" step="100" value="6000" oninput="calculate()" />
+      </div>
+
+      <!-- 每月其他雜費 -->
+      <div>
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="misc-input">每月其他雜費（交通、書籍）（元）</label>
+        <input type="number" id="misc-input" class="c-num-full" min="0" step="100" value="2000" oninput="calculate()" />
+      </div>
+
+      <!-- 預期年度獎學金 -->
+      <div>
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="scholarship-input">預期年度獎學金（元）</label>
+        <input type="number" id="scholarship-input" class="c-num-full" min="0" step="1000" value="0" oninput="calculate()" />
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 結果區 -->
+  <div id="result-section" style="display:none; flex-direction:column; gap:16px;">
+
+    <!-- 評級 + 複製 -->
+    <div class="c-card p-6 fade-up">
+      <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+        <h2 class="text-sm font-semibold text-ink uppercase" style="letter-spacing:.08em;">四年財務壓力評級</h2>
+        <button class="btn-copy" id="copy-btn" onclick="copySummary()">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+            <rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M3 11H2a1 1 0 01-1-1V2a1 1 0 011-1h8a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          複製摘要
+        </button>
+      </div>
+      <div class="flex items-start justify-between gap-4 flex-wrap mb-5">
+        <p id="rating-desc" class="text-sm text-ink-muted max-w-md" style="line-height:1.6;"></p>
+        <div id="rating-badge" class="rating-badge" style="min-width:100px;text-align:center;"></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-xs text-ink-subtle mb-1">
+          <span>財務壓力指數</span>
+          <span id="pressure-pct">0%</span>
+        </div>
+        <div class="bar-track">
+          <div id="pressure-bar" class="bar-fill" style="width:0%;background:#0f62fe;"></div>
         </div>
       </div>
     </div>
 
-    <!-- ?? 蝯??嚗?憪???? -->
-    <div id="result-section" class="hidden flex flex-col gap-6">
-
-      <!-- 鞎∪?憯?閰? -->
-      <div id="rating-card" class="card p-6 fade-up" style="animation-delay:60ms">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h2 class="text-base font-semibold text-ink mb-1">?僑鞎∪?憯?閰?</h2>
-            <p id="rating-desc" class="text-sm text-ink-muted max-w-md" style="line-height:1.55;"></p>
-          </div>
-          <div id="rating-badge" class="text-2xl font-semibold px-6 py-3 border text-center shrink-0" style="min-width:120px;border-radius:0;"></div>
-        </div>
-        <!-- Pressure bar -->
-        <div class="mt-5">
-          <div class="flex justify-between text-xs text-ink-muted mb-1">
-            <span>鞎∪?憯??</span>
-            <span id="pressure-pct">0%</span>
-          </div>
-          <div class="bar-track">
-            <div id="pressure-bar" class="bar-fill bg-primary" style="width:0%"></div>
-          </div>
-        </div>
+    <!-- 損益平衡 -->
+    <div class="wh-box fade-up">
+      <div>
+        <div class="text-sm font-semibold text-primary">損益平衡：每週最低工讀時數</div>
+        <div class="text-xs text-ink-muted mt-1">以時薪 176 元 × 每月 4 週計算</div>
       </div>
-
-      <!-- ?詨??? -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-hairline border border-hairline fade-up" style="animation-delay:90ms">
-        <div class="stat-box">
-          <p class="text-xs text-ink-subtle mb-1">銝撟游飛?祥</p>
-          <p id="s-tuition" class="text-xl font-semibold text-ink">??/p>
-          <p class="text-xs text-ink-subtle">??/p>
-        </div>
-        <div class="stat-box">
-          <p class="text-xs text-ink-subtle mb-1">銝撟港?摰??輻?</p>
-          <p id="s-housing" class="text-xl font-semibold text-ink">??/p>
-          <p class="text-xs text-ink-subtle">??/p>
-        </div>
-        <div class="stat-box">
-          <p class="text-xs text-ink-subtle mb-1">銝撟港?憌祥</p>
-          <p id="s-food" class="text-xl font-semibold text-ink">??/p>
-          <p class="text-xs text-ink-subtle">??/p>
-        </div>
-        <div class="stat-box">
-          <p class="text-xs text-ink-subtle mb-1">銝撟湔楊?臬</p>
-          <p id="s-net" class="text-xl font-semibold text-ink">??/p>
-          <p class="text-xs text-ink-subtle">?????嗅嚗?/p>
-        </div>
+      <div class="text-right">
+        <span id="wh-value" class="text-3xl font-light text-primary">—</span>
+        <span class="text-xs text-ink-muted ml-1">小時／週</span>
       </div>
-
-      <!-- ????+ 撘勗鋆 -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 fade-up" style="animation-delay:120ms">
-
-        <!-- ????-->
-        <div class="card p-6">
-          <h3 class="text-sm font-semibold text-ink mb-4">銝撟湔?箔?瘥?/h3>
-          <div class="flex items-center gap-6">
-            <svg id="pie-svg" width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
-              <circle cx="60" cy="60" r="50" fill="#f4f4f4"/>
-              <!-- slices drawn by JS -->
-            </svg>
-            <div id="pie-legend" class="flex flex-col gap-2 text-xs text-ink-muted"></div>
-          </div>
-        </div>
-
-        <!-- 撘勗鋆 -->
-        <div class="card p-6">
-          <h3 class="text-sm font-semibold text-ink mb-4">?舐隢?撘勗鋆</h3>
-          <div id="aid-list" class="flex flex-col gap-3"></div>
-        </div>
-      </div>
-
-      <!-- ?僑蝮質汗 -->
-      <div class="card p-6 fade-up" style="animation-delay:150ms">
-        <h3 class="text-sm font-semibold text-ink mb-4">?僑鞎∪?蝮質汗</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div class="stat-box">
-            <p class="text-xs text-ink-subtle mb-1">?僑蝮賣???/p>
-            <p id="s-4y-total" class="text-2xl font-light text-ink">??/p>
-            <p class="text-xs text-ink-subtle">??/p>
-          </div>
-          <div class="stat-box">
-            <p class="text-xs text-ink-subtle mb-1">?僑撌亥?蝮賣??/p>
-            <p id="s-4y-income" class="text-2xl font-light text-ink">??/p>
-            <p class="text-xs text-ink-subtle">??10 ??/撟湛?</p>
-          </div>
-          <div class="stat-box">
-            <p class="text-xs text-ink-subtle mb-1">?僑??芰?</p>
-            <p id="s-4y-gap" class="text-2xl font-light text-ink">??/p>
-            <p class="text-xs text-ink-subtle">??/p>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /result-section -->
-
-    <!-- 蝛箇???-->
-    <div id="empty-state" class="card p-12 flex flex-col items-center gap-4 text-ink-subtle fade-up" style="animation-delay:60ms">
-      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
-        <rect x="8" y="8" width="32" height="32" rx="0" stroke="#8c8c8c" stroke-width="2"/>
-        <path d="M16 24h16M24 16v16" stroke="#8c8c8c" stroke-width="2"/>
-      </svg>
-      <p class="text-base">隢??豢?摮豢嚗?憪?隡啗瓷????/p>
     </div>
 
-  </main>
-
-  <!-- FOOTER -->
-  <footer style="background:#161616;" class="mt-8">
-    <div class="max-w-4xl mx-auto px-4 py-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <p class="text-xs" style="color:#a8a8a8;letter-spacing:.16px;">鞈?????撖阡?鞎餌靘??∪?皞?/p>
-      <p class="text-xs" style="color:#6f6f6f;">隞?IBM Bob AI ?? 繚 ?摮貊?撠</p>
+    <!-- 5 格數字 -->
+    <div class="stat-grid fade-up">
+      <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">一年學雜費</p><p id="s-tuition" class="text-xl font-semibold text-ink">—</p><p class="text-xs text-ink-subtle">元</p></div>
+      <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">一年住宿／房租</p><p id="s-housing" class="text-xl font-semibold text-ink">—</p><p class="text-xs text-ink-subtle">元</p></div>
+      <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">一年伙食費</p><p id="s-food" class="text-xl font-semibold text-ink">—</p><p class="text-xs text-ink-subtle">元</p></div>
+      <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">一年其他雜費</p><p id="s-misc" class="text-xl font-semibold text-ink">—</p><p class="text-xs text-ink-subtle">元</p></div>
+      <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">一年淨支出</p><p id="s-net" class="text-xl font-semibold text-ink">—</p><p class="text-xs text-ink-subtle">元（扣收入與補助）</p></div>
     </div>
-  </footer>
 
-  <script>
-  // ??????????????????????????????????????????????????????????????????
-  // ?? 摮豢鞈?摨????航?望憓?/ 靽格
-  //
-  //   tuition      撟游飛?祥嚗?嚗?
-  //   dormFee      摰輯?銝撟渲祥?剁??怠???嚗?
-  //   dormRate     摰輯?銝剔惜??0~1嚗?
-  //   avgRent      ?∪???嚗?嚗?
-  //   subsidy      摮豢撘勗鋆撟湧?憿???靽?隡啗?嚗?
-  //   aids         ?舐隢??拇???[{name, amount, url}]
-  // ??????????????????????????????????????????????????????????????????
-  // ?梁鋆嚗??摮豢?賣?嚗?
-  const AIDS_PUBLIC  = [
-    { name: '??典摹?Ｗ摮賊?', amount: 36000, url: 'https://www.edu.tw/News.aspx?n=829446EED325AD02' },
-    { name: '撠勗飛鞎豢狡嚗?荔?',  amount: 0,     url: 'https://www.edu.tw/heloan/' },
-  ];
-  const AIDS_PRIVATE = [
-    { name: '??函??∪摮賊?', amount: 36000, url: 'https://www.edu.tw/News.aspx?n=829446EED325AD02' },
-    { name: '撠勗飛鞎豢狡嚗?荔?',  amount: 0,     url: 'https://www.edu.tw/heloan/' },
-  ];
+    <!-- 圓餅 + 補助 -->
+    <div class="two-col fade-up">
+      <div class="c-card p-5">
+        <h3 class="text-xs font-semibold text-ink uppercase mb-4" style="letter-spacing:.08em;">一年支出佔比</h3>
+        <div class="flex items-center gap-5">
+          <svg id="pie-svg" width="110" height="110" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="#f4f4f4"/>
+          </svg>
+          <div id="pie-legend" class="flex flex-col gap-2 text-xs text-ink-muted"></div>
+        </div>
+      </div>
+      <div class="c-card p-5">
+        <h3 class="text-xs font-semibold text-ink uppercase mb-4" style="letter-spacing:.08em;">可申請的弱勢補助</h3>
+        <div id="aid-list"></div>
+      </div>
+    </div>
 
-  function pub(name, tuition, dormFee, dormRate, avgRent, subsidy, schoolAid, aidUrl) {
-    return { name, tuition, dormFee, dormRate, avgRent, subsidy,
-      aids: [{ name: schoolAid, amount: subsidy, url: aidUrl }, ...AIDS_PUBLIC] };
-  }
-  function priv(name, tuition, dormFee, dormRate, avgRent, subsidy, schoolAid, aidUrl) {
-    return { name, tuition, dormFee, dormRate, avgRent, subsidy,
-      aids: [{ name: schoolAid, amount: subsidy, url: aidUrl }, ...AIDS_PRIVATE] };
-  }
+    <!-- 四年總覽 -->
+    <div class="c-card p-5 fade-up">
+      <h3 class="text-xs font-semibold text-ink uppercase mb-4" style="letter-spacing:.08em;">四年財務總覽</h3>
+      <div class="y4-grid">
+        <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">四年總成本</p><p id="s-4y-total" class="text-2xl font-light text-ink">—</p><p class="text-xs text-ink-subtle">元</p></div>
+        <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">四年工讀總收入</p><p id="s-4y-income" class="text-2xl font-light text-ink">—</p><p class="text-xs text-ink-subtle">元（10 個月／年）</p></div>
+        <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">四年需自籌</p><p id="s-4y-gap" class="text-2xl font-light text-ink">—</p><p class="text-xs text-ink-subtle">元</p></div>
+      </div>
+    </div>
+  </div>
 
-  const SCHOOLS = [
-    // ?? ??蝬?憭批飛 ??
-    pub('???箇憭批飛',     53000, 28000, 0.55, 10000, 40000, '?箏之撘勗?拙飛??,     'https://osa.ntu.edu.tw/scholarship'),
-    pub('????憭批飛',     50000, 24000, 0.65,  7000, 35000, '?之撘勗?拙飛閮',   'https://www.ncku.edu.tw/p/412-1000-13707.php'),
-    pub('???踵祥憭批飛',     50000, 26000, 0.50,  9000, 35000, '?踹之撘勗?拙飛??,     'https://osa.nccu.edu.tw/'),
-    pub('???賣?鈭日之摮?, 50000, 25000, 0.60,  8500, 35000, '?賣?鈭文之?拙飛??,     'https://osa.nycu.edu.tw/'),
-    pub('??皜憭批飛',     50000, 24000, 0.60,  8000, 35000, '皜之?拙飛??,         'https://osa.nthu.edu.tw/'),
-    pub('??銝剛?憭批飛',     48000, 22000, 0.70,  6500, 30000, '?之?仿???,     'https://osa.nchu.edu.tw/'),
-    pub('??銝剖控憭批飛',     48000, 22000, 0.70,  6500, 30000, '銝剖控憭批飛?拙飛??,     'https://osa.nsysu.edu.tw/'),
-    pub('??銝剖亢憭批飛',     49000, 23000, 0.65,  8000, 30000, '銝剖之撘勗?拙飛??,     'https://osa.ncu.edu.tw/'),
-    pub('??銝剜迤憭批飛',     47000, 21000, 0.72,  5500, 28000, '銝剜迤憭批飛?拙飛??,     'https://osa.ccu.edu.tw/'),
-    pub('???典???憭批飛', 46000, 20000, 0.80,  5000, 27000, '?典之?拙飛??,         'https://osa.ncnu.edu.tw/'),
-    pub('???梯憭批飛',     45000, 19000, 0.82,  4500, 27000, '?梯?拙飛??,         'https://osa.ndhu.edu.tw/'),
-    pub('???箇撣怎?憭批飛', 49000, 25000, 0.58,  9000, 32000, '撣怠之?拙飛??,         'https://osa.ntnu.edu.tw/'),
-    pub('??敶啣?撣怎?憭批飛', 46000, 20000, 0.75,  5500, 26000, '敶啣葦憭批摮賊?',       'https://osa.ncue.edu.tw/'),
-    pub('??擃?撣怎?憭批飛', 45000, 19000, 0.78,  5000, 25000, '擃葦憭批摮賊?',       'https://osa.nknu.edu.tw/'),
-    pub('???箏??憭批飛', 47000, 22000, 0.65,  8500, 28000, '??憭批摮賊?',       'https://osa.ntue.edu.tw/'),
-    pub('???箔葉?憭批飛', 46000, 21000, 0.68,  6000, 27000, '銝剜?憭批摮賊?',       'https://osa.ntcu.edu.tw/'),
-    pub('???箏?憭批飛',     45000, 19000, 0.78,  5000, 25000, '?啣?憭批飛?拙飛??,     'https://osa.nutn.edu.tw/'),
-    pub('??撅憭批飛',     44000, 18000, 0.80,  5000, 25000, '撅之撘勗?拙飛',       'https://www.nptu.edu.tw/p/412-1003-6380.php'),
-    pub('???梯?憭批飛', 44000, 18000, 0.82,  4000, 24000, '?望?憭批摮賊?',       'https://osa.ndhu.edu.tw/'),
-    pub('???箸憭批飛',     43000, 17000, 0.85,  4000, 24000, '?唳憭批飛?拙飛??,     'https://osa.nttu.edu.tw/'),
-    // ?? ??蝘?憭批飛 ??
-    pub('???箇蝘?憭批飛', 50000, 24000, 0.62,  9000, 32000, '?箇?憭批摮賊?',       'https://osa.ntust.edu.tw/'),
-    pub('???箏?蝘?憭批飛', 49000, 23000, 0.63,  9000, 30000, '??憭批摮賊?',       'https://osa.ntut.edu.tw/'),
-    pub('???脫?蝘?憭批飛', 47000, 21000, 0.72,  5500, 27000, '?脩?憭批摮賊?',       'https://osa.yuntech.edu.tw/'),
-    pub('??擃?蝘?憭批飛', 47000, 20000, 0.73,  5500, 27000, '擃?憭批摮賊?',       'https://osa.nkust.edu.tw/'),
-    pub('??撅蝘?憭批飛', 46000, 19000, 0.78,  4800, 26000, '撅?憭批摮賊?',       'https://osa.npust.edu.tw/'),
-    pub('??摰憭批飛',     45000, 19000, 0.80,  4500, 25000, '摰之?拙飛??,         'https://osa.niu.edu.tw/'),
-    pub('???斤?蝘?憭批飛', 46000, 20000, 0.76,  5500, 26000, '?斤??拙飛??,         'https://osa.ncut.edu.tw/'),
-    pub('???偏蝘?憭批飛', 45000, 19000, 0.78,  4800, 25000, '??憭批摮賊?',       'https://osa.nfu.edu.tw/'),
-    pub('??瞉?蝘?憭批飛', 43000, 17000, 0.88,  3500, 24000, '瞉?憭批摮賊?',       'https://osa.npu.edu.tw/'),
-    pub('????憭批飛',     43000, 17000, 0.88,  3500, 24000, '?之?拙飛??,         'https://osa.nqu.edu.tw/'),
-    pub('???臬?憭批飛',     45000, 19000, 0.80,  5000, 25000, '?臬之?拙飛??,         'https://osa.nuu.edu.tw/'),
-    pub('???箇瘚瑟?憭批飛', 47000, 21000, 0.72,  7000, 27000, '瘚瑕之?拙飛??,         'https://osa.ntou.edu.tw/'),
-    // ?? ????/擃/?怠飛 ??
-    pub('???箇??憭批飛', 48000, 22000, 0.65,  8000, 28000, '?之?拙飛??,         'https://osa.ntua.edu.tw/'),
-    pub('???箏???憭批飛', 47000, 21000, 0.70,  5500, 27000, '??憭批摮賊?',       'https://osa.tnnua.edu.tw/'),
-    pub('??擃憭批飛',     46000, 20000, 0.75,  6000, 26000, '??憭批摮賊?',       'https://osa.ntsu.edu.tw/'),
-    pub('???箇擃??憭批飛', 45000, 20000, 0.76, 5500, 25000, '?圈?憭批摮賊?',   'https://osa.ntus.edu.tw/'),
-    pub('???賣?憭批飛',     50000, 24000, 0.60,  9000, 32000, '?賣??拙飛??,         'https://osa.ym.edu.tw/'),
-    // ?? 蝘?蝬?憭批飛嚗??剁???
-    priv('蝘?頛?憭批飛',     95000, 32000, 0.45,  8000, 30000, '頛之撘勗?拙飛?飛??, 'https://dosa.fju.edu.tw/scholarship.php'),
-    priv('蝘?瘛⊥?憭批飛',     92000, 30000, 0.45,  8500, 25000, '瘛∪之?拙飛??,         'https://osa.tku.edu.tw/'),
-    priv('蝘??勗憭批飛',     90000, 30000, 0.40,  9500, 22000, '?勗?仿?拙飛??,     'https://www.scu.edu.tw/osa/'),
-    priv('蝘???憭批飛',     90000, 28000, 0.42,  9000, 22000, '??憭批飛?拙飛??,     'https://osa.pccu.edu.tw/'),
-    priv('蝘??憭批飛',     90000, 28000, 0.44,  8500, 22000, '??拙飛??,         'https://osa.mcu.edu.tw/'),
-    priv('蝘?銝憭批飛',     90000, 27000, 0.45,  9000, 20000, '銝?拙飛??,         'https://osa.shu.edu.tw/'),
-    priv('蝘??箏??怠飛憭批飛', 110000, 33000, 0.38, 9500, 30000, '??拙飛??,         'https://osa.tmu.edu.tw/'),
-    priv('蝘??瑕?憭批飛',     105000, 32000, 0.42, 8000, 30000, '?瑕??拙飛??,         'https://osa.cgu.edu.tw/'),
-    priv('蝘??憭批飛',     90000, 27000, 0.48,  7500, 22000, '??拙飛??,         'https://osa.yzu.edu.tw/'),
-    priv('蝘?銝剖?憭批飛',     92000, 28000, 0.47,  7500, 22000, '銝剖??拙飛??,         'https://osa.cycu.edu.tw/'),
-    priv('蝘??Ｙ憭批飛',     90000, 27000, 0.48,  6000, 22000, '?Ｙ?拙飛??,         'https://osa.fcu.edu.tw/'),
-    priv('蝘??望絲憭批飛',     90000, 27000, 0.48,  6000, 22000, '?望絲?拙飛??,         'https://osa.thu.edu.tw/'),
-    priv('蝘???憭批飛',     88000, 26000, 0.50,  6000, 20000, '???拙飛??,         'https://osa.pu.edu.tw/'),
-    priv('蝘??蝘?憭批飛', 88000, 26000, 0.50,  5800, 20000, '??拙飛??,         'https://osa.cyut.edu.tw/'),
-    priv('蝘?銝剖??怨憭批飛', 108000, 32000, 0.40, 6000, 30000, '銝剝憭批摮賊?',       'https://osa.cmu.edu.tw/'),
-    priv('蝘?鈭散憭批飛',     88000, 26000, 0.50,  5800, 20000, '鈭散憭批飛?拙飛??,     'https://osa.asia.edu.tw/'),
-    // ?? 蝘?憭批飛嚗葉?嚗??
-    priv('蝘?蝢拙?憭批飛',     90000, 27000, 0.48,  5500, 20000, '蝢拙??拙飛??,         'https://osa.isu.edu.tw/'),
-    priv('蝘?擃??怠飛憭批飛', 108000, 32000, 0.40, 5500, 30000, '擃?拙飛??,         'https://osa.kmu.edu.tw/'),
-    priv('蝘?銝剖控?怠飛憭批飛', 108000, 32000, 0.40, 6000, 30000, '銝剖控?怠摮賊?',       'https://osa.csmu.edu.tw/'),
-    priv('蝘?頛蝘?憭批飛', 85000, 25000, 0.52,  5000, 18000, '頛?拙飛??,         'https://osa.feu.edu.tw/'),
-    priv('蝘?撏控蝘?憭批飛', 85000, 25000, 0.52,  5000, 18000, '撏控?拙飛??,         'https://osa.ksu.edu.tw/'),
-    priv('蝘??蝘?憭批飛', 86000, 25000, 0.52,  5000, 18000, '??拙飛??,         'https://osa.stust.edu.tw/'),
-    priv('蝘?甇?耨蝘?憭批飛', 84000, 24000, 0.53,  5000, 18000, '甇?耨?拙飛??,         'https://osa.csu.edu.tw/'),
-    priv('蝘?憭找?蝘?憭批飛', 84000, 24000, 0.55,  4800, 17000, '憭找??拙飛??,         'https://osa.tajen.edu.tw/'),
-    priv('蝘????亦?憭批飛', 85000, 24000, 0.55,  5000, 18000, '??拙飛??,         'https://osa.cnu.edu.tw/'),
-    priv('蝘???憭批飛',     90000, 26000, 0.50,  4500, 22000, '???拙飛??,         'https://osa.tcu.edu.tw/'),
-    priv('蝘?雿?憭批飛',     86000, 25000, 0.52,  4500, 18000, '雿??拙飛??,         'https://osa.fgu.edu.tw/'),
-    priv('蝘?憭扯?憭批飛',     86000, 25000, 0.52,  5500, 18000, '憭扯??拙飛??,         'https://osa.dyu.edu.tw/'),
-    priv('蝘???憭批飛',     84000, 24000, 0.54,  5500, 17000, '???拙飛??,         'https://osa.mdu.edu.tw/'),
-    priv('蝘?撘?蝘?憭批飛', 86000, 25000, 0.52,  6000, 18000, '撘??拙飛??,         'https://osa.hk.edu.tw/'),
-    priv('蝘?靽桀像蝘?憭批飛', 84000, 24000, 0.54,  5500, 17000, '靽桀像?拙飛??,         'https://osa.hfu.edu.tw/'),
-    priv('蝘?撊箸蝘?憭批飛', 86000, 25000, 0.52,  5800, 18000, '撊箸?拙飛??,         'https://osa.ltu.edu.tw/'),
-    priv('蝘?銝剛憭批飛',     87000, 25000, 0.52,  7500, 18000, '銝剛憭批飛?拙飛??,     'https://osa.chu.edu.tw/'),
-    priv('蝘???憭批飛',     87000, 25000, 0.52,  7000, 18000, '???拙飛??,         'https://osa.hcu.edu.tw/'),
-    // ?? 蝘?憭批飛嚗??典隞???
-    priv('蝘?頛之嚗摮賂?', 110000, 33000, 0.40, 8000, 30000, '頛之?怠飛?拙飛??,     'https://dosa.fju.edu.tw/'),
-    priv('蝘???憭批飛',     86000, 25000, 0.52,  7500, 18000, '???拙飛??,         'https://osa.knu.edu.tw/'),
-    priv('蝘?憭批?憭批飛',     90000, 27000, 0.48,  9000, 20000, '憭批??拙飛??,         'https://osa.ttu.edu.tw/'),
-    priv('蝘??啣???蝘?憭批飛', 86000, 25000, 0.50, 8500, 18000,'??蝘之?拙飛??,   'https://osa.utica.edu.tw/'),
-    priv('蝘?敺瑟?鞎∠?蝘?憭批飛', 86000, 24000, 0.50, 8500, 17000,'敺瑟??拙飛??,       'https://osa.takming.edu.tw/'),
-    priv('蝘??舀?蝘?憭批飛', 84000, 24000, 0.52,  8000, 17000, '?舀??拙飛??,         'https://osa.just.edu.tw/'),
-    priv('蝘??祈蝘?憭批飛', 84000, 24000, 0.53,  7500, 17000, '?祈?拙飛??,         'https://osa.vnu.edu.tw/'),
-    priv('蝘?樴蝘?憭批飛', 85000, 25000, 0.52,  7500, 18000, '樴?拙飛??,         'https://osa.lhu.edu.tw/'),
-    priv('蝘??蝘?憭批飛', 84000, 24000, 0.54,  6500, 17000, '??拙飛??,         'https://osa.must.edu.tw/'),
-    priv('蝘?銝剖?蝘?憭批飛', 84000, 24000, 0.53,  8500, 17000, '銝剖?蝘之?拙飛??,     'https://osa.cute.edu.tw/'),
-    priv('蝘???蝧啁??憭批飛', 84000, 24000, 0.52, 8000, 17000, '??蝧啣摮賊?',     'https://osa.sju.edu.tw/'),
-    priv('蝘???憭批飛',     86000, 25000, 0.51,  8000, 18000, '???拙飛??,         'https://osa.au.edu.tw/'),
-    priv('蝘??箇擐?憭批飛', 84000, 24000, 0.54,  5000, 17000, '擐??拙飛??,         'https://osa.tsu.edu.tw/'),
-    priv('蝘?蝔餅?蝘??函恣?飛??, 83000, 23000, 0.55, 5500, 16000, '蝔餅??拙飛??,   'https://osa.dj.edu.tw/'),
-    priv('蝘??啁?蝘?憭批飛', 83000, 23000, 0.55,  5000, 16000, '?啁??拙飛??,         'https://osa.twu.edu.tw/'),
-    priv('蝘??喲陶蝘?憭批飛', 83000, 23000, 0.55,  5200, 16000, '?喲陶?拙飛??,         'https://osa.wfu.edu.tw/'),
-    priv('蝘??蝘?憭批飛', 83000, 23000, 0.55,  5000, 16000, '??拙飛??,         'https://osa.feu.edu.tw/'),
-    priv('蝘???銵飛??, 80000, 22000, 0.58,  5000, 15000, '??拙飛??,         'https://osa.hsc.edu.tw/'),
-  ];
+  <!-- 空狀態 -->
+  <div id="empty-state" class="c-card p-12 flex flex-col items-center gap-4 text-ink-subtle fade-up">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <rect x="8" y="8" width="32" height="32" stroke="#8d8d8d" stroke-width="2"/>
+      <path d="M16 24h16M24 16v16" stroke="#8d8d8d" stroke-width="2"/>
+    </svg>
+    <p class="text-sm">請先選擇學校，開始評估財務壓力。</p>
+  </div>
 
-  // ?? ??銝? ??
-  let selectedSchoolIdx = null;
+  <!-- ② 學校資源工具籃 -->
+  <div class="c-card p-6 fade-up">
+    <h2 class="text-sm font-semibold text-ink uppercase mb-1" style="letter-spacing:.08em;">② 學校官網資源工具籃</h2>
+    <p class="text-xs text-ink-subtle mb-5">收錄全台大學，點擊直接前往官網。</p>
+    <div style="font-size:12px;font-weight:700;color:#57606a;letter-spacing:0.06em;margin-bottom:8px;">▸ 北部</div>
+    <div class="tools-grid" style="margin-bottom:16px;">
+      <a class="tool-card" href="https://www.ntu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺灣大學</span><span class="tc-type">台北</span><span class="tc-url">ntu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntnu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺灣師範大學</span><span class="tc-type">台北</span><span class="tc-url">ntnu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntust.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺灣科技大學</span><span class="tc-type">台北</span><span class="tc-url">ntust.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nccu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立政治大學</span><span class="tc-type">台北</span><span class="tc-url">nccu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nycu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立陽明交通大學</span><span class="tc-type">新竹</span><span class="tc-url">nycu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nthu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立清華大學</span><span class="tc-type">新竹</span><span class="tc-url">nthu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ncu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立中央大學</span><span class="tc-type">桃園</span><span class="tc-url">ncu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntpu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺北大學</span><span class="tc-type">新北</span><span class="tc-url">ntpu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntut.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺北科技大學</span><span class="tc-type">台北</span><span class="tc-url">ntut.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntou.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺灣海洋大學</span><span class="tc-type">基隆</span><span class="tc-url">ntou.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntsu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立體育大學</span><span class="tc-type">桃園</span><span class="tc-url">ntsu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntue.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺北教育大學</span><span class="tc-type">台北</span><span class="tc-url">ntue.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntub.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺北商業大學</span><span class="tc-type">台北</span><span class="tc-url">ntub.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntunhs.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺北護理健康大學</span><span class="tc-type">台北</span><span class="tc-url">ntunhs.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.tnua.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺北藝術大學</span><span class="tc-type">台北</span><span class="tc-url">tnua.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntua.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺灣藝術大學</span><span class="tc-type">新北</span><span class="tc-url">ntua.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nuu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立聯合大學</span><span class="tc-type">苗栗</span><span class="tc-url">nuu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.yuntech.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立雲林科技大學</span><span class="tc-type">雲林</span><span class="tc-url">yuntech.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nfu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立虎尾科技大學</span><span class="tc-type">雲林</span><span class="tc-url">nfu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.utaipei.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">臺北市立大學</span><span class="tc-type">台北</span><span class="tc-url">utaipei.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.fju.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立輔仁大學</span><span class="tc-type">新北</span><span class="tc-url">fju.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.scu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立東吳大學</span><span class="tc-type">台北</span><span class="tc-url">scu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.tku.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立淡江大學</span><span class="tc-type">新北</span><span class="tc-url">tku.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.cycu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立中原大學</span><span class="tc-type">桃園</span><span class="tc-url">cycu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.yzu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立元智大學</span><span class="tc-type">桃園</span><span class="tc-url">yzu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.mcu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立銘傳大學</span><span class="tc-type">台北</span><span class="tc-url">mcu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.shu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立世新大學</span><span class="tc-type">台北</span><span class="tc-url">shu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.pccu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立文化大學</span><span class="tc-type">台北</span><span class="tc-url">pccu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.cgu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立長庚大學</span><span class="tc-type">桃園</span><span class="tc-url">cgu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.tmu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立臺北醫學大學</span><span class="tc-type">台北</span><span class="tc-url">tmu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ttu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立大同大學</span><span class="tc-type">台北</span><span class="tc-url">ttu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.usc.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立實踐大學</span><span class="tc-type">台北</span><span class="tc-url">usc.edu.tw ↗</span></a>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#57606a;letter-spacing:0.06em;margin-bottom:8px;">▸ 中部</div>
+    <div class="tools-grid" style="margin-bottom:16px;">
+      <a class="tool-card" href="https://www.nchu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立中興大學</span><span class="tc-type">台中</span><span class="tc-url">nchu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ncue.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立彰化師範大學</span><span class="tc-type">彰化</span><span class="tc-url">ncue.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nutc.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺中科技大學</span><span class="tc-type">台中</span><span class="tc-url">nutc.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ncnu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立暨南國際大學</span><span class="tc-type">南投</span><span class="tc-url">ncnu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ncut.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立勤益科技大學</span><span class="tc-type">台中</span><span class="tc-url">ncut.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ntcu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺中教育大學</span><span class="tc-type">台中</span><span class="tc-url">ntcu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.fcu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立逢甲大學</span><span class="tc-type">台中</span><span class="tc-url">fcu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.thu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立東海大學</span><span class="tc-type">台中</span><span class="tc-url">thu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.pu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立靜宜大學</span><span class="tc-type">台中</span><span class="tc-url">pu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.asia.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立亞洲大學</span><span class="tc-type">台中</span><span class="tc-url">asia.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.cyut.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立朝陽科技大學</span><span class="tc-type">台中</span><span class="tc-url">cyut.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.dyu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立大葉大學</span><span class="tc-type">彰化</span><span class="tc-url">dyu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nhu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立南華大學</span><span class="tc-type">嘉義</span><span class="tc-url">nhu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.cmu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立中國醫藥大學</span><span class="tc-type">台中</span><span class="tc-url">cmu.edu.tw ↗</span></a>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#57606a;letter-spacing:0.06em;margin-bottom:8px;">▸ 南部</div>
+    <div class="tools-grid" style="margin-bottom:16px;">
+      <a class="tool-card" href="https://www.ncku.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立成功大學</span><span class="tc-type">台南</span><span class="tc-url">ncku.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nsysu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立中山大學</span><span class="tc-type">高雄</span><span class="tc-url">nsysu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nuk.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立高雄大學</span><span class="tc-type">高雄</span><span class="tc-url">nuk.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nknu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立高雄師範大學</span><span class="tc-type">高雄</span><span class="tc-url">nknu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nkust.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立高雄科技大學</span><span class="tc-type">高雄</span><span class="tc-url">nkust.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ncyu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立嘉義大學</span><span class="tc-type">嘉義</span><span class="tc-url">ncyu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nutn.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺南大學</span><span class="tc-type">台南</span><span class="tc-url">nutn.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nptu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立屏東大學</span><span class="tc-type">屏東</span><span class="tc-url">nptu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.npust.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立屏東科技大學</span><span class="tc-type">屏東</span><span class="tc-url">npust.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nkuht.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立高雄餐旅大學</span><span class="tc-type">高雄</span><span class="tc-url">nkuht.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.tnnua.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立臺南藝術大學</span><span class="tc-type">台南</span><span class="tc-url">tnnua.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.isu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立義守大學</span><span class="tc-type">高雄</span><span class="tc-url">isu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.ksu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立崑山科技大學</span><span class="tc-type">台南</span><span class="tc-url">ksu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.stust.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立南臺科技大學</span><span class="tc-type">台南</span><span class="tc-url">stust.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.cjcu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立長榮大學</span><span class="tc-type">台南</span><span class="tc-url">cjcu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.fy.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立輔英科技大學</span><span class="tc-type">高雄</span><span class="tc-url">fy.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.kmu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立高雄醫學大學</span><span class="tc-type">高雄</span><span class="tc-url">kmu.edu.tw ↗</span></a>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#57606a;letter-spacing:0.06em;margin-bottom:8px;">▸ 東部 ／ 離島</div>
+    <div class="tools-grid" style="margin-bottom:16px;">
+      <a class="tool-card" href="https://www.ndhu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立東華大學</span><span class="tc-type">花蓮</span><span class="tc-url">ndhu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nttu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立台東大學</span><span class="tc-type">台東</span><span class="tc-url">nttu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.niu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立宜蘭大學</span><span class="tc-type">宜蘭</span><span class="tc-url">niu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.npu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立澎湖科技大學</span><span class="tc-type">澎湖</span><span class="tc-url">npu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.nqu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">國立金門大學</span><span class="tc-type">金門</span><span class="tc-url">nqu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.fgu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立佛光大學</span><span class="tc-type">宜蘭</span><span class="tc-url">fgu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.tcu.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立慈濟大學</span><span class="tc-type">花蓮</span><span class="tc-url">tcu.edu.tw ↗</span></a>
+      <a class="tool-card" href="https://www.tccn.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">私立慈濟科技大學</span><span class="tc-type">花蓮</span><span class="tc-url">tccn.edu.tw ↗</span></a>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#57606a;letter-spacing:0.06em;margin-bottom:8px;">▸ 通用資源</div>
+    <div class="tools-grid">
+      <a class="tool-card" href="https://heloan.edu.tw" target="_blank" rel="noopener noreferrer"><span class="tc-name">就學貸款申請</span><span class="tc-type">教育部・無息貸款</span><span class="tc-url">heloan.edu.tw ↗</span></a>
+    </div>
+  </div>
 
-  const schoolInput    = document.getElementById('school-input');
-  const schoolDropdown = document.getElementById('school-dropdown');
-  const schoolChosen   = document.getElementById('school-chosen');
+</main>
 
-  function filterSchools() {
-    const q = schoolInput.value.trim();
-    const matched = q.length === 0
-      ? SCHOOLS.map((s, i) => ({ s, i })).slice(0, 20)   // ?芾撓?交?憿舐內??0蝑?
-      : SCHOOLS.map((s, i) => ({ s, i })).filter(({ s }) => s.name.includes(q));
+<footer style="background:#161616;margin-top:32px;">
+  <div class="max-w-4xl mx-auto px-4 py-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <p class="text-xs" style="color:#a8a8a8;">資料僅供參考，實際費用依各校公告為準。</p>
+    <p class="text-xs" style="color:#6f6f6f;">以 IBM Bob AI 協助開發 · 星火學習導航</p>
+  </div>
+</footer>
 
-    if (matched.length === 0) {
-      schoolDropdown.innerHTML = '<div style="padding:10px 16px;font-size:13px;color:#8c8c8c;">?亦?貊泵摮豢</div>';
-    } else {
-      schoolDropdown.innerHTML = matched.map(({ s, i }) =>
-        `<div data-idx="${i}" onmousedown="selectSchool(${i})"
+<script>
+// 共用補助
+const AIDS_PUB  = (osa) => [
+  { name: '教育部助學金',     amount: 36000, url: 'https://www.edu.tw/' },
+  { name: '校內弱勢助學金',   amount: 30000, url: osa },
+  { name: '就學貸款（無息）', amount: 0,     url: 'https://heloan.edu.tw/' },
+];
+const AIDS_PRI  = (osa) => [
+  { name: '教育部私校助學金', amount: 36000, url: 'https://www.edu.tw/' },
+  { name: '校內弱勢助學金',   amount: 25000, url: osa },
+  { name: '就學貸款（無息）', amount: 0,     url: 'https://heloan.edu.tw/' },
+];
+
+const SCHOOLS = [
+  { name: '國立臺灣大學',       city: '台北市', tuition: 53000, avgRent: 10000, subsidy: 30000, url: 'https://www.ntu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 22000, rate: 0.40 }, { label: '冷氣2人房', fee: 32000, rate: 0.25 }],
+    aids: [{ name: '臺大弱勢助學金', amount: 40000, url: 'https://osa.ntu.edu.tw/scholarship' }, ...AIDS_PUB('https://osa.ntu.edu.tw/').slice(1)] },
+  { name: '國立臺灣師範大學',   city: '台北市', tuition: 50000, avgRent: 10000, subsidy: 28000, url: 'https://www.ntnu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 24000, rate: 0.50 }, { label: '冷氣2人房', fee: 34000, rate: 0.35 }], aids: AIDS_PUB('https://osa.ntnu.edu.tw/') },
+  { name: '國立臺灣科技大學',   city: '台北市', tuition: 50000, avgRent: 10000, subsidy: 26000, url: 'https://www.ntust.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 22000, rate: 0.55 }, { label: '冷氣2人房', fee: 30000, rate: 0.40 }], aids: AIDS_PUB('https://osa.ntust.edu.tw/') },
+  { name: '國立政治大學',       city: '台北市', tuition: 50000, avgRent: 10000, subsidy: 28000, url: 'https://www.nccu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 20000, rate: 0.60 }, { label: '冷氣2人房', fee: 30000, rate: 0.45 }], aids: AIDS_PUB('https://osa.nccu.edu.tw/') },
+  { name: '國立陽明交通大學',   city: '新竹市', tuition: 51000, avgRent: 8000, subsidy: 27000, url: 'https://www.nycu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 20000, rate: 0.65 }, { label: '冷氣2人房', fee: 28000, rate: 0.50 }], aids: AIDS_PUB('https://osa.nycu.edu.tw/') },
+  { name: '國立清華大學',       city: '新竹市', tuition: 51000, avgRent: 8000, subsidy: 27000, url: 'https://www.nthu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '傳統4人房', fee: 18000, rate: 0.70 }, { label: '冷氣2人房', fee: 28000, rate: 0.60 }], aids: AIDS_PUB('https://osa.nthu.edu.tw/') },
+  { name: '國立中央大學',       city: '桃園市', tuition: 49000, avgRent: 7000, subsidy: 26000, url: 'https://www.ncu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 18000, rate: 0.75 }, { label: '冷氣2人房', fee: 26000, rate: 0.60 }], aids: AIDS_PUB('https://osa.ncu.edu.tw/') },
+  { name: '國立臺北大學',       city: '新北市', tuition: 46000, avgRent: 9000, subsidy: 24000, url: 'https://www.ntpu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 18000, rate: 0.70 }, { label: '冷氣2人房', fee: 26000, rate: 0.55 }], aids: AIDS_PUB('https://osa.ntpu.edu.tw/') },
+  { name: '國立臺北科技大學',   city: '台北市', tuition: 49000, avgRent: 10000, subsidy: 25000, url: 'https://www.ntut.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 24000, rate: 0.45 }, { label: '冷氣2人房', fee: 34000, rate: 0.30 }], aids: AIDS_PUB('https://osa.ntut.edu.tw/') },
+  { name: '國立臺灣海洋大學',   city: '基隆市', tuition: 47000, avgRent: 7000, subsidy: 24000, url: 'https://www.ntou.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 18000, rate: 0.70 }, { label: '冷氣2人房', fee: 26000, rate: 0.55 }], aids: AIDS_PUB('https://osa.ntou.edu.tw/') },
+  { name: '國立體育大學',       city: '桃園市', tuition: 46000, avgRent: 7000, subsidy: 22000, url: 'https://www.ntsu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '多人房', fee: 16000, rate: 0.80 }, { label: '冷氣2人房', fee: 24000, rate: 0.65 }], aids: AIDS_PUB('https://osa.ntsu.edu.tw/') },
+  { name: '國立臺北教育大學',   city: '台北市', tuition: 44000, avgRent: 10000, subsidy: 23000, url: 'https://www.ntue.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 21000, rate: 0.55 }], aids: AIDS_PUB('https://osa.ntue.edu.tw/') },
+  { name: '國立臺北商業大學',   city: '台北市', tuition: 46000, avgRent: 10000, subsidy: 23000, url: 'https://www.ntub.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 20000, rate: 0.50 }], aids: AIDS_PUB('https://osa.ntub.edu.tw/') },
+  { name: '國立臺北護理健康大學', city: '台北市', tuition: 47000, avgRent: 10000, subsidy: 24000, url: 'https://www.ntunhs.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 20000, rate: 0.65 }], aids: AIDS_PUB('https://osa.ntunhs.edu.tw/') },
+  { name: '國立臺北藝術大學',   city: '台北市', tuition: 48000, avgRent: 10000, subsidy: 24000, url: 'https://www.tnua.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '藝術宿舍2人房', fee: 20000, rate: 0.80 }, { label: '單人房', fee: 28000, rate: 0.75 }], aids: AIDS_PUB('https://osa.tnua.edu.tw/') },
+  { name: '國立臺灣藝術大學',   city: '新北市', tuition: 48000, avgRent: 8000, subsidy: 24000, url: 'https://www.ntua.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 20000, rate: 0.68 }], aids: AIDS_PUB('https://osa.ntua.edu.tw/') },
+  { name: '國立聯合大學',       city: '苗栗縣', tuition: 44000, avgRent: 5000, subsidy: 22000, url: 'https://www.nuu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 12000, rate: 0.75 }], aids: AIDS_PUB('https://osa.nuu.edu.tw/') },
+  { name: '國立雲林科技大學',   city: '雲林縣', tuition: 48000, avgRent: 5000, subsidy: 24000, url: 'https://www.yuntech.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 12000, rate: 0.73 }, { label: '冷氣2人房', fee: 22000, rate: 0.55 }], aids: AIDS_PUB('https://osa.yuntech.edu.tw/') },
+  { name: '國立虎尾科技大學',   city: '雲林縣', tuition: 47000, avgRent: 4500, subsidy: 23000, url: 'https://www.nfu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 11000, rate: 0.77 }], aids: AIDS_PUB('https://osa.nfu.edu.tw/') },
+  { name: '臺北市立大學',       city: '台北市', tuition: 46000, avgRent: 11000, subsidy: 24000, url: 'https://www.utaipei.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 22000, rate: 0.60 }], aids: AIDS_PUB('https://osa.utaipei.edu.tw/') },
+  { name: '私立輔仁大學',       city: '新北市', tuition: 95000, avgRent: 8000, subsidy: 20000, url: 'https://www.fju.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 26000, rate: 0.65 }, { label: '冷氣2人房', fee: 36000, rate: 0.50 }], aids: AIDS_PRI('https://osa.fju.edu.tw/') },
+  { name: '私立東吳大學',       city: '台北市', tuition: 90000, avgRent: 9500, subsidy: 18000, url: 'https://www.scu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 28000, rate: 0.45 }, { label: '冷氣2人房', fee: 38000, rate: 0.35 }], aids: AIDS_PRI('https://osa.scu.edu.tw/') },
+  { name: '私立淡江大學',       city: '新北市', tuition: 88000, avgRent: 7500, subsidy: 18000, url: 'https://www.tku.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 22000, rate: 0.65 }, { label: '冷氣2人房', fee: 32000, rate: 0.50 }], aids: AIDS_PRI('https://osa.tku.edu.tw/') },
+  { name: '私立中原大學',       city: '桃園市', tuition: 92000, avgRent: 7000, subsidy: 18000, url: 'https://www.cycu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 22000, rate: 0.70 }, { label: '冷氣2人房', fee: 30000, rate: 0.55 }], aids: AIDS_PRI('https://osa.cycu.edu.tw/') },
+  { name: '私立元智大學',       city: '桃園市', tuition: 89000, avgRent: 7000, subsidy: 17000, url: 'https://www.yzu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 20000, rate: 0.75 }, { label: '冷氣2人房', fee: 28000, rate: 0.60 }], aids: AIDS_PRI('https://osa.yzu.edu.tw/') },
+  { name: '私立銘傳大學',       city: '台北市', tuition: 88000, avgRent: 9000, subsidy: 16000, url: 'https://www.mcu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 24000, rate: 0.60 }, { label: '冷氣2人房', fee: 34000, rate: 0.45 }], aids: AIDS_PRI('https://osa.mcu.edu.tw/') },
+  { name: '私立世新大學',       city: '台北市', tuition: 85000, avgRent: 9500, subsidy: 15000, url: 'https://www.shu.edu.tw',
+    hasDorm: false, dormTypes: [], aids: AIDS_PRI('https://osa.shu.edu.tw/') },
+  { name: '私立文化大學',       city: '台北市', tuition: 88000, avgRent: 9000, subsidy: 16000, url: 'https://www.pccu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 26000, rate: 0.50 }, { label: '冷氣2人房', fee: 36000, rate: 0.35 }], aids: AIDS_PRI('https://osa.pccu.edu.tw/') },
+  { name: '私立長庚大學',       city: '桃園市', tuition: 95000, avgRent: 7000, subsidy: 19000, url: 'https://www.cgu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 24000, rate: 0.75 }, { label: '冷氣2人房', fee: 34000, rate: 0.60 }], aids: AIDS_PRI('https://osa.cgu.edu.tw/') },
+  { name: '私立臺北醫學大學',   city: '台北市', tuition: 98000, avgRent: 11000, subsidy: 20000, url: 'https://www.tmu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 28000, rate: 0.45 }, { label: '冷氣2人房', fee: 40000, rate: 0.30 }], aids: AIDS_PRI('https://osa.tmu.edu.tw/') },
+  { name: '私立大同大學',       city: '台北市', tuition: 88000, avgRent: 10000, subsidy: 16000, url: 'https://www.ttu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 24000, rate: 0.50 }], aids: AIDS_PRI('https://osa.ttu.edu.tw/') },
+  { name: '私立實踐大學',       city: '台北市', tuition: 88000, avgRent: 9500, subsidy: 16000, url: 'https://www.usc.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 26000, rate: 0.45 }], aids: AIDS_PRI('https://osa.usc.edu.tw/') },
+  { name: '國立中興大學',       city: '台中市', tuition: 48000, avgRent: 6500, subsidy: 25000, url: 'https://www.nchu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 18000, rate: 0.70 }, { label: '冷氣2人房', fee: 26000, rate: 0.55 }], aids: AIDS_PUB('https://osa.nchu.edu.tw/') },
+  { name: '國立彰化師範大學',   city: '彰化縣', tuition: 46000, avgRent: 6000, subsidy: 23000, url: 'https://www.ncue.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 16000, rate: 0.70 }, { label: '冷氣2人房', fee: 24000, rate: 0.55 }], aids: AIDS_PUB('https://osa.ncue.edu.tw/') },
+  { name: '國立臺中科技大學',   city: '台中市', tuition: 47000, avgRent: 6500, subsidy: 23000, url: 'https://www.nutc.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 20000, rate: 0.50 }, { label: '冷氣2人房', fee: 28000, rate: 0.35 }], aids: AIDS_PUB('https://osa.nutc.edu.tw/') },
+  { name: '國立暨南國際大學',   city: '南投縣', tuition: 45000, avgRent: 5000, subsidy: 23000, url: 'https://www.ncnu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 14000, rate: 0.85 }, { label: '冷氣2人房', fee: 20000, rate: 0.75 }], aids: AIDS_PUB('https://osa.ncnu.edu.tw/') },
+  { name: '國立勤益科技大學',   city: '台中市', tuition: 47000, avgRent: 6000, subsidy: 23000, url: 'https://www.ncut.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 14000, rate: 0.70 }], aids: AIDS_PUB('https://osa.ncut.edu.tw/') },
+  { name: '國立臺中教育大學',   city: '台中市', tuition: 45000, avgRent: 6500, subsidy: 23000, url: 'https://www.ntcu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 14000, rate: 0.65 }], aids: AIDS_PUB('https://osa.ntcu.edu.tw/') },
+  { name: '私立逢甲大學',       city: '台中市', tuition: 90000, avgRent: 6500, subsidy: 17000, url: 'https://www.fcu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 22000, rate: 0.55 }, { label: '冷氣2人房', fee: 32000, rate: 0.40 }], aids: AIDS_PRI('https://osa.fcu.edu.tw/') },
+  { name: '私立東海大學',       city: '台中市', tuition: 88000, avgRent: 6500, subsidy: 17000, url: 'https://www.thu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '傳統多人房', fee: 18000, rate: 0.70 }, { label: '冷氣2人房', fee: 26000, rate: 0.55 }], aids: AIDS_PRI('https://osa.thu.edu.tw/') },
+  { name: '私立靜宜大學',       city: '台中市', tuition: 82000, avgRent: 6000, subsidy: 15000, url: 'https://www.pu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 20000, rate: 0.65 }, { label: '冷氣2人房', fee: 28000, rate: 0.50 }], aids: AIDS_PRI('https://osa.pu.edu.tw/') },
+  { name: '私立亞洲大學',       city: '台中市', tuition: 85000, avgRent: 6000, subsidy: 15000, url: 'https://www.asia.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 22000, rate: 0.70 }, { label: '冷氣2人房', fee: 30000, rate: 0.55 }], aids: AIDS_PRI('https://osa.asia.edu.tw/') },
+  { name: '私立朝陽科技大學',   city: '台中市', tuition: 84000, avgRent: 5500, subsidy: 15000, url: 'https://www.cyut.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 18000, rate: 0.62 }, { label: '冷氣2人房', fee: 28000, rate: 0.40 }], aids: AIDS_PRI('https://osa.cyut.edu.tw/') },
+  { name: '私立大葉大學',       city: '彰化縣', tuition: 83000, avgRent: 5500, subsidy: 14000, url: 'https://www.dyu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 16000, rate: 0.68 }], aids: AIDS_PRI('https://osa.dyu.edu.tw/') },
+  { name: '私立南華大學',       city: '嘉義縣', tuition: 80000, avgRent: 4500, subsidy: 13000, url: 'https://www.nhu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 14000, rate: 0.72 }], aids: AIDS_PRI('https://osa.nhu.edu.tw/') },
+  { name: '私立中國醫藥大學',   city: '台中市', tuition: 98000, avgRent: 6500, subsidy: 20000, url: 'https://www.cmu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 24000, rate: 0.55 }, { label: '冷氣2人房', fee: 34000, rate: 0.40 }], aids: AIDS_PRI('https://osa.cmu.edu.tw/') },
+  { name: '國立成功大學',       city: '台南市', tuition: 50000, avgRent: 7000, subsidy: 28000, url: 'https://www.ncku.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 20000, rate: 0.45 }, { label: '冷氣2人房', fee: 30000, rate: 0.30 }], aids: AIDS_PUB('https://osa.ncku.edu.tw/') },
+  { name: '國立中山大學',       city: '高雄市', tuition: 49000, avgRent: 7000, subsidy: 26000, url: 'https://www.nsysu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 18000, rate: 0.70 }, { label: '冷氣2人房', fee: 26000, rate: 0.55 }], aids: AIDS_PUB('https://osa.nsysu.edu.tw/') },
+  { name: '國立高雄大學',       city: '高雄市', tuition: 45000, avgRent: 6000, subsidy: 23000, url: 'https://www.nuk.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 16000, rate: 0.75 }, { label: '冷氣2人房', fee: 22000, rate: 0.60 }], aids: AIDS_PUB('https://osa.nuk.edu.tw/') },
+  { name: '國立高雄師範大學',   city: '高雄市', tuition: 45000, avgRent: 6000, subsidy: 23000, url: 'https://www.nknu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 16000, rate: 0.65 }, { label: '冷氣2人房', fee: 24000, rate: 0.50 }], aids: AIDS_PUB('https://osa.nknu.edu.tw/') },
+  { name: '國立高雄科技大學',   city: '高雄市', tuition: 47000, avgRent: 6000, subsidy: 23000, url: 'https://www.nkust.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 16000, rate: 0.65 }, { label: '冷氣2人房', fee: 22000, rate: 0.50 }], aids: AIDS_PUB('https://osa.nkust.edu.tw/') },
+  { name: '國立嘉義大學',       city: '嘉義縣', tuition: 44000, avgRent: 5000, subsidy: 22000, url: 'https://www.ncyu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 14000, rate: 0.75 }, { label: '冷氣2人房', fee: 20000, rate: 0.60 }], aids: AIDS_PUB('https://osa.ncyu.edu.tw/') },
+  { name: '國立臺南大學',       city: '台南市', tuition: 44000, avgRent: 5500, subsidy: 22000, url: 'https://www.nutn.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 14000, rate: 0.70 }, { label: '冷氣2人房', fee: 20000, rate: 0.55 }], aids: AIDS_PUB('https://osa.nutn.edu.tw/') },
+  { name: '國立屏東大學',       city: '屏東縣', tuition: 44000, avgRent: 5000, subsidy: 22000, url: 'https://www.nptu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 12000, rate: 0.65 }, { label: '冷氣2人房', fee: 18000, rate: 0.50 }], aids: AIDS_PUB('https://osa.nptu.edu.tw/') },
+  { name: '國立屏東科技大學',   city: '屏東縣', tuition: 47000, avgRent: 4000, subsidy: 23000, url: 'https://www.npust.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 11000, rate: 0.80 }, { label: '冷氣2人房', fee: 20000, rate: 0.55 }], aids: AIDS_PUB('https://osa.npust.edu.tw/') },
+  { name: '國立高雄餐旅大學',   city: '高雄市', tuition: 47000, avgRent: 6000, subsidy: 23000, url: 'https://www.nkuht.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 16000, rate: 0.70 }], aids: AIDS_PUB('https://osa.nkuht.edu.tw/') },
+  { name: '國立臺南藝術大學',   city: '台南市', tuition: 48000, avgRent: 5000, subsidy: 24000, url: 'https://www.tnnua.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '藝術宿舍2人房', fee: 14000, rate: 0.85 }, { label: '單人房', fee: 18000, rate: 0.82 }], aids: AIDS_PUB('https://osa.tnnua.edu.tw/') },
+  { name: '私立義守大學',       city: '高雄市', tuition: 85000, avgRent: 6000, subsidy: 15000, url: 'https://www.isu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 20000, rate: 0.75 }, { label: '冷氣2人房', fee: 28000, rate: 0.60 }], aids: AIDS_PRI('https://osa.isu.edu.tw/') },
+  { name: '私立崑山科技大學',   city: '台南市', tuition: 82000, avgRent: 5500, subsidy: 14000, url: 'https://www.ksu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 18000, rate: 0.65 }, { label: '冷氣2人房', fee: 26000, rate: 0.50 }], aids: AIDS_PRI('https://osa.ksu.edu.tw/') },
+  { name: '私立南臺科技大學',   city: '台南市', tuition: 83000, avgRent: 5500, subsidy: 14000, url: 'https://www.stust.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 16000, rate: 0.65 }, { label: '冷氣2人房', fee: 26000, rate: 0.45 }], aids: AIDS_PRI('https://osa.stust.edu.tw/') },
+  { name: '私立長榮大學',       city: '台南市', tuition: 80000, avgRent: 5500, subsidy: 13000, url: 'https://www.cjcu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 16000, rate: 0.65 }], aids: AIDS_PRI('https://osa.cjcu.edu.tw/') },
+  { name: '私立輔英科技大學',   city: '高雄市', tuition: 80000, avgRent: 5500, subsidy: 13000, url: 'https://www.fy.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 14000, rate: 0.68 }], aids: AIDS_PRI('https://osa.fy.edu.tw/') },
+  { name: '私立高雄醫學大學',   city: '高雄市', tuition: 96000, avgRent: 6000, subsidy: 19000, url: 'https://www.kmu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 22000, rate: 0.50 }, { label: '冷氣2人房', fee: 30000, rate: 0.35 }], aids: AIDS_PRI('https://osa.kmu.edu.tw/') },
+  { name: '國立中正大學',       city: '嘉義縣', tuition: 46000, avgRent: 4500, subsidy: 24000, url: 'https://www.ccu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 12000, rate: 0.72 }, { label: '冷氣2人房', fee: 20000, rate: 0.55 }], aids: AIDS_PUB('https://osa.ccu.edu.tw/') },
+  { name: '國立東華大學',       city: '花蓮縣', tuition: 43000, avgRent: 4500, subsidy: 23000, url: 'https://www.ndhu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 14000, rate: 0.85 }, { label: '冷氣2人房', fee: 20000, rate: 0.75 }], aids: AIDS_PUB('https://osa.ndhu.edu.tw/') },
+  { name: '國立台東大學',       city: '台東縣', tuition: 42000, avgRent: 4000, subsidy: 23000, url: 'https://www.nttu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 12000, rate: 0.80 }, { label: '冷氣2人房', fee: 18000, rate: 0.70 }], aids: AIDS_PUB('https://osa.nttu.edu.tw/') },
+  { name: '國立宜蘭大學',       city: '宜蘭縣', tuition: 43000, avgRent: 4500, subsidy: 22000, url: 'https://www.niu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 14000, rate: 0.70 }, { label: '冷氣2人房', fee: 20000, rate: 0.55 }], aids: AIDS_PUB('https://osa.niu.edu.tw/') },
+  { name: '國立澎湖科技大學',   city: '澎湖縣', tuition: 46000, avgRent: 4000, subsidy: 24000, url: 'https://www.npu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 10000, rate: 0.88 }], aids: AIDS_PUB('https://osa.npu.edu.tw/') },
+  { name: '國立金門大學',       city: '金門縣', tuition: 44000, avgRent: 3500, subsidy: 24000, url: 'https://www.nqu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 9000, rate: 0.90 }], aids: AIDS_PUB('https://osa.nqu.edu.tw/') },
+  { name: '私立佛光大學',       city: '宜蘭縣', tuition: 78000, avgRent: 4500, subsidy: 13000, url: 'https://www.fgu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 16000, rate: 0.75 }], aids: AIDS_PRI('https://osa.fgu.edu.tw/') },
+  { name: '私立慈濟大學',       city: '花蓮縣', tuition: 86000, avgRent: 4500, subsidy: 16000, url: 'https://www.tcu.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 14000, rate: 0.80 }, { label: '冷氣2人房', fee: 24000, rate: 0.60 }], aids: AIDS_PRI('https://osa.tcu.edu.tw/') },
+  { name: '私立慈濟科技大學',   city: '花蓮縣', tuition: 78000, avgRent: 4500, subsidy: 14000, url: 'https://www.tccn.edu.tw',
+    hasDorm: true, dormTypes: [{ label: '一般4人房', fee: 13000, rate: 0.82 }], aids: AIDS_PRI('https://osa.tccn.edu.tw/') },
+];
+
+// ── 搜尋下拉 ──
+let selectedSchoolIdx = null;
+
+function filterSchools() {
+  const q   = document.getElementById('school-input').value.trim();
+  const dd  = document.getElementById('school-dropdown');
+  const matched = q.length === 0
+    ? SCHOOLS.map((s,i) => ({s,i})).slice(0,20)
+    : SCHOOLS.map((s,i) => ({s,i})).filter(({s}) => s.name.includes(q));
+  dd.innerHTML = matched.length === 0
+    ? '<div style="padding:10px 16px;font-size:13px;color:#8c8c8c;">查無相符學校</div>'
+    : matched.map(({s,i}) =>
+        `<div onmousedown="selectSchool(${i})"
           style="padding:9px 16px;font-size:14px;color:#161616;cursor:pointer;border-bottom:1px solid #f4f4f4;"
-          onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#fff'">
-          ${s.name}
-        </div>`
+          onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#fff'">${s.name}</div>`
       ).join('');
-    }
-    schoolDropdown.style.display = 'block';
+  dd.style.display = 'block';
+}
+
+function selectSchool(idx) {
+  selectedSchoolIdx = idx;
+  const s = SCHOOLS[idx];
+  document.getElementById('school-input').value = s.name;
+  document.getElementById('school-chosen').textContent = '✓ 已選擇：' + s.name;
+  document.getElementById('school-dropdown').style.display = 'none';
+  const link = document.getElementById('school-website');
+  link.href = s.url; link.style.display = 'inline-flex';
+  // 帶入預設月租
+  document.getElementById('rent-input').value = s.avgRent;
+  updateDormUI(s);
+  calculate();
+}
+
+function hideDropdown() {
+  document.getElementById('school-dropdown').style.display = 'none';
+}
+
+function updateDormUI(school) {
+  const dormRadio  = document.querySelector('input[name="dorm"][value="dorm"]');
+  const dormLabel  = document.getElementById('label-dorm');
+  const wrapEl     = document.getElementById('rent-input-wrap');
+  if (!school.hasDorm) {
+    dormRadio.disabled = true; dormLabel.style.color = '#aaa';
+    document.querySelector('input[name="dorm"][value="rent"]').checked = true;
+    wrapEl.style.display = 'block';
+  } else {
+    dormRadio.disabled = false; dormLabel.style.color = '';
+    const useDorm = document.querySelector('input[name="dorm"]:checked').value === 'dorm';
+    wrapEl.style.display = useDorm ? 'none' : 'block';
+  }
+}
+
+function onDormChange() {
+  const useDorm = document.querySelector('input[name="dorm"]:checked').value === 'dorm';
+  document.getElementById('rent-input-wrap').style.display = useDorm ? 'none' : 'block';
+  calculate();
+}
+
+let _lastSummary = '';
+
+function calculate() {
+  const idx = selectedSchoolIdx;
+  const rs  = document.getElementById('result-section');
+  const es  = document.getElementById('empty-state');
+  if (idx === null || idx === undefined) {
+    rs.style.display = 'none'; es.style.display = 'flex'; return;
   }
 
-  function selectSchool(idx) {
-    selectedSchoolIdx = idx;
-    schoolInput.value = SCHOOLS[idx].name;
-    schoolChosen.textContent = '??撌脤??' + SCHOOLS[idx].name;
-    schoolDropdown.style.display = 'none';
-    calculate();
+  const school      = SCHOOLS[idx];
+  const useDorm     = document.querySelector('input[name="dorm"]:checked').value === 'dorm';
+  const monthFood   = Math.max(0, Number(document.getElementById('food-input').value) || 0);
+  const monthInc    = Math.max(0, Number(document.getElementById('income-input').value) || 0);
+  const monthMisc   = Math.max(0, Number(document.getElementById('misc-input').value) || 0);
+  const scholarship = Math.max(0, Number(document.getElementById('scholarship-input').value) || 0);
+  const monthRent   = Math.max(0, Number(document.getElementById('rent-input').value) || school.avgRent);
+
+  let housingYear, dormNoteText;
+  if (useDorm && school.hasDorm) {
+    const dt = school.dormTypes[0];
+    housingYear  = dt.fee;
+    dormNoteText = `宿舍年費 ${dt.fee.toLocaleString()} 元・中籤率約 ${Math.round(dt.rate * 100)}%，未中籤需租屋（月租 ${monthRent.toLocaleString()} 元）`;
+  } else {
+    housingYear  = monthRent * 10;
+    dormNoteText = school.hasDorm
+      ? `月租 ${monthRent.toLocaleString()} 元，以 10 個月計算`
+      : `此校無宿舍・月租 ${monthRent.toLocaleString()} 元，以 10 個月計算`;
+  }
+  document.getElementById('dorm-note').textContent = dormNoteText;
+
+  const yearTuition = school.tuition;
+  const yearFood    = monthFood * 10;
+  const yearMisc    = monthMisc * 10;
+  const yearTotal   = yearTuition + housingYear + yearFood + yearMisc;
+  const yearIncome  = monthInc * 10;
+  const yearNet     = yearTotal - yearIncome - school.subsidy - scholarship;
+  const y4Total     = yearTotal * 4;
+  const y4Income    = yearIncome * 4;
+  const y4Gap       = Math.max(0, yearNet * 4);
+
+  const monthlyGap  = Math.max(0, yearNet / 10);
+  const weeklyHours = monthlyGap > 0 ? Math.ceil(monthlyGap / (176 * 4)) : 0;
+
+  const pressure = Math.min(1, Math.max(0, yearNet / yearTotal));
+  const pPct     = Math.round(pressure * 100);
+
+  let rating, ratingClass, ratingDesc;
+  if (pressure < 0.35) {
+    rating = '🟢 低壓'; ratingClass = 'badge-green';
+    ratingDesc = '財務缺口不大，維持工讀收入與現有補助，預計可順利完成學業。';
+  } else if (pressure < 0.65) {
+    rating = '🟡 中壓'; ratingClass = 'badge-yellow';
+    ratingDesc = '財務有一定壓力，建議積極申請助學金並規劃穩定的工讀來源。';
+  } else {
+    rating = '🔴 高壓'; ratingClass = 'badge-red';
+    ratingDesc = '財務缺口偏大，強烈建議申請就學貸款、弱勢助學金，並提高工讀時數或選擇宿舍降低住宿成本。';
   }
 
-  function hideDropdown() {
-    schoolDropdown.style.display = 'none';
-  }
+  rs.style.display = 'flex'; es.style.display = 'none';
 
-  // ?? 銝餉?蝞???
-  function calculate() {
-    const idx = selectedSchoolIdx;
-    if (idx === null || idx === undefined) {
-      document.getElementById('result-section').classList.add('hidden');
-      document.getElementById('empty-state').classList.remove('hidden');
-      return;
-    }
+  const badge = document.getElementById('rating-badge');
+  badge.textContent = rating; badge.className = 'rating-badge ' + ratingClass;
+  document.getElementById('rating-desc').textContent = ratingDesc;
+  document.getElementById('pressure-pct').textContent = pPct + '%';
+  const bar = document.getElementById('pressure-bar');
+  bar.style.width = pPct + '%';
+  bar.style.background = pressure < 0.35 ? '#15803d' : pressure < 0.65 ? '#b45309' : '#dc2626';
 
-    const school    = SCHOOLS[idx];
-    const useDorm   = document.querySelector('input[name="dorm"]:checked').value === 'dorm';
-    const monthFood = Math.max(0, Number(document.getElementById('food-input').value) || 0);
-    const monthInc  = Math.max(0, Number(document.getElementById('income-input').value) || 0);
+  document.getElementById('wh-value').textContent = weeklyHours > 0 ? weeklyHours : '已打平';
 
-    // 雿挪鞎?
-    const housingYear = useDorm ? school.dormFee : school.avgRent * 10;
+  const fmt = n => Math.round(n).toLocaleString();
+  document.getElementById('s-tuition').textContent  = fmt(yearTuition);
+  document.getElementById('s-housing').textContent  = fmt(housingYear);
+  document.getElementById('s-food').textContent     = fmt(yearFood);
+  document.getElementById('s-misc').textContent     = fmt(yearMisc);
+  document.getElementById('s-net').textContent      = fmt(Math.max(0, yearNet));
+  document.getElementById('s-4y-total').textContent  = fmt(y4Total);
+  document.getElementById('s-4y-income').textContent = fmt(y4Income);
+  document.getElementById('s-4y-gap').textContent    = fmt(y4Gap);
 
-    // 摰輯??酉
-    const dormNote = document.getElementById('dorm-note');
-    if (useDorm) {
-      dormNote.textContent = `銝剔惜?? ${Math.round(school.dormRate * 100)}%嚗銝剔惜隞?蝘?嚗?蝘?${school.avgRent.toLocaleString()} ??`;
-    } else {
-      dormNote.textContent = `?∪?撟喳??? ${school.avgRent.toLocaleString()} ??隞?10 ??閮?`;
-    }
+  _lastSummary =
+    `【大學生存成本評估摘要】\n學校：${school.name}（${useDorm ? '住宿舍' : '租屋外住'}）\n` +
+    `一年學雜費：${fmt(yearTuition)} 元\n一年住宿費：${fmt(housingYear)} 元\n` +
+    `一年伙食費：${fmt(yearFood)} 元\n一年其他雜費：${fmt(yearMisc)} 元\n` +
+    `一年淨支出：${fmt(Math.max(0,yearNet))} 元\n四年總成本：${fmt(y4Total)} 元\n` +
+    `四年需自籌：${fmt(y4Gap)} 元\n財務壓力評級：${rating}\n` +
+    `損益平衡工讀時數：每週 ${weeklyHours > 0 ? weeklyHours + ' 小時' : '已打平'}`;
 
-    // 銝撟游???
-    const yearTuition = school.tuition;
-    const yearFood    = monthFood * 10;           // 10 ??摮豢?
-    const yearTotal   = yearTuition + housingYear + yearFood;
-    const yearIncome  = monthInc * 10;
-    const yearNet     = yearTotal - yearIncome - school.subsidy;
+  drawPie([
+    { label: '學雜費',   value: yearTuition, color: '#3b82d4' },
+    { label: '住宿費',   value: housingYear, color: '#1f2328' },
+    { label: '伙食費',   value: yearFood,    color: '#7c5cd8' },
+    { label: '其他雜費', value: yearMisc,    color: '#f59e0b' },
+  ]);
 
-    // ?僑
-    const y4Total  = yearTotal * 4;
-    const y4Income = yearIncome * 4;
-    const y4Gap    = Math.max(0, yearNet * 4);
+  document.getElementById('aid-list').innerHTML = school.aids.map(a => `
+    <div class="aid-item">
+      <div><div class="aid-name">${a.name}</div>
+      <div class="aid-amount">${a.amount > 0 ? '最高 ' + a.amount.toLocaleString() + ' 元／年' : '視個人情況核定'}</div></div>
+      <a href="${a.url}" target="_blank" rel="noopener noreferrer" class="aid-link">申請說明 →</a>
+    </div>`).join('');
+}
 
-    // 憯?? = 瘛冽??/ 蝮賣??穿?0~1嚗?
-    const pressure = Math.min(1, Math.max(0, yearNet / yearTotal));
-    const pPct     = Math.round(pressure * 100);
+function drawPie(slices) {
+  const svg = document.getElementById('pie-svg');
+  const legend = document.getElementById('pie-legend');
+  const R = 50, CX = 60, CY = 60;
+  const total = slices.reduce((s,d) => s + d.value, 0);
+  let paths = '<circle cx="60" cy="60" r="50" fill="#f7f8fa"/>';
+  let start = 0;
+  slices.forEach(sl => {
+    const angle = (sl.value / total) * 2 * Math.PI;
+    const x1 = CX + R * Math.cos(start), y1 = CY + R * Math.sin(start);
+    const x2 = CX + R * Math.cos(start + angle), y2 = CY + R * Math.sin(start + angle);
+    paths += `<path d="M${CX},${CY} L${x1},${y1} A${R},${R} 0 ${angle > Math.PI ? 1 : 0},1 ${x2},${y2} Z" fill="${sl.color}" opacity="0.9"/>`;
+    start += angle;
+  });
+  paths += '<circle cx="60" cy="60" r="28" fill="#fff"/>';
+  svg.innerHTML = paths;
+  legend.innerHTML = slices.map(sl =>
+    `<div class="pie-legend-item"><span class="pie-dot" style="background:${sl.color}"></span><span>${sl.label}（${Math.round(sl.value / total * 100)}%）</span></div>`
+  ).join('');
+}
 
-    // 閰?
-    let rating, ratingClass, ratingDesc;
-    if (pressure < 0.35) {
-      rating = '? 雿?'; ratingClass = 'badge-green';
-      ratingDesc = '鞎∪?蝻箏銝之嚗雁?極霈?嗅????抬????舫??拙??飛璆准?;
-    } else if (pressure < 0.65) {
-      rating = '? 銝剖?'; ratingClass = 'badge-yellow';
-      ratingDesc = '鞎∪???摰???撱箄降蝛扔?唾??拙飛?蒂閬?蝛拙??極霈靘???;
-    } else {
-      rating = '? 擃?'; ratingClass = 'badge-red';
-      ratingDesc = '鞎∪?蝻箏?之嚗撥?遣霅啁隢停摮貉硫甈整摹?Ｗ摮賊?嚗蒂??撌亥????挪??雿?摰踵??研?;
-    }
-
-    // ?? ?湔 DOM ??
-    document.getElementById('result-section').classList.remove('hidden');
-    document.getElementById('empty-state').classList.add('hidden');
-
-    // 閰?
-    const badge = document.getElementById('rating-badge');
-    badge.textContent = rating;
-    badge.className = `text-lg font-semibold px-6 py-3 border text-center shrink-0 ${ratingClass}`;
-    document.getElementById('rating-desc').textContent = ratingDesc;
-
-    // 憯?璇?
-    document.getElementById('pressure-pct').textContent = pPct + '%';
-    const bar = document.getElementById('pressure-bar');
-    bar.style.width = pPct + '%';
-    bar.style.background = pressure < 0.35 ? '#198038' : pressure < 0.65 ? '#b28600' : '#da1e28';
-
-    // ?詨?
-    const fmt = n => Math.round(n).toLocaleString();
-    document.getElementById('s-tuition').textContent = fmt(yearTuition);
-    document.getElementById('s-housing').textContent = fmt(housingYear);
-    document.getElementById('s-food').textContent    = fmt(yearFood);
-    document.getElementById('s-net').textContent     = fmt(Math.max(0, yearNet));
-    document.getElementById('s-4y-total').textContent  = fmt(y4Total);
-    document.getElementById('s-4y-income').textContent = fmt(y4Income);
-    document.getElementById('s-4y-gap').textContent    = fmt(y4Gap);
-
-    // ????
-    drawPie([
-      { label: '摮賊?鞎?, value: yearTuition, color: '#0f62fe' },
-      { label: '雿挪鞎?, value: housingYear, color: '#393939' },
-      { label: '隡?鞎?, value: yearFood,    color: '#8a3ffc' },
-    ]);
-
-    // 鋆皜
-    const aidList = document.getElementById('aid-list');
-    aidList.innerHTML = school.aids.map(a => `
-      <div class="flex items-start justify-between gap-3 pb-3 border-b border-hairline last:border-0 last:pb-0">
-        <div>
-          <p class="text-sm font-medium text-ink">${a.name}</p>
-          ${a.amount > 0 ? `<p class="text-xs text-ink-subtle mt-0.5">?擃?${a.amount.toLocaleString()} ??撟?/p>` : '<p class="text-xs text-ink-subtle mt-0.5">閬犖???詨?</p>'}
-        </div>
-        <a href="${a.url}" target="_blank" rel="noopener noreferrer"
-           class="text-xs text-primary shrink-0 border-b border-primary hover:text-primary-hover" style="letter-spacing:.16px;">
-          ?唾?隤芣? ??
-        </a>
-      </div>
-    `).join('');
-  }
-
-  // ?? ????蝝?SVG嚗??
-  function drawPie(slices) {
-    const svg    = document.getElementById('pie-svg');
-    const legend = document.getElementById('pie-legend');
-    const R = 50, CX = 60, CY = 60;
-    const total  = slices.reduce((s, d) => s + d.value, 0);
-
-    let paths = '<circle cx="60" cy="60" r="50" fill="#f4f4f4"/>';
-    let start = 0;
-    slices.forEach(sl => {
-      const pct   = sl.value / total;
-      const angle = pct * 2 * Math.PI;
-      const x1 = CX + R * Math.cos(start);
-      const y1 = CY + R * Math.sin(start);
-      const x2 = CX + R * Math.cos(start + angle);
-      const y2 = CY + R * Math.sin(start + angle);
-      const large = angle > Math.PI ? 1 : 0;
-      paths += `<path d="M${CX},${CY} L${x1},${y1} A${R},${R} 0 ${large},1 ${x2},${y2} Z" fill="${sl.color}" opacity="0.92"/>`;
-      start += angle;
-    });
-    // centre donut hole
-    paths += `<circle cx="60" cy="60" r="28" fill="#ffffff"/>`;
-    svg.innerHTML = paths;
-
-    legend.innerHTML = slices.map(sl => `
-      <div class="flex items-center gap-2">
-        <span class="pie-legend-dot" style="background:${sl.color}"></span>
-        <span>${sl.label}嚗?{Math.round(sl.value / total * 100)}%嚗?/span>
-      </div>
-    `).join('');
-  }
-
-  // ?? Init ??
-  </script>
+function copySummary() {
+  if (!_lastSummary) return;
+  navigator.clipboard.writeText(_lastSummary).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ 已複製'; btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11H2a1 1 0 01-1-1V2a1 1 0 011-1h8a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.5"/></svg> 複製摘要`;
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
 </body>
 </html>
