@@ -64,6 +64,27 @@
     /* Pie chart */
     #pie-svg { transform:rotate(-90deg); }
     .pie-legend-dot { width:10px; height:10px; border-radius:0; display:inline-block; }
+
+    /* Accordion */
+    .acc-item { border:1px solid #e0e0e0; margin-bottom:4px; }
+    .acc-btn {
+      width:100%; display:flex; align-items:center; justify-content:space-between;
+      padding:12px 16px; background:#ffffff; border:none; cursor:pointer;
+      font-family:inherit; font-size:14px; font-weight:600; color:#161616;
+      letter-spacing:.16px; text-align:left;
+    }
+    .acc-btn:hover { background:#f4f4f4; }
+    .acc-arrow { transition:transform .2s; font-size:10px; color:#525252; }
+    .acc-body { display:none; padding:0 16px 14px; background:#f4f4f4; }
+    .acc-body.open { display:block; }
+    .acc-item.open .acc-arrow { transform:rotate(180deg); }
+    .info-row { display:flex; gap:8px; margin-bottom:6px; font-size:13px; color:#161616; letter-spacing:.16px; line-height:1.5; }
+    .info-label { color:#525252; min-width:60px; flex-shrink:0; }
+    .step-list { margin:0; padding-left:18px; font-size:13px; color:#161616; letter-spacing:.16px; line-height:1.8; }
+    .tag-blue  { display:inline-block; background:#edf5ff; color:#0043ce; border:1px solid #d0e2ff; font-size:11px; padding:2px 7px; }
+    .tag-green { display:inline-block; background:#defbe6; color:#198038; border:1px solid #a7f0ba; font-size:11px; padding:2px 7px; }
+    .ext-link  { font-size:12px; color:#0f62fe; border-bottom:1px solid #0f62fe; text-decoration:none; letter-spacing:.16px; }
+    .ext-link:hover { color:#0353e9; }
   </style>
 </head>
 <body>
@@ -208,7 +229,7 @@
         <!-- 弱勢補助 -->
         <div class="card p-6">
           <h3 class="text-sm font-semibold text-ink mb-4">可申請的弱勢補助</h3>
-          <div id="aid-list" class="flex flex-col gap-3"></div>
+          <div id="aid-list" class="flex flex-col gap-2"></div>
         </div>
       </div>
 
@@ -266,134 +287,252 @@
   //   subsidy      學校弱勢補助年金額（元，保守估計）
   //   aids         可申請補助清單 [{name, amount, url}]
   // ══════════════════════════════════════════════════════════════════
-  // 共用補助（每所學校都有）
-  const GOV_AID = [
-    { name: '教育部弱勢助學金', amount: 36000, url: 'https://www.edu.tw/News.aspx?n=829446EED325AD02' },
-    { name: '就學貸款（無息）',  amount: 0,     url: 'https://heloan.moe.edu.tw/' },
-  ];
+  // 就學貸款統一入口（教育部官方，已確認可開啟）
+  const LOAN_URL = 'https://www.edu.tw/News.aspx?n=0217161130F0B192';
+  // 教育部弱勢助學金統一入口
+  const AID_URL  = 'https://www.edu.tw/News.aspx?n=829446EED325AD02';
+
+  // 共用搜尋提示
+  const LOAN_HINT = '開啟後搜尋「就學貸款」或「學雜費減免貸款」';
+  const AID_HINT  = '開啟後搜尋「大專校院弱勢學生助學計畫」';
 
   const SCHOOLS = [
     // ── 台北 ──
     {
       name: '國立臺灣大學',
       tuition: 53000, dormFee: 28000, dormRate: 0.55, avgRent: 10000, subsidy: 30000,
-      aids: [{ name: '臺大弱勢助學金', amount: 40000, url: 'https://osa.ntu.edu.tw/scholarship' }, ...GOV_AID],
+      osa: { tel: '02-3366-2388', addr: '台北市大安區羅斯福路四段1號（行政大樓）', url: 'https://osa.ntu.edu.tw' },
+      aids: [
+        { name: '臺大弱勢助學金',   amount: 40000, url: 'https://osa.ntu.edu.tw/scholarship' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '國立臺灣師範大學',
       tuition: 50000, dormFee: 26000, dormRate: 0.50, avgRent: 10000, subsidy: 25000,
-      aids: [{ name: '師大急難救助金', amount: 20000, url: 'https://osa.ntnu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '02-7749-5963', addr: '台北市大安區和平東路一段162號（進修推廣學院）', url: 'https://www.ntnu.edu.tw/osa/' },
+      aids: [
+        { name: '師大急難救助金',   amount: 20000, url: 'https://www.ntnu.edu.tw/osa/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '國立臺灣科技大學',
       tuition: 52000, dormFee: 27000, dormRate: 0.52, avgRent: 10000, subsidy: 25000,
-      aids: [{ name: '臺科大助學金', amount: 25000, url: 'https://osa.ntust.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '02-2733-3141 #7001', addr: '台北市大安區基隆路四段43號', url: 'https://www.ntust.edu.tw/osa/' },
+      aids: [
+        { name: '臺科大助學金',     amount: 25000, url: 'https://www.ntust.edu.tw/osa/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '國立政治大學',
       tuition: 51000, dormFee: 26000, dormRate: 0.53, avgRent: 9500, subsidy: 26000,
-      aids: [{ name: '政大弱勢助學金', amount: 30000, url: 'https://osa.nccu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '02-2938-7066', addr: '台北市文山區指南路二段64號', url: 'https://osa.nccu.edu.tw' },
+      aids: [
+        { name: '政大弱勢助學金',   amount: 30000, url: 'https://osa.nccu.edu.tw/p/412-1008-2516.php' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '私立淡江大學',
       tuition: 92000, dormFee: 30000, dormRate: 0.42, avgRent: 7000, subsidy: 18000,
-      aids: [{ name: '淡江助學獎學金', amount: 20000, url: 'https://osa.tku.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '02-2621-5656 #2391', addr: '新北市淡水區英專路151號', url: 'https://www.tku.edu.tw/osa/' },
+      aids: [
+        { name: '淡江助學獎學金',   amount: 20000, url: 'https://www.tku.edu.tw/osa/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '私立輔仁大學',
       tuition: 95000, dormFee: 32000, dormRate: 0.45, avgRent: 8000, subsidy: 20000,
-      aids: [{ name: '輔大弱勢助學獎學金', amount: 30000, url: 'https://dosa.fju.edu.tw/scholarship.php' }, ...GOV_AID],
+      osa: { tel: '02-2905-2016', addr: '新北市新莊區中正路510號', url: 'https://dosa.fju.edu.tw' },
+      aids: [
+        { name: '輔大弱勢助學獎學金', amount: 30000, url: 'https://dosa.fju.edu.tw/scholarship.php' },
+        { name: '教育部弱勢助學金',   amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）',   amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '私立東吳大學',
       tuition: 90000, dormFee: 30000, dormRate: 0.40, avgRent: 9500, subsidy: 18000,
-      aids: [{ name: '東吳急難助學金', amount: 20000, url: 'https://www.scu.edu.tw/osa/' }, ...GOV_AID],
+      osa: { tel: '02-2311-1531 #2311', addr: '台北市中正區貴陽街一段56號', url: 'https://www.scu.edu.tw/osa/' },
+      aids: [
+        { name: '東吳急難助學金',   amount: 20000, url: 'https://www.scu.edu.tw/osa/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '私立中國文化大學',
       tuition: 93000, dormFee: 31000, dormRate: 0.38, avgRent: 9000, subsidy: 17000,
-      aids: [{ name: '文大弱勢助學金', amount: 18000, url: 'https://osa.pccu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '02-2861-0511 #31101', addr: '台北市士林區華岡路55號', url: 'https://www.pccu.edu.tw/osa/' },
+      aids: [
+        { name: '文大弱勢助學金',   amount: 18000, url: 'https://www.pccu.edu.tw/osa/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     // ── 桃竹 ──
     {
       name: '國立中央大學',
       tuition: 50000, dormFee: 24000, dormRate: 0.60, avgRent: 7000, subsidy: 25000,
-      aids: [{ name: '中央大學急難助學', amount: 20000, url: 'https://osa.ncu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '03-422-7151 #57007', addr: '桃園市中壢區中大路300號', url: 'https://osa.ncu.edu.tw' },
+      aids: [
+        { name: '中央大學急難助學', amount: 20000, url: 'https://osa.ncu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
-      name: '國立交通大學（陽明交大）',
+      name: '國立陽明交通大學',
       tuition: 52000, dormFee: 25000, dormRate: 0.58, avgRent: 7500, subsidy: 26000,
-      aids: [{ name: '陽明交大助學金', amount: 28000, url: 'https://osa.nycu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '03-571-2121 #31700', addr: '新竹市大學路1001號（光復校區）', url: 'https://osa.nycu.edu.tw' },
+      aids: [
+        { name: '陽明交大助學金',   amount: 28000, url: 'https://osa.nycu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '國立清華大學',
       tuition: 53000, dormFee: 26000, dormRate: 0.60, avgRent: 7500, subsidy: 27000,
-      aids: [{ name: '清大弱勢助學金', amount: 30000, url: 'https://osa.nthu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '03-571-5131 #33001', addr: '新竹市光復路二段101號', url: 'https://osa.nthu.edu.tw' },
+      aids: [
+        { name: '清大弱勢助學金',   amount: 30000, url: 'https://osa.nthu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     // ── 台中 ──
     {
       name: '國立中興大學',
       tuition: 48000, dormFee: 22000, dormRate: 0.70, avgRent: 6500, subsidy: 25000,
-      aids: [{ name: '興大急難救助金', amount: 20000, url: 'https://osa.nchu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '04-2284-0291 #18101', addr: '台中市南區國光路250號', url: 'https://osa.nchu.edu.tw' },
+      aids: [
+        { name: '興大急難救助金',   amount: 20000, url: 'https://osa.nchu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '私立逢甲大學',
       tuition: 92000, dormFee: 28000, dormRate: 0.43, avgRent: 6500, subsidy: 17000,
-      aids: [{ name: '逢甲助學獎學金', amount: 18000, url: 'https://osa.fcu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '04-2451-7250 #5701', addr: '台中市西屯區文華路100號', url: 'https://osa.fcu.edu.tw' },
+      aids: [
+        { name: '逢甲助學獎學金',   amount: 18000, url: 'https://osa.fcu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '私立東海大學',
       tuition: 90000, dormFee: 27000, dormRate: 0.45, avgRent: 6000, subsidy: 16000,
-      aids: [{ name: '東海急難助學金', amount: 15000, url: 'https://osa.thu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '04-2359-0121 #31107', addr: '台中市西屯區臺灣大道四段1727號', url: 'https://osa.thu.edu.tw' },
+      aids: [
+        { name: '東海急難助學金',   amount: 15000, url: 'https://osa.thu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     // ── 台南 ──
     {
       name: '國立成功大學',
       tuition: 50000, dormFee: 24000, dormRate: 0.65, avgRent: 7000, subsidy: 28000,
-      aids: [{ name: '成大弱勢助學計畫', amount: 35000, url: 'https://www.ncku.edu.tw/p/412-1000-13707.php' }, ...GOV_AID],
+      osa: { tel: '06-275-7575 #50110', addr: '台南市東區大學路1號', url: 'https://osa.ncku.edu.tw' },
+      aids: [
+        { name: '成大弱勢助學計畫', amount: 35000, url: 'https://www.ncku.edu.tw/p/412-1000-13707.php' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '國立臺南大學',
       tuition: 44000, dormFee: 20000, dormRate: 0.72, avgRent: 5500, subsidy: 22000,
-      aids: [{ name: '南大助學金', amount: 20000, url: 'https://osa.nutn.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '06-260-6123 #7701', addr: '台南市中西區樹林街二段33號', url: 'https://osa.nutn.edu.tw' },
+      aids: [
+        { name: '南大助學金',       amount: 20000, url: 'https://osa.nutn.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     // ── 高雄 ──
     {
       name: '國立中山大學',
       tuition: 50000, dormFee: 23000, dormRate: 0.65, avgRent: 6500, subsidy: 26000,
-      aids: [{ name: '中山大學助學金', amount: 28000, url: 'https://osa.nsysu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '07-525-2000 #2001', addr: '高雄市鼓山區蓮海路70號', url: 'https://osa.nsysu.edu.tw' },
+      aids: [
+        { name: '中山大學助學金',   amount: 28000, url: 'https://osa.nsysu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '國立高雄大學',
       tuition: 45000, dormFee: 20000, dormRate: 0.73, avgRent: 5500, subsidy: 22000,
-      aids: [{ name: '高大弱勢助學金', amount: 20000, url: 'https://osa.nuk.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '07-591-9083', addr: '高雄市楠梓區高雄大學路700號', url: 'https://osa.nuk.edu.tw' },
+      aids: [
+        { name: '高大弱勢助學金',   amount: 20000, url: 'https://osa.nuk.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '私立義守大學',
       tuition: 88000, dormFee: 26000, dormRate: 0.48, avgRent: 5500, subsidy: 15000,
-      aids: [{ name: '義守助學獎學金', amount: 15000, url: 'https://osa.isu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '07-657-7711 #2001', addr: '高雄市大樹區學城路一段1號', url: 'https://osa.isu.edu.tw' },
+      aids: [
+        { name: '義守助學獎學金',   amount: 15000, url: 'https://osa.isu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     // ── 東部 ──
     {
       name: '國立東華大學',
       tuition: 44000, dormFee: 18000, dormRate: 0.82, avgRent: 4500, subsidy: 23000,
-      aids: [{ name: '東華弱勢助學金', amount: 22000, url: 'https://osa.ndhu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '03-863-5000 #2001', addr: '花蓮縣壽豐鄉志學村大學路二段1號', url: 'https://osa.ndhu.edu.tw' },
+      aids: [
+        { name: '東華弱勢助學金',   amount: 22000, url: 'https://osa.ndhu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '國立臺東大學',
       tuition: 43000, dormFee: 17000, dormRate: 0.85, avgRent: 4000, subsidy: 22000,
-      aids: [{ name: '臺東大學助學金', amount: 20000, url: 'https://osa.nttu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '089-518-513 #1501', addr: '台東市大學路二段369號', url: 'https://osa.nttu.edu.tw' },
+      aids: [
+        { name: '臺東大學助學金',   amount: 20000, url: 'https://osa.nttu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     // ── 南部偏鄉 ──
     {
       name: '國立屏東大學',
       tuition: 44000, dormFee: 18000, dormRate: 0.80, avgRent: 5000, subsidy: 22000,
-      aids: [{ name: '屏大弱勢助學', amount: 25000, url: 'https://www.nptu.edu.tw/p/412-1003-6380.php' }, ...GOV_AID],
+      osa: { tel: '08-722-6141 #33101', addr: '屏東市民生路4-18號', url: 'https://www.nptu.edu.tw' },
+      aids: [
+        { name: '屏大弱勢助學',     amount: 25000, url: 'https://www.nptu.edu.tw/p/412-1003-6380.php' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
     {
       name: '國立嘉義大學',
       tuition: 44000, dormFee: 19000, dormRate: 0.78, avgRent: 5000, subsidy: 22000,
-      aids: [{ name: '嘉大助學金', amount: 20000, url: 'https://osa.ncyu.edu.tw/' }, ...GOV_AID],
+      osa: { tel: '05-271-7000 #31001', addr: '嘉義市學府路300號', url: 'https://osa.ncyu.edu.tw' },
+      aids: [
+        { name: '嘉大助學金',       amount: 20000, url: 'https://osa.ncyu.edu.tw/' },
+        { name: '教育部弱勢助學金', amount: 36000, url: AID_URL,  hint: AID_HINT },
+        { name: '就學貸款（無息）', amount: 0,     url: LOAN_URL, hint: LOAN_HINT },
+      ],
     },
   ];
 
@@ -503,20 +642,126 @@
       { label: '伙食費', value: yearFood,    color: '#8a3ffc' },
     ]);
 
-    // 補助清單
+    // 補助清單（手風琴，資訊直接內嵌）
     const aidList = document.getElementById('aid-list');
-    aidList.innerHTML = school.aids.map(a => `
-      <div class="flex items-start justify-between gap-3 pb-3 border-b border-hairline last:border-0 last:pb-0">
-        <div>
-          <p class="text-sm font-medium text-ink">${a.name}</p>
-          ${a.amount > 0 ? `<p class="text-xs text-ink-subtle mt-0.5">最高 ${a.amount.toLocaleString()} 元/年</p>` : '<p class="text-xs text-ink-subtle mt-0.5">視個人情況核定</p>'}
+    aidList.innerHTML = school.aids.map((a, i) => renderAid(a, i, school.osa)).join('');
+    // 手風琴切換
+    document.querySelectorAll('.acc-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const body = item.querySelector('.acc-body');
+        const isOpen = item.classList.contains('open');
+        item.classList.toggle('open', !isOpen);
+        body.classList.toggle('open', !isOpen);
+      });
+    });
+  }
+
+  // ── 各補助項目的內嵌說明 ──
+  const AID_DETAIL = {
+    '就學貸款（無息）': {
+      tags: ['無息貸款', '在校申請'],
+      rows: [
+        { label: '貸款對象', value: '全體在學學生，不限家庭收入，需就讀公私立大專院校' },
+        { label: '貸款金額', value: '學雜費全額 + 生活費（上限每學期約 6,500 元）' },
+        { label: '利息', value: '就學期間完全免息，畢業後一年開始還款' },
+        { label: '還款期限', value: '最長 15 年，依貸款金額調整' },
+      ],
+      steps: [
+        '開學前至學校學務處（生輔組）索取申請表',
+        '備妥：身分證、學生證、存摺封面（本人帳戶）',
+        '填寫申請書，由學校統一送件至銀行',
+        '核撥後款項直接匯入學校帳戶（扣抵學費）',
+      ],
+      note: '每學期皆需重新申請，截止日通常為開學後 2 週內，請注意學校公告。',
+    },
+    '教育部弱勢助學金': {
+      tags: ['最高 36,000 元/年', '需財力審查'],
+      rows: [
+        { label: '申請資格', value: '家庭年收入 148 萬元以下，就讀公私立大專院校' },
+        { label: '金額', value: '低收入戶：每學期 18,000 元；中低收入戶：每學期 9,000 元；一般弱勢：每學期 4,500 元' },
+        { label: '名額', value: '無名額限制，符合資格即可核發' },
+        { label: '發放時間', value: '每學期一次，通常於學期中核撥' },
+      ],
+      steps: [
+        '至學校學務處（生輔組）索取「大專校院弱勢學生助學計畫」申請表',
+        '備妥：低收入/中低收入戶證明 或 最近一年家庭綜合所得稅申報資料',
+        '填寫申請書並附上家庭成員資料',
+        '學校審核後送教育部複審，通常 1–2 個月後核撥',
+      ],
+      note: '每學年皆需重新申請。已申請就學貸款者仍可同時申請本補助，兩者不衝突。',
+    },
+    '大專校院弱勢學生助學計畫': {
+      tags: ['最高 36,000 元/年', '需財力審查'],
+      rows: [
+        { label: '申請資格', value: '家庭年收入 148 萬元以下，就讀公私立大專院校' },
+        { label: '金額', value: '依家庭收入分三級：18,000 / 9,000 / 4,500 元（每學期）' },
+        { label: '名額', value: '無名額限制，符合資格即可核發' },
+      ],
+      steps: [
+        '至學校學務處索取申請表或線上申請',
+        '備妥所得證明文件',
+        '繳交申請書，等待學校及教育部審核',
+      ],
+      note: '與就學貸款可同時申請。',
+    },
+  };
+
+  function renderAid(a, i, osa) {
+    const detail = AID_DETAIL[a.name];
+    const id = `acc-${i}`;
+    if (!detail) {
+      // 各校專屬助學金：簡單一列 + 外部連結
+      return `
+        <div class="acc-item">
+          <button class="acc-btn" aria-expanded="false" aria-controls="${id}">
+            <span class="flex items-center gap-2">
+              <span>${a.name}</span>
+              ${a.amount > 0 ? `<span class="tag-blue">最高 ${a.amount.toLocaleString()} 元/年</span>` : ''}
+            </span>
+            <span class="acc-arrow">▼</span>
+          </button>
+          <div class="acc-body" id="${id}">
+            <p class="text-xs text-ink-muted mb-3" style="letter-spacing:.16px;">此為各校自行辦理的補助，詳細辦法依學校公告為準。</p>
+            <a href="${a.url}" target="_blank" rel="noopener noreferrer" class="ext-link">前往學校學務處查看詳情 →</a>
+          </div>
+        </div>`;
+    }
+    // 有內嵌說明的補助
+    return `
+      <div class="acc-item">
+        <button class="acc-btn" aria-expanded="false" aria-controls="${id}">
+          <span class="flex items-center gap-2 flex-wrap gap-y-1">
+            <span>${a.name}</span>
+            ${detail.tags.map(t => `<span class="tag-green">${t}</span>`).join('')}
+          </span>
+          <span class="acc-arrow">▼</span>
+        </button>
+        <div class="acc-body" id="${id}">
+          <!-- 基本資訊 -->
+          <div class="mb-3 mt-1">
+            ${detail.rows.map(r => `
+              <div class="info-row">
+                <span class="info-label">${r.label}</span>
+                <span>${r.value}</span>
+              </div>`).join('')}
+          </div>
+          <!-- 申請步驟 -->
+          <p class="text-xs font-semibold text-ink mb-1" style="letter-spacing:.16px;">申請步驟</p>
+          <ol class="step-list mb-3">
+            ${detail.steps.map(s => `<li>${s}</li>`).join('')}
+          </ol>
+          <!-- 注意事項 -->
+          <p class="text-xs" style="color:#b28600;letter-spacing:.16px;line-height:1.6;">⚠️ ${detail.note}</p>
+          ${(a.name === '就學貸款（無息）' || a.name === '教育部弱勢助學金') && osa
+            ? '<div class="mt-3 pt-3 border-t border-s2">'
+              + '<p class="text-xs font-semibold text-ink mb-1" style="letter-spacing:.16px;">📍 本校學務處洽辦窗口　<a href="' + osa.url + '" target="_blank" rel="noopener noreferrer" class="ext-link">前往學務處網站 →</a></p>'
+              + '<div class="info-row"><span class="info-label">電話</span><span>' + osa.tel + '</span></div>'
+              + '<div class="info-row"><span class="info-label">地址</span><span>' + osa.addr + '</span></div>'
+              + '</div>'
+            : ''}
         </div>
-        <a href="${a.url}" target="_blank" rel="noopener noreferrer"
-           class="text-xs text-primary shrink-0 border-b border-primary hover:text-primary-hover" style="letter-spacing:.16px;">
-          申請說明 →
-        </a>
-      </div>
-    `).join('');
+      </div>`;
   }
 
   // ── 圓餅圖（純 SVG）──
