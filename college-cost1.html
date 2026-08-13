@@ -967,34 +967,84 @@ const SCHOOLS = [
     aids: AIDS_PRI('https://osa.tccn.edu.tw/') },
 ];
 
-// 蝮??憿舐內??
+// 縣市排序（供下拉搜尋用）
 const CITY_ORDER = [
-  '?啣?撣?,'?啣?撣?,'?粹?撣?,'獢?撣?,'?啁姘撣?,'??蝮?,
-  '?唬葉撣?,'敶啣?蝮?,'??蝮?,'?脫?蝮?,
-  '?儔蝮?,'?啣?撣?,'擃?撣?,'撅蝮?,
-  '摰蝮?,'?梯蝮?,'?唳蝮?,'瞉?蝮?,'??蝮?,
+  '台北市', '新北市', '基隆市', '桃園市', '新竹市', '新竹縣',
+  '苗栗縣', '台中市', '彰化縣', '南投縣', '雲林縣',
+  '嘉義市', '嘉義縣', '台南市', '高雄市', '屏東縣',
+  '宜蘭縣', '花蓮縣', '台東縣', '澎湖縣', '金門縣',
 ];
 
-// ????殷?靘腦撣?optgroup ??嚗?const sel = document.getElementById('school-select');
+// 目前選中的學校 index
+let selectedSchoolIdx = null;
+
+// 建立縣市分組索引
 const cityMap = {};
 SCHOOLS.forEach((s, i) => { (cityMap[s.city] = cityMap[s.city] || []).push({ s, i }); });
-CITY_ORDER.forEach(city => {
-  if (!cityMap[city]) return;
-  const grp = document.createElement('optgroup');
-  grp.label = city;
-  cityMap[city].forEach(({ s, i }) => {
-    const opt = document.createElement('option');
-    opt.value = i; opt.textContent = s.name;
-    grp.appendChild(opt);
-  });
-  sel.appendChild(grp);
-});
 
-// ??摮豢??啣挪?????sel.addEventListener('change', function () {
-  const idx = this.value;
-  if (idx === '') return;
-  updateDormUI(SCHOOLS[idx]);
-});
+function filterSchools() {
+  const input    = document.getElementById('school-input');
+  const dropdown = document.getElementById('school-dropdown');
+  const q        = input.value.trim();
+  let filtered;
+  if (q === '') {
+    filtered = null;
+  } else {
+    filtered = SCHOOLS.map((s, i) => ({ s, i })).filter(({ s }) =>
+      s.name.includes(q) || s.city.includes(q)
+    );
+  }
+  dropdown.innerHTML = '';
+  if (filtered !== null && filtered.length === 0) {
+    const div = document.createElement('div');
+    div.style.cssText = 'padding:10px 14px;font-size:13px;color:#8d8d8d;';
+    div.textContent = '找不到符合的學校';
+    dropdown.appendChild(div);
+    dropdown.style.display = 'block';
+    return;
+  }
+  const orderedCities = filtered
+    ? [...new Set(filtered.map(({ s }) => s.city))]
+        .sort((a, b) => {
+          const ai = CITY_ORDER.indexOf(a), bi = CITY_ORDER.indexOf(b);
+          return (ai === -1 ? 999 : ai) - (bi === -1 ? 999 : bi);
+        })
+    : CITY_ORDER.filter(c => cityMap[c]);
+  orderedCities.forEach(city => {
+    const items = filtered
+      ? filtered.filter(({ s }) => s.city === city)
+      : (cityMap[city] || []);
+    if (!items.length) return;
+    const header = document.createElement('div');
+    header.style.cssText = 'padding:5px 14px 3px;font-size:11px;font-weight:700;color:#8d8d8d;background:#f4f4f4;letter-spacing:.06em;border-top:1px solid #e0e0e0;';
+    header.textContent = '\u2500\u2500 ' + city + ' \u2500\u2500';
+    dropdown.appendChild(header);
+    items.forEach(({ s, i }) => {
+      const div = document.createElement('div');
+      div.style.cssText = 'padding:9px 14px;font-size:14px;color:#161616;cursor:pointer;';
+      div.textContent = s.name;
+      div.onmousedown = () => selectSchool(i);
+      div.onmouseover = () => { div.style.background = '#edf4ff'; };
+      div.onmouseout  = () => { div.style.background = ''; };
+      dropdown.appendChild(div);
+    });
+  });
+  dropdown.style.display = 'block';
+}
+
+function selectSchool(idx) {
+  selectedSchoolIdx = idx;
+  const school = SCHOOLS[idx];
+  document.getElementById('school-input').value = school.name;
+  document.getElementById('school-chosen').textContent = '\u2714 已選擇：' + school.name + '（' + school.city + '）';
+  hideDropdown();
+  updateDormUI(school);
+  calculate();
+}
+
+function hideDropdown() {
+  document.getElementById('school-dropdown').style.display = 'none';
+}
 
 function updateDormUI(school) {
   const dormRadio      = document.querySelector('input[name="dorm"][value="dorm"]');
@@ -1002,7 +1052,8 @@ function updateDormUI(school) {
   const rentSliderWrap = document.getElementById('rent-slider-wrap');
   const rentSlider     = document.getElementById('rent-slider');
 
-  // 撣嗅甇斗?身????  rentSlider.value = school.avgRent;
+  // 帶入此校預設租金
+  rentSlider.value = school.avgRent;
 
   if (!school.hasDorm) {
     dormRadio.disabled = true;
@@ -1060,7 +1111,8 @@ function calculate() {
   schoolLink.href = school.url;
   schoolLink.style.display = 'inline-flex';
 
-  // 雿挪鞎餉?蝞?  const monthRent = Number(document.getElementById('rent-slider').value);
+  // 住宿費（元）
+  const monthRent = Number(document.getElementById('rent-slider').value);
   let housingYear, dormNoteText;
   if (useDorm && school.hasDorm) {
     const dt    = school.dormTypes[0];
