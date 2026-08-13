@@ -1,0 +1,1213 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>憭批飛???閰摯</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { plex: ['"IBM Plex Sans"','Helvetica Neue','Arial','sans-serif'] },
+        colors: {
+          primary: '#0f62fe', 'primary-hover': '#0353e9',
+          ink: '#161616', 'ink-muted': '#525252', 'ink-subtle': '#8d8d8d',
+          s1: '#f4f4f4', hairline: '#e0e0e0',
+          'c-green': '#198038', 'c-green-bg': '#defbe6', 'c-green-border': '#a7f0ba',
+          'c-yellow': '#b28600', 'c-yellow-bg': '#fdf6dd', 'c-yellow-border': '#f5cc00',
+          'c-red': '#da1e28', 'c-red-bg': '#fff1f1', 'c-red-border': '#ffb3b8',
+        }
+      }
+    }
+  }
+</script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'IBM Plex Sans','Helvetica Neue',Arial,sans-serif; letter-spacing:.16px; background:#f4f4f4; color:#161616; }
+
+  /* Carbon select */
+  .c-select {
+    width:100%; background:#ffffff; border:none; border-bottom:2px solid #8d8d8d;
+    padding:13px 40px 13px 16px; font-family:inherit; font-size:14px; color:#161616;
+    letter-spacing:.16px; outline:none; border-radius:0; appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M8 10L3 5h10z' fill='%23161616'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 12px center; cursor:pointer;
+  }
+  .c-select:focus { border-bottom-color:#0f62fe; outline:2px solid #0f62fe; outline-offset:-2px; }
+
+  /* Carbon number input */
+  .c-number {
+    background:#ffffff; border:none; border-bottom:2px solid #8d8d8d;
+    padding:11px 16px; font-family:inherit; font-size:14px; color:#161616;
+    letter-spacing:.16px; outline:none; border-radius:0; width:140px;
+  }
+  .c-number:focus { border-bottom-color:#0f62fe; outline:2px solid #0f62fe; outline-offset:-2px; }
+
+  /* Carbon range */
+  .c-range { width:100%; accent-color:#0f62fe; height:4px; cursor:pointer; }
+
+  /* Carbon card */
+  .c-card { background:#ffffff; border:1px solid #e0e0e0; }
+
+  /* Stat tile */
+  .stat-tile { background:#f4f4f4; border:1px solid #e0e0e0; padding:16px 20px; }
+
+  /* Rating badge */
+  .badge-green  { background:#defbe6; color:#198038; border:1px solid #a7f0ba; }
+  .badge-yellow { background:#fdf6dd; color:#b28600; border:1px solid #f5cc00; }
+  .badge-red    { background:#fff1f1; color:#da1e28; border:1px solid #ffb3b8; }
+
+  /* Progress bar */
+  .bar-track { background:#e0e0e0; height:8px; width:100%; }
+  .bar-fill  { height:8px; transition:width .35s ease; }
+
+  /* Pie */
+  #pie-svg { transform:rotate(-90deg); }
+  .pie-dot { width:10px; height:10px; display:inline-block; flex-shrink:0; }
+
+  /* Aid item */
+  .aid-item { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid #e0e0e0; }
+  .aid-item:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+
+  /* Tool card */
+  .tool-card { border:1px solid #e0e0e0; padding:12px 14px; text-decoration:none; color:#161616; background:#f4f4f4; display:flex; flex-direction:column; gap:3px; transition:border-color .15s,background .15s; }
+  .tool-card:hover { border-color:#0f62fe; background:#edf4ff; }
+  .tool-card .tc-name { font-size:12px; font-weight:600; color:#161616; }
+  .tool-card .tc-type { font-size:11px; color:#525252; }
+  .tool-card .tc-url  { font-size:11px; color:#0f62fe; }
+
+  /* Tools grid */
+  .tools-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+  @media(max-width:560px){ .tools-grid{ grid-template-columns:1fr 1fr; } }
+
+  /* Work hours */
+  .wh-box { background:#edf4ff; border-left:4px solid #0f62fe; padding:16px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+
+  /* Fade in */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .fade-up { animation:fadeUp .2s ease both; }
+
+  /* Stat grid */
+  .stat-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:#e0e0e0; border:1px solid #e0e0e0; }
+  @media(max-width:600px){ .stat-grid{ grid-template-columns:1fr 1fr; } }
+
+  /* Two col */
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:560px){ .two-col{ grid-template-columns:1fr; } }
+
+  /* Y4 grid */
+  .y4-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#e0e0e0; border:1px solid #e0e0e0; }
+  @media(max-width:560px){ .y4-grid{ grid-template-columns:1fr; } }
+
+  /* Copy button */
+  .btn-copy { display:inline-flex; align-items:center; gap:6px; background:#f4f4f4; border:1px solid #e0e0e0; padding:8px 16px; font-size:13px; font-family:inherit; color:#525252; cursor:pointer; letter-spacing:.16px; transition:border-color .15s,color .15s; }
+  .btn-copy:hover { border-color:#0f62fe; color:#0f62fe; }
+  .btn-copy.copied { border-color:#198038; color:#198038; }
+
+  /* School link */
+  .school-link { display:inline-flex; align-items:center; gap:4px; font-size:12px; color:#0f62fe; text-decoration:none; border-bottom:1px solid #0f62fe; margin-top:8px; }
+  .school-link:hover { color:#0353e9; border-color:#0353e9; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="bg-white border-b border-hairline sticky top-0 z-50">
+  <div class="max-w-4xl mx-auto px-4 h-12 flex items-center gap-3">
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M10 2L2 7v11h6v-5h4v5h6V7z" fill="#0f62fe"/>
+    </svg>
+    <span class="font-semibold text-ink text-sm">憭批飛???閰摯</span>
+    <span class="ml-auto text-xs text-ink-subtle hidden sm:inline">College Survival Cost Calculator</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="bg-white border-b border-hairline">
+  <div class="max-w-4xl mx-auto px-4 py-8 sm:py-10">
+    <p class="text-xs text-primary font-semibold mb-2 uppercase" style="letter-spacing:.08em;">?祥撌亙 繚 鞈???</p>
+    <h1 class="text-3xl sm:text-4xl font-light text-ink mb-3" style="letter-spacing:-0.2px;">銝之摮賂?雿??末鈭?嚗?/h1>
+    <p class="text-sm text-ink-muted max-w-xl" style="line-height:1.6;">
+      ?豢?摮豢?身摰??極霈?嗅??鞎鳴?蝟餌絞?芸?閮??僑鞎∪?憯?嚗鼠雿??箸憟賜??飛瘙箇???    </p>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="max-w-4xl mx-auto px-4 py-6 flex flex-col gap-5">
+
+  <!-- ??頛詨? -->
+  <div class="c-card p-6 fade-up">
+    <h2 class="text-sm font-semibold text-ink mb-5 uppercase" style="letter-spacing:.08em;">???豢?摮豢??亥身摰?/h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
+      <div style="position:relative;">
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="school-input">選擇大學</label>
+        <input type="text" id="school-input" autocomplete="off" placeholder="輸入學校名稱搜尋…"
+          oninput="filterSchools()" onfocus="filterSchools()" onblur="setTimeout(hideDropdown,180)"
+          style="width:100%;border:none;border-bottom:2px solid #8d8d8d;background:#f4f4f4;padding:11px 0 8px;font-size:14px;color:#161616;font-family:inherit;outline:none;"
+          onfocus="this.style.borderBottomColor='#0f62fe'" onblur="this.style.borderBottomColor='#8d8d8d'" />
+        <div id="school-dropdown"
+          style="display:none;position:absolute;z-index:100;left:0;right:0;top:100%;max-height:240px;overflow-y:auto;background:#fff;border:1px solid #e0e0e0;border-top:none;box-shadow:0 4px 12px rgba(0,0,0,.1);"></div>
+        <p id="school-chosen" class="text-xs text-primary mt-1" style="min-height:1.2em;"></p>
+        <a id="school-website" class="school-link" href="#" target="_blank" rel="noopener noreferrer" style="display:none;">↗ 前往學校官網</a>
+      </div>
+
+      <div>
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;">雿挪?孵?</label>
+        <div class="flex gap-5 mt-1">
+          <label id="label-dorm" class="flex items-center gap-2 cursor-pointer text-sm text-ink">
+            <input type="radio" name="dorm" value="dorm" checked onchange="calculate()" style="accent-color:#0f62fe;" /> 雿挪??          </label>
+          <label class="flex items-center gap-2 cursor-pointer text-sm text-ink">
+            <input type="radio" name="dorm" value="rent" onchange="calculate()" style="accent-color:#0f62fe;" /> 蝘?憭?
+          </label>
+        </div>
+        <div id="rent-slider-wrap" style="margin-top:10px; display:none;">
+          <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="rent-input">??????</label>
+          <input type="number" id="rent-slider" class="c-number" min="0" step="500" value="8000" oninput="calculate()" />
+        </div>
+        <p id="dorm-note" class="text-xs text-ink-subtle mt-2"></p>
+      </div>
+
+      <div>
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="food-input">每月伙食費（元）</label>
+        <input type="number" id="food-input" min="0" step="100" value="5000" oninput="calculate()"
+          style="width:100%;border:none;border-bottom:2px solid #8d8d8d;background:#f4f4f4;padding:11px 0 8px;font-size:14px;color:#161616;font-family:inherit;outline:none;" />
+      </div>
+
+      <div>
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="income-input">每月工讀收入（元）</label>
+        <input type="number" id="income-input" min="0" step="100" value="6000" oninput="calculate()"
+          style="width:100%;border:none;border-bottom:2px solid #8d8d8d;background:#f4f4f4;padding:11px 0 8px;font-size:14px;color:#161616;font-family:inherit;outline:none;" />
+      </div>
+
+      <div>
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="misc-slider">
+          瘥??嗡??祥嚗漱?蝐?嚗?span class="text-ink font-semibold normal-case" style="letter-spacing:.16px;"><span id="misc-label">2,000</span> ??/span>
+        </label>
+        <input type="range" id="misc-slider" class="c-range" min="0" max="10000" step="500" value="2000"
+               oninput="updateLabel('misc-slider','misc-label');calculate()" />
+        <div class="flex justify-between text-xs text-ink-subtle mt-1"><span>0</span><span>10,000</span></div>
+      </div>
+
+      <div>
+        <label class="block text-xs text-ink-muted font-semibold mb-2 uppercase" style="letter-spacing:.08em;" for="scholarship-input">
+          ??撟游漲?飛??<span class="text-ink font-semibold normal-case" style="letter-spacing:.16px;"><span id="scholarship-label">0</span> ??/span>
+        </label>
+        <input type="range" id="scholarship-input" class="c-range" min="0" max="60000" step="5000" value="0"
+               oninput="updateLabel('scholarship-input','scholarship-label');calculate()" />
+        <div class="flex justify-between text-xs text-ink-subtle mt-1"><span>0</span><span>60,000</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 蝯?? -->
+  <div id="result-section" style="display:none; flex-direction:column; gap:16px;">
+
+    <!-- 閰? + 銴ˊ -->
+    <div class="c-card p-6 fade-up">
+      <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+        <h2 class="text-sm font-semibold text-ink uppercase" style="letter-spacing:.08em;">?僑鞎∪?憯?閰?</h2>
+        <button class="btn-copy" id="copy-btn" onclick="copySummary()">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11H2a1 1 0 01-1-1V2a1 1 0 011-1h8a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.5"/></svg>
+          銴ˊ??
+        </button>
+      </div>
+      <div class="flex items-start justify-between gap-4 flex-wrap mb-5">
+        <p id="rating-desc" class="text-sm text-ink-muted max-w-md" style="line-height:1.6;"></p>
+        <div id="rating-badge" class="text-base font-semibold px-5 py-2 border shrink-0" style="min-width:100px;text-align:center;"></div>
+      </div>
+      <div>
+        <div class="flex justify-between text-xs text-ink-subtle mb-1">
+          <span>鞎∪?憯??</span><span id="pressure-pct">0%</span>
+        </div>
+        <div class="bar-track"><div id="pressure-bar" class="bar-fill" style="width:0%;background:#0f62fe;"></div></div>
+      </div>
+    </div>
+
+    <!-- ??撟唾﹛ -->
+    <div class="wh-box fade-up">
+      <div>
+        <div class="text-sm font-semibold text-primary">??撟唾﹛嚗??望?雿極霈?</div>
+        <div class="text-xs text-ink-muted mt-1">隞交???176 ??? 瘥? 4 ?梯?蝞?/div>
+      </div>
+      <div class="text-right">
+        <span id="wh-value" class="text-3xl font-light text-primary">??/span>
+        <span class="text-xs text-ink-muted ml-1">撠?嚗?/span>
+      </div>
+    </div>
+
+    <!-- 5 ?潭摮?-->
+    <div class="stat-grid fade-up">
+      <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">銝撟游飛?祥</p><p id="s-tuition" class="text-xl font-semibold text-ink">??/p><p class="text-xs text-ink-subtle">??/p></div>
+      <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">銝撟港?摰選??輻?</p><p id="s-housing" class="text-xl font-semibold text-ink">??/p><p class="text-xs text-ink-subtle">??/p></div>
+      <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">銝撟港?憌祥</p><p id="s-food" class="text-xl font-semibold text-ink">??/p><p class="text-xs text-ink-subtle">??/p></div>
+      <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">銝撟游隞?鞎?/p><p id="s-misc" class="text-xl font-semibold text-ink">??/p><p class="text-xs text-ink-subtle">??/p></div>
+      <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">銝撟湔楊?臬</p><p id="s-net" class="text-xl font-semibold text-ink">??/p><p class="text-xs text-ink-subtle">?????亥?鋆嚗?/p></div>
+    </div>
+
+    <!-- ?? + 鋆 -->
+    <div class="two-col fade-up">
+      <div class="c-card p-5">
+        <h3 class="text-xs font-semibold text-ink uppercase mb-4" style="letter-spacing:.08em;">銝撟湔?箔?瘥?/h3>
+        <div class="flex items-center gap-5">
+          <svg id="pie-svg" width="110" height="110" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="#f4f4f4"/></svg>
+          <div id="pie-legend" class="flex flex-col gap-2 text-xs text-ink-muted"></div>
+        </div>
+      </div>
+      <div class="c-card p-5">
+        <h3 class="text-xs font-semibold text-ink uppercase mb-4" style="letter-spacing:.08em;">?舐隢?撘勗鋆</h3>
+        <div id="aid-list"></div>
+      </div>
+    </div>
+
+    <!-- ?僑蝮質汗 -->
+    <div class="c-card p-5 fade-up">
+      <h3 class="text-xs font-semibold text-ink uppercase mb-4" style="letter-spacing:.08em;">?僑鞎∪?蝮質汗</h3>
+      <div class="y4-grid">
+        <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">?僑蝮賣???/p><p id="s-4y-total" class="text-2xl font-light text-ink">??/p><p class="text-xs text-ink-subtle">??/p></div>
+        <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">?僑撌亥?蝮賣??/p><p id="s-4y-income" class="text-2xl font-light text-ink">??/p><p class="text-xs text-ink-subtle">??10 ??嚗僑嚗?/p></div>
+        <div class="stat-tile"><p class="text-xs text-ink-subtle mb-1">?僑??芰?</p><p id="s-4y-gap" class="text-2xl font-light text-ink">??/p><p class="text-xs text-ink-subtle">??/p></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 蝛箇???-->
+  <div id="empty-state" class="c-card p-12 flex flex-col items-center gap-4 text-ink-subtle fade-up">
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <rect x="8" y="8" width="32" height="32" stroke="#8d8d8d" stroke-width="2"/>
+      <path d="M16 24h16M24 16v16" stroke="#8d8d8d" stroke-width="2"/>
+    </svg>
+    <p class="text-sm">隢??豢?摮豢嚗?憪?隡啗瓷????/p>
+  </div>
+
+  <!-- ??摮豢鞈?撌亙蝐?-->
+  <div class="c-card p-6 fade-up">
+    <h2 class="text-sm font-semibold text-ink uppercase mb-1" style="letter-spacing:.08em;">??摮豢摰雯鞈?撌亙蝐?/h2>
+    <p class="text-xs text-ink-subtle mb-5">?望??74 ?憭批飛嚗???亙?敺摰雯??/p>
+    <div style="font-size:12px;font-weight:700;color:#57606a;letter-spacing:0.06em;margin-bottom:8px;">???</div>
+    <div class="tools-grid" style="margin-bottom:16px;">
+      <a class="tool-card" href="https://www.ntu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">???箇憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ntu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntnu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箇撣怎?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ntnu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntust.edu.tw"      target="_blank" rel="noopener noreferrer"><span class="tc-name">???箇蝘?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ntust.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nccu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???踵祥憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">nccu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nycu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???賣?鈭日之摮?/span><span class="tc-type">?啁姘</span><span class="tc-url">nycu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nthu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">??皜憭批飛</span><span class="tc-type">?啁姘</span><span class="tc-url">nthu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ncu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">??銝剖亢憭批飛</span><span class="tc-type">獢?</span><span class="tc-url">ncu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntpu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箏?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ntpu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntut.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箏?蝘?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ntut.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntou.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箇瘚瑟?憭批飛</span><span class="tc-type">?粹?</span><span class="tc-url">ntou.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntsu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">??擃憭批飛</span><span class="tc-type">獢?</span><span class="tc-url">ntsu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntue.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箏??憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ntue.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntub.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箏??平憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ntub.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntunhs.edu.tw"     target="_blank" rel="noopener noreferrer"><span class="tc-name">???箏?霅瑞??亙熒憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ntunhs.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.tnua.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箏???憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">tnua.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntua.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箇??憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ntua.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nuu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">???臬?憭批飛</span><span class="tc-type">??</span><span class="tc-url">nuu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.yuntech.edu.tw"    target="_blank" rel="noopener noreferrer"><span class="tc-name">???脫?蝘?憭批飛</span><span class="tc-type">?脫?</span><span class="tc-url">yuntech.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nfu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">???偏蝘?憭批飛</span><span class="tc-type">?脫?</span><span class="tc-url">nfu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.utaipei.edu.tw"    target="_blank" rel="noopener noreferrer"><span class="tc-name">?箏?撣?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">utaipei.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.fju.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?頛?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">fju.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.scu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??勗憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">scu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.tku.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?瘛⊥?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">tku.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.cycu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?銝剖?憭批飛</span><span class="tc-type">獢?</span><span class="tc-url">cycu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.yzu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??憭批飛</span><span class="tc-type">獢?</span><span class="tc-url">yzu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.mcu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">mcu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.shu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?銝憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">shu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.pccu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘???憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">pccu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.cgu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??瑕?憭批飛</span><span class="tc-type">獢?</span><span class="tc-url">cgu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.tmu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??箏??怠飛憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">tmu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ttu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?憭批?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ttu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.usc.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?撖西?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">usc.edu.tw ??/span></a>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#57606a;letter-spacing:0.06em;margin-bottom:8px;">??銝剝</div>
+    <div class="tools-grid" style="margin-bottom:16px;">
+      <a class="tool-card" href="https://www.nchu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">??銝剛?憭批飛</span><span class="tc-type">?唬葉</span><span class="tc-url">nchu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ncue.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">??敶啣?撣怎?憭批飛</span><span class="tc-type">敶啣?</span><span class="tc-url">ncue.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nutc.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箔葉蝘?憭批飛</span><span class="tc-type">?唬葉</span><span class="tc-url">nutc.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ncnu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???典???憭批飛</span><span class="tc-type">??</span><span class="tc-url">ncnu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ncut.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???斤?蝘?憭批飛</span><span class="tc-type">?唬葉</span><span class="tc-url">ncut.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ntcu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箔葉?憭批飛</span><span class="tc-type">?唬葉</span><span class="tc-url">ntcu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.fcu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??Ｙ憭批飛</span><span class="tc-type">?唬葉</span><span class="tc-url">fcu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.thu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??望絲憭批飛</span><span class="tc-type">?唬葉</span><span class="tc-url">thu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.pu.edu.tw"         target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘???憭批飛</span><span class="tc-type">?唬葉</span><span class="tc-url">pu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.asia.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?鈭散憭批飛</span><span class="tc-type">?唬葉</span><span class="tc-url">asia.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.cyut.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??蝘?憭批飛</span><span class="tc-type">?唬葉</span><span class="tc-url">cyut.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.dyu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?憭扯?憭批飛</span><span class="tc-type">敶啣?</span><span class="tc-url">dyu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nhu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??憭批飛</span><span class="tc-type">?儔</span><span class="tc-url">nhu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.cmu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?銝剖??怨憭批飛</span><span class="tc-type">?唬葉</span><span class="tc-url">cmu.edu.tw ??/span></a>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#57606a;letter-spacing:0.06em;margin-bottom:8px;">???</div>
+    <div class="tools-grid" style="margin-bottom:16px;">
+      <a class="tool-card" href="https://www.ncku.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">????憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ncku.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nsysu.edu.tw"      target="_blank" rel="noopener noreferrer"><span class="tc-name">??銝剖控憭批飛</span><span class="tc-type">擃?</span><span class="tc-url">nsysu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nuk.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">??擃?憭批飛</span><span class="tc-type">擃?</span><span class="tc-url">nuk.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nknu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">??擃?撣怎?憭批飛</span><span class="tc-type">擃?</span><span class="tc-url">nknu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nkust.edu.tw"      target="_blank" rel="noopener noreferrer"><span class="tc-name">??擃?蝘?憭批飛</span><span class="tc-type">擃?</span><span class="tc-url">nkust.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ncyu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???儔憭批飛</span><span class="tc-type">?儔</span><span class="tc-url">ncyu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nutn.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???箏?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">nutn.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nptu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">??撅憭批飛</span><span class="tc-type">撅</span><span class="tc-url">nptu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.npust.edu.tw"      target="_blank" rel="noopener noreferrer"><span class="tc-name">??撅蝘?憭批飛</span><span class="tc-type">撅</span><span class="tc-url">npust.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nkuht.edu.tw"      target="_blank" rel="noopener noreferrer"><span class="tc-name">??擃?擗?憭批飛</span><span class="tc-type">擃?</span><span class="tc-url">nkuht.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.tnnua.edu.tw"      target="_blank" rel="noopener noreferrer"><span class="tc-name">???箏???憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">tnnua.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.isu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?蝢拙?憭批飛</span><span class="tc-type">擃?</span><span class="tc-url">isu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.ksu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?撏控蝘?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">ksu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.stust.edu.tw"      target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??蝘?憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">stust.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.cjcu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘??瑟旨憭批飛</span><span class="tc-type">?啣?</span><span class="tc-url">cjcu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.fy.edu.tw"         target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?頛蝘?憭批飛</span><span class="tc-type">擃?</span><span class="tc-url">fy.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.kmu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?擃??怠飛憭批飛</span><span class="tc-type">擃?</span><span class="tc-url">kmu.edu.tw ??/span></a>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#57606a;letter-spacing:0.06em;margin-bottom:8px;">???梢 嚗??Ｗ雀</div>
+    <div class="tools-grid" style="margin-bottom:16px;">
+      <a class="tool-card" href="https://www.ndhu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???梯憭批飛</span><span class="tc-type">?梯</span><span class="tc-url">ndhu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nttu.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">???唳憭批飛</span><span class="tc-type">?唳</span><span class="tc-url">nttu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.niu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">??摰憭批飛</span><span class="tc-type">摰</span><span class="tc-url">niu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.npu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">??瞉?蝘?憭批飛</span><span class="tc-type">瞉?</span><span class="tc-url">npu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.nqu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">????憭批飛</span><span class="tc-type">??</span><span class="tc-url">nqu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.fgu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘?雿?憭批飛</span><span class="tc-type">摰</span><span class="tc-url">fgu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.tcu.edu.tw"        target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘???憭批飛</span><span class="tc-type">?梯</span><span class="tc-url">tcu.edu.tw ??/span></a>
+      <a class="tool-card" href="https://www.tccn.edu.tw"       target="_blank" rel="noopener noreferrer"><span class="tc-name">蝘???蝘?憭批飛</span><span class="tc-type">?梯</span><span class="tc-url">tccn.edu.tw ??/span></a>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:#57606a;letter-spacing:0.06em;margin-bottom:8px;">???鞈?</div>
+    <div class="tools-grid">
+      <a class="tool-card" href="https://heloan.edu.tw"         target="_blank" rel="noopener noreferrer"><span class="tc-name">撠勗飛鞎豢狡?唾?</span><span class="tc-type">??具?⊥鞎豢狡</span><span class="tc-url">heloan.edu.tw ??/span></a>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <span>鞈?????撖阡?鞎餌靘??∪?皞?/span>
+  <span class="made">Made with IBM Bob</span>
+</footer>
+
+<script>
+// ?梁鋆璅?
+const AIDS_PUB  = (osa) => [
+  { name: '??典摮賊?',     amount: 36000, url: 'https://www.edu.tw/' },
+  { name: '?∪撘勗?拙飛??,   amount: 30000, url: osa },
+  { name: '撠勗飛鞎豢狡嚗?荔?', amount: 0,     url: 'https://heloan.edu.tw/' },
+];
+const AIDS_PRI  = (osa) => [
+  { name: '??函??∪摮賊?', amount: 36000, url: 'https://www.edu.tw/' },
+  { name: '?∪撘勗?拙飛??,   amount: 25000, url: osa },
+  { name: '撠勗飛鞎豢狡嚗?荔?', amount: 0,     url: 'https://heloan.edu.tw/' },
+];
+
+// dormTypes: ?挪????{ label, fee(撟?, rate(銝剔惜?? }
+// hasDorm: false 隞?”?∪挪???芾蝘?
+const SCHOOLS = [
+  // ?? ?啣?撣???
+  { name: '???箇憭批飛',       city: '?啣?撣?, tuition: 53000, avgRent: 10000, subsidy: 30000, url: 'https://www.ntu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸',   fee: 22000, rate: 0.40, note: '蝡嗥瞈??憭腦撣?撘勗?芸?' },
+      { label: '?瑟除2鈭箸',   fee: 32000, rate: 0.25 },
+      { label: '?桐犖憟',    fee: 48000, rate: 0.10 },
+    ],
+    aids: [{ name: '?箏之撘勗?拙飛??, amount: 40000, url: 'https://osa.ntu.edu.tw/scholarship' }, ...AIDS_PUB('https://osa.ntu.edu.tw/').slice(1)] },
+
+  { name: '???箇撣怎?憭批飛',   city: '?啣?撣?, tuition: 50000, avgRent: 10000, subsidy: 28000, url: 'https://www.ntnu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 24000, rate: 0.50 },
+      { label: '?瑟除2鈭箸', fee: 34000, rate: 0.35 },
+    ],
+    aids: AIDS_PUB('https://osa.ntnu.edu.tw/') },
+
+  { name: '???箇蝘?憭批飛',   city: '?啣?撣?, tuition: 50000, avgRent: 10000, subsidy: 26000, url: 'https://www.ntust.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 22000, rate: 0.55 },
+      { label: '?瑟除2鈭箸', fee: 30000, rate: 0.40 },
+    ],
+    aids: AIDS_PUB('https://osa.ntust.edu.tw/') },
+
+  { name: '???踵祥憭批飛',       city: '?啣?撣?, tuition: 50000, avgRent: 10000, subsidy: 28000, url: 'https://www.nccu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 20000, rate: 0.60, note: '雿僑蝝???擃僑蝝蝐? },
+      { label: '?瑟除2鈭箸', fee: 30000, rate: 0.45 },
+    ],
+    aids: AIDS_PUB('https://osa.nccu.edu.tw/') },
+
+  { name: '???賣?鈭日之摮?,   city: '?啁姘撣?, tuition: 51000, avgRent: 8000, subsidy: 27000, url: 'https://www.nycu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 20000, rate: 0.65 },
+      { label: '?瑟除2鈭箸', fee: 28000, rate: 0.50 },
+    ],
+    aids: AIDS_PUB('https://osa.nycu.edu.tw/') },
+
+  { name: '??皜憭批飛',       city: '?啁姘撣?, tuition: 51000, avgRent: 8000, subsidy: 27000, url: 'https://www.nthu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '?喟絞4鈭箸嚗?嚗?, fee: 18000, rate: 0.70 },
+      { label: '?瑟除2鈭箸嚗嚗?, fee: 28000, rate: 0.60 },
+    ],
+    aids: AIDS_PUB('https://osa.nthu.edu.tw/') },
+
+  { name: '??銝剖亢憭批飛',       city: '獢?撣?, tuition: 49000, avgRent: 7000, subsidy: 26000, url: 'https://www.ncu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 18000, rate: 0.75, note: '1撟渡?靽??乩?' },
+      { label: '?瑟除2鈭箸', fee: 26000, rate: 0.60 },
+    ],
+    aids: AIDS_PUB('https://osa.ncu.edu.tw/') },
+
+  { name: '???箏?憭批飛',       city: '?啣?撣?, tuition: 46000, avgRent: 9000, subsidy: 24000, url: 'https://www.ntpu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸嚗?撜踝?', fee: 18000, rate: 0.70 },
+      { label: '?瑟除2鈭箸嚗?撜踝?', fee: 26000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.ntpu.edu.tw/') },
+
+  { name: '???箏?蝘?憭批飛',   city: '?啣?撣?, tuition: 49000, avgRent: 10000, subsidy: 25000, url: 'https://www.ntut.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 24000, rate: 0.45, note: '撣?摮豢????' },
+      { label: '?瑟除2鈭箸', fee: 34000, rate: 0.30 },
+    ],
+    aids: AIDS_PUB('https://osa.ntut.edu.tw/') },
+
+  { name: '???箇瘚瑟?憭批飛',   city: '?粹?撣?, tuition: 47000, avgRent: 7000, subsidy: 24000, url: 'https://www.ntou.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 18000, rate: 0.70 },
+      { label: '?瑟除2鈭箸', fee: 26000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.ntou.edu.tw/') },
+
+  { name: '??擃憭批飛',       city: '獢?撣?, tuition: 46000, avgRent: 7000, subsidy: 22000, url: 'https://www.ntsu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '憭犖??, fee: 16000, rate: 0.80 },
+      { label: '?瑟除2鈭箸', fee: 24000, rate: 0.65 },
+    ],
+    aids: AIDS_PUB('https://osa.ntsu.edu.tw/') },
+
+  { name: '蝘?頛?憭批飛',       city: '?啣?撣?, tuition: 95000, avgRent: 8000, subsidy: 20000, url: 'https://www.fju.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 26000, rate: 0.65 },
+      { label: '?瑟除2鈭箸', fee: 36000, rate: 0.50 },
+    ],
+    aids: AIDS_PRI('https://osa.fju.edu.tw/') },
+
+  { name: '蝘??勗憭批飛',       city: '?啣?撣?, tuition: 90000, avgRent: 9500, subsidy: 18000, url: 'https://www.scu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 28000, rate: 0.45 },
+      { label: '?瑟除2鈭箸', fee: 38000, rate: 0.35 },
+    ],
+    aids: AIDS_PRI('https://osa.scu.edu.tw/') },
+
+  { name: '蝘?瘛⊥?憭批飛',       city: '?啣?撣?, tuition: 88000, avgRent: 7500, subsidy: 18000, url: 'https://www.tku.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 22000, rate: 0.65 },
+      { label: '?瑟除2鈭箸', fee: 32000, rate: 0.50 },
+    ],
+    aids: AIDS_PRI('https://osa.tku.edu.tw/') },
+
+  { name: '蝘?銝剖?憭批飛',       city: '獢?撣?, tuition: 92000, avgRent: 7000, subsidy: 18000, url: 'https://www.cycu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 22000, rate: 0.70 },
+      { label: '?瑟除2鈭箸', fee: 30000, rate: 0.55 },
+    ],
+    aids: AIDS_PRI('https://osa.cycu.edu.tw/') },
+
+  { name: '蝘??憭批飛',       city: '獢?撣?, tuition: 89000, avgRent: 7000, subsidy: 17000, url: 'https://www.yzu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 20000, rate: 0.75 },
+      { label: '?瑟除2鈭箸', fee: 28000, rate: 0.60 },
+    ],
+    aids: AIDS_PRI('https://osa.yzu.edu.tw/') },
+
+  { name: '蝘??憭批飛',       city: '?啣?撣?, tuition: 88000, avgRent: 9000, subsidy: 16000, url: 'https://www.mcu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 24000, rate: 0.60 },
+      { label: '?瑟除2鈭箸', fee: 34000, rate: 0.45 },
+    ],
+    aids: AIDS_PRI('https://osa.mcu.edu.tw/') },
+
+  { name: '蝘?銝憭批飛',       city: '?啣?撣?, tuition: 85000, avgRent: 9500, subsidy: 15000, url: 'https://www.shu.edu.tw',
+    hasDorm: false,
+    dormTypes: [],
+    aids: AIDS_PRI('https://osa.shu.edu.tw/') },
+
+  { name: '蝘???憭批飛',       city: '?啣?撣?, tuition: 88000, avgRent: 9000, subsidy: 16000, url: 'https://www.pccu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 26000, rate: 0.50, note: '撅曹?鈭日?靘選?雿挪?瘙?' },
+      { label: '?瑟除2鈭箸', fee: 36000, rate: 0.35 },
+    ],
+    aids: AIDS_PRI('https://osa.pccu.edu.tw/') },
+
+  { name: '蝘??瑕?憭批飛',       city: '獢?撣?, tuition: 95000, avgRent: 7000, subsidy: 19000, url: 'https://www.cgu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 24000, rate: 0.75, note: '雿僑蝝??訾??雿? },
+      { label: '?瑟除2鈭箸', fee: 34000, rate: 0.60 },
+    ],
+    aids: AIDS_PRI('https://osa.cgu.edu.tw/') },
+
+  { name: '??銝剛?憭批飛',       city: '?唬葉撣?, tuition: 48000, avgRent: 6500, subsidy: 25000, url: 'https://www.nchu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 18000, rate: 0.70, note: '1撟渡?靽?' },
+      { label: '?瑟除2鈭箸', fee: 26000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.nchu.edu.tw/') },
+
+  { name: '??敶啣?撣怎?憭批飛',   city: '敶啣?蝮?, tuition: 46000, avgRent: 6000, subsidy: 23000, url: 'https://www.ncue.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 16000, rate: 0.70 },
+      { label: '?瑟除2鈭箸', fee: 24000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.ncue.edu.tw/') },
+
+  { name: '???箔葉蝘?憭批飛',   city: '?唬葉撣?, tuition: 47000, avgRent: 6500, subsidy: 23000, url: 'https://www.nutc.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 20000, rate: 0.50, note: '撣?摮豢????' },
+      { label: '?瑟除2鈭箸', fee: 28000, rate: 0.35 },
+    ],
+    aids: AIDS_PUB('https://osa.nutc.edu.tw/') },
+
+  { name: '???典???憭批飛',   city: '??蝮?, tuition: 45000, avgRent: 5000, subsidy: 23000, url: 'https://www.ncnu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 14000, rate: 0.85, note: '?啗???嚗?摰輻?擃? },
+      { label: '?瑟除2鈭箸', fee: 20000, rate: 0.75 },
+    ],
+    aids: AIDS_PUB('https://osa.ncnu.edu.tw/') },
+
+  { name: '蝘??Ｙ憭批飛',       city: '?唬葉撣?, tuition: 90000, avgRent: 6500, subsidy: 17000, url: 'https://www.fcu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 22000, rate: 0.55 },
+      { label: '?瑟除2鈭箸', fee: 32000, rate: 0.40 },
+    ],
+    aids: AIDS_PRI('https://osa.fcu.edu.tw/') },
+
+  { name: '蝘??望絲憭批飛',       city: '?唬葉撣?, tuition: 88000, avgRent: 6500, subsidy: 17000, url: 'https://www.thu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '?喟絞憭犖??, fee: 18000, rate: 0.70 },
+      { label: '?瑟除2鈭箸',  fee: 26000, rate: 0.55 },
+    ],
+    aids: AIDS_PRI('https://osa.thu.edu.tw/') },
+
+  { name: '蝘???憭批飛',       city: '?唬葉撣?, tuition: 82000, avgRent: 6000, subsidy: 15000, url: 'https://www.pu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 20000, rate: 0.65 },
+      { label: '?瑟除2鈭箸', fee: 28000, rate: 0.50 },
+    ],
+    aids: AIDS_PRI('https://osa.pu.edu.tw/') },
+
+  { name: '蝘?鈭散憭批飛',       city: '?唬葉撣?, tuition: 85000, avgRent: 6000, subsidy: 15000, url: 'https://www.asia.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 22000, rate: 0.70 },
+      { label: '?瑟除2鈭箸', fee: 30000, rate: 0.55 },
+    ],
+    aids: AIDS_PRI('https://osa.asia.edu.tw/') },
+
+  { name: '????憭批飛',       city: '?啣?撣?, tuition: 50000, avgRent: 7000, subsidy: 28000, url: 'https://www.ncku.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 20000, rate: 0.45, note: '撣?蝡嗥瞈?? },
+      { label: '?瑟除2鈭箸', fee: 30000, rate: 0.30 },
+    ],
+    aids: AIDS_PUB('https://osa.ncku.edu.tw/') },
+
+  { name: '??銝剖控憭批飛',       city: '擃?撣?, tuition: 49000, avgRent: 7000, subsidy: 26000, url: 'https://www.nsysu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 18000, rate: 0.70, note: '1撟渡?靽?' },
+      { label: '?瑟除2鈭箸', fee: 26000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.nsysu.edu.tw/') },
+
+  { name: '??擃?憭批飛',       city: '擃?撣?, tuition: 45000, avgRent: 6000, subsidy: 23000, url: 'https://www.nuk.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 16000, rate: 0.75 },
+      { label: '?瑟除2鈭箸', fee: 22000, rate: 0.60 },
+    ],
+    aids: AIDS_PUB('https://osa.nuk.edu.tw/') },
+
+  { name: '??擃?撣怎?憭批飛',   city: '擃?撣?, tuition: 45000, avgRent: 6000, subsidy: 23000, url: 'https://www.nknu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 16000, rate: 0.65 },
+      { label: '?瑟除2鈭箸', fee: 24000, rate: 0.50 },
+    ],
+    aids: AIDS_PUB('https://osa.nknu.edu.tw/') },
+
+  { name: '??擃?蝘?憭批飛',   city: '擃?撣?, tuition: 47000, avgRent: 6000, subsidy: 23000, url: 'https://www.nkust.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 16000, rate: 0.65 },
+      { label: '?瑟除2鈭箸', fee: 22000, rate: 0.50 },
+    ],
+    aids: AIDS_PUB('https://osa.nkust.edu.tw/') },
+
+  { name: '???儔憭批飛',       city: '?儔蝮?, tuition: 44000, avgRent: 5000, subsidy: 22000, url: 'https://www.ncyu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 14000, rate: 0.75 },
+      { label: '?瑟除2鈭箸', fee: 20000, rate: 0.60 },
+    ],
+    aids: AIDS_PUB('https://osa.ncyu.edu.tw/') },
+
+  { name: '???箏?憭批飛',       city: '?啣?撣?, tuition: 44000, avgRent: 5500, subsidy: 22000, url: 'https://www.nutn.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 14000, rate: 0.70 },
+      { label: '?瑟除2鈭箸', fee: 20000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.nutn.edu.tw/') },
+
+  { name: '??撅憭批飛',       city: '撅蝮?, tuition: 44000, avgRent: 5000, subsidy: 22000, url: 'https://www.nptu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 12000, rate: 0.65 },
+      { label: '?瑟除2鈭箸', fee: 18000, rate: 0.50 },
+    ],
+    aids: AIDS_PUB('https://osa.nptu.edu.tw/') },
+
+  { name: '蝘?蝢拙?憭批飛',       city: '擃?撣?, tuition: 85000, avgRent: 6000, subsidy: 15000, url: 'https://www.isu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 20000, rate: 0.75, note: '?啗???嚗?摰輻?擃? },
+      { label: '?瑟除2鈭箸', fee: 28000, rate: 0.60 },
+    ],
+    aids: AIDS_PRI('https://osa.isu.edu.tw/') },
+
+  { name: '蝘?撏控蝘?憭批飛',   city: '?啣?撣?, tuition: 82000, avgRent: 5500, subsidy: 14000, url: 'https://www.ksu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 18000, rate: 0.65 },
+      { label: '?瑟除2鈭箸', fee: 26000, rate: 0.50 },
+    ],
+    aids: AIDS_PRI('https://osa.ksu.edu.tw/') },
+
+  { name: '???梯憭批飛',       city: '?梯蝮?, tuition: 43000, avgRent: 4500, subsidy: 23000, url: 'https://www.ndhu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 14000, rate: 0.85, note: '???啣?嚗?摰輻?擃? },
+      { label: '?瑟除2鈭箸', fee: 20000, rate: 0.75 },
+    ],
+    aids: AIDS_PUB('https://osa.ndhu.edu.tw/') },
+
+  { name: '???唳憭批飛',       city: '?唳蝮?, tuition: 42000, avgRent: 4000, subsidy: 23000, url: 'https://www.nttu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 12000, rate: 0.80 },
+      { label: '?瑟除2鈭箸', fee: 18000, rate: 0.70 },
+    ],
+    aids: AIDS_PUB('https://osa.nttu.edu.tw/') },
+
+  { name: '??摰憭批飛',       city: '摰蝮?, tuition: 43000, avgRent: 4500, subsidy: 22000, url: 'https://www.niu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 14000, rate: 0.70 },
+      { label: '?瑟除2鈭箸', fee: 20000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.niu.edu.tw/') },
+
+  { name: '???箇憭批飛?怠飛??, city: '?啣?撣?, tuition: 56000, avgRent: 10000, subsidy: 32000, url: 'https://www.ntu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 22000, rate: 0.40 },
+      { label: '?瑟除2鈭箸', fee: 32000, rate: 0.25 },
+    ],
+    aids: AIDS_PUB('https://osa.ntu.edu.tw/') },
+
+  { name: '蝘?銝剖??怨憭批飛',   city: '?唬葉撣?, tuition: 98000, avgRent: 6500, subsidy: 20000, url: 'https://www.cmu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 24000, rate: 0.55, note: '?怎????????' },
+      { label: '?瑟除2鈭箸', fee: 34000, rate: 0.40 },
+    ],
+    aids: AIDS_PRI('https://osa.cmu.edu.tw/') },
+
+  { name: '蝘?擃??怠飛憭批飛',   city: '擃?撣?, tuition: 96000, avgRent: 6000, subsidy: 19000, url: 'https://www.kmu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 22000, rate: 0.50, note: '?怎???? },
+      { label: '?瑟除2鈭箸', fee: 30000, rate: 0.35 },
+    ],
+    aids: AIDS_PRI('https://osa.kmu.edu.tw/') },
+
+  { name: '??銝剜迤憭批飛',       city: '?儔蝮?, tuition: 46000, avgRent: 4500, subsidy: 24000, url: 'https://www.ccu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 12000, rate: 0.72 },
+      { label: '?瑟除2鈭箸', fee: 20000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.ccu.edu.tw/') },
+
+  { name: '?箏?撣?憭批飛',       city: '?啣?撣?, tuition: 46000, avgRent: 11000, subsidy: 24000, url: 'https://www.utaipei.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 22000, rate: 0.60 },
+    ],
+    aids: AIDS_PUB('https://osa.utaipei.edu.tw/') },
+
+  { name: '???箏??憭批飛',   city: '?啣?撣?, tuition: 44000, avgRent: 10000, subsidy: 23000, url: 'https://www.ntue.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 21000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.ntue.edu.tw/') },
+
+  { name: '???箏??平憭批飛',   city: '?啣?撣?, tuition: 46000, avgRent: 10000, subsidy: 23000, url: 'https://www.ntub.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 20000, rate: 0.50 },
+    ],
+    aids: AIDS_PUB('https://osa.ntub.edu.tw/') },
+
+  { name: '???箏?霅瑞??亙熒憭批飛', city: '?啣?撣?, tuition: 47000, avgRent: 10000, subsidy: 24000, url: 'https://www.ntunhs.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 20000, rate: 0.65 },
+    ],
+    aids: AIDS_PUB('https://osa.ntunhs.edu.tw/') },
+
+  { name: '???箏???憭批飛',   city: '?啣?撣?, tuition: 48000, avgRent: 10000, subsidy: 24000, url: 'https://www.tnua.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '??摰輯??桐犖??, fee: 28000, rate: 0.75, note: '?冽雿挪??' },
+      { label: '??摰輯?2鈭箸',  fee: 20000, rate: 0.80 },
+    ],
+    aids: AIDS_PUB('https://osa.tnua.edu.tw/') },
+
+  { name: '蝘??箏??怠飛憭批飛',   city: '?啣?撣?, tuition: 98000, avgRent: 11000, subsidy: 20000, url: 'https://www.tmu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 28000, rate: 0.45, note: '?怎???? },
+      { label: '?瑟除2鈭箸', fee: 40000, rate: 0.30 },
+    ],
+    aids: AIDS_PRI('https://osa.tmu.edu.tw/') },
+
+  { name: '蝘?憭批?憭批飛',       city: '?啣?撣?, tuition: 88000, avgRent: 10000, subsidy: 16000, url: 'https://www.ttu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 24000, rate: 0.50 },
+    ],
+    aids: AIDS_PRI('https://osa.ttu.edu.tw/') },
+
+  { name: '蝘?撖西?憭批飛',       city: '?啣?撣?, tuition: 88000, avgRent: 9500, subsidy: 16000, url: 'https://www.usc.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 26000, rate: 0.45 },
+    ],
+    aids: AIDS_PRI('https://osa.usc.edu.tw/') },
+
+  { name: '???箇??憭批飛',   city: '?啣?撣?, tuition: 48000, avgRent: 8000, subsidy: 24000, url: 'https://www.ntua.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 20000, rate: 0.68 },
+    ],
+    aids: AIDS_PUB('https://osa.ntua.edu.tw/') },
+
+  { name: '???臬?憭批飛',       city: '??蝮?, tuition: 44000, avgRent: 5000, subsidy: 22000, url: 'https://www.nuu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 12000, rate: 0.75 },
+    ],
+    aids: AIDS_PUB('https://osa.nuu.edu.tw/') },
+
+  { name: '???脫?蝘?憭批飛',   city: '?脫?蝮?, tuition: 48000, avgRent: 5000, subsidy: 24000, url: 'https://www.yuntech.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 12000, rate: 0.73 },
+      { label: '?瑟除2鈭箸', fee: 22000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.yuntech.edu.tw/') },
+
+  { name: '???偏蝘?憭批飛',   city: '?脫?蝮?, tuition: 47000, avgRent: 4500, subsidy: 23000, url: 'https://www.nfu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 11000, rate: 0.77 },
+    ],
+    aids: AIDS_PUB('https://osa.nfu.edu.tw/') },
+
+  { name: '???斤?蝘?憭批飛',   city: '?唬葉撣?, tuition: 47000, avgRent: 6000, subsidy: 23000, url: 'https://www.ncut.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 14000, rate: 0.70 },
+    ],
+    aids: AIDS_PUB('https://osa.ncut.edu.tw/') },
+
+  { name: '???箔葉?憭批飛',   city: '?唬葉撣?, tuition: 45000, avgRent: 6500, subsidy: 23000, url: 'https://www.ntcu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 14000, rate: 0.65 },
+    ],
+    aids: AIDS_PUB('https://osa.ntcu.edu.tw/') },
+
+  { name: '蝘??蝘?憭批飛',   city: '?唬葉撣?, tuition: 84000, avgRent: 5500, subsidy: 15000, url: 'https://www.cyut.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 18000, rate: 0.62 },
+      { label: '?瑟除2鈭箸', fee: 28000, rate: 0.40 },
+    ],
+    aids: AIDS_PRI('https://osa.cyut.edu.tw/') },
+
+  { name: '蝘?憭扯?憭批飛',       city: '敶啣?蝮?, tuition: 83000, avgRent: 5500, subsidy: 14000, url: 'https://www.dyu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 16000, rate: 0.68 },
+      { label: '憟', fee: 36000, rate: 0.25 },
+    ],
+    aids: AIDS_PRI('https://osa.dyu.edu.tw/') },
+
+  { name: '蝘??憭批飛',       city: '?儔蝮?, tuition: 80000, avgRent: 4500, subsidy: 13000, url: 'https://www.nhu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 14000, rate: 0.72 },
+    ],
+    aids: AIDS_PRI('https://osa.nhu.edu.tw/') },
+
+  { name: '蝘??蝘?憭批飛',   city: '?啣?撣?, tuition: 83000, avgRent: 5500, subsidy: 14000, url: 'https://www.stust.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 16000, rate: 0.65 },
+      { label: '?瑟除2鈭箸', fee: 26000, rate: 0.45 },
+    ],
+    aids: AIDS_PRI('https://osa.stust.edu.tw/') },
+
+  { name: '蝘???憭批飛',       city: '?梯蝮?, tuition: 86000, avgRent: 4500, subsidy: 16000, url: 'https://www.tcu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 14000, rate: 0.80, note: '?梯雿挪?嫣噶' },
+      { label: '?瑟除2鈭箸', fee: 24000, rate: 0.60 },
+    ],
+    aids: AIDS_PRI('https://osa.tcu.edu.tw/') },
+
+  { name: '??撅蝘?憭批飛',   city: '撅蝮?, tuition: 47000, avgRent: 4000, subsidy: 23000, url: 'https://www.npust.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 11000, rate: 0.80 },
+      { label: '?瑟除2鈭箸', fee: 20000, rate: 0.55 },
+    ],
+    aids: AIDS_PUB('https://osa.npust.edu.tw/') },
+
+  { name: '??擃?擗?憭批飛',   city: '擃?撣?, tuition: 47000, avgRent: 6000, subsidy: 23000, url: 'https://www.nkuht.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 16000, rate: 0.70 },
+    ],
+    aids: AIDS_PUB('https://osa.nkuht.edu.tw/') },
+
+  { name: '???箏???憭批飛',   city: '?啣?撣?, tuition: 48000, avgRent: 5000, subsidy: 24000, url: 'https://www.tnnua.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '??摰輯??桐犖??, fee: 18000, rate: 0.82, note: '雿挪?扔擃? },
+      { label: '??摰輯?2鈭箸',  fee: 14000, rate: 0.85 },
+    ],
+    aids: AIDS_PUB('https://osa.tnnua.edu.tw/') },
+
+  { name: '蝘??瑟旨憭批飛',       city: '?啣?撣?, tuition: 80000, avgRent: 5500, subsidy: 13000, url: 'https://www.cjcu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 16000, rate: 0.65 },
+    ],
+    aids: AIDS_PRI('https://osa.cjcu.edu.tw/') },
+
+  { name: '蝘?頛蝘?憭批飛',   city: '擃?撣?, tuition: 80000, avgRent: 5500, subsidy: 13000, url: 'https://www.fy.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 14000, rate: 0.68 },
+    ],
+    aids: AIDS_PRI('https://osa.fy.edu.tw/') },
+
+  { name: '??瞉?蝘?憭批飛',   city: '瞉?蝮?, tuition: 46000, avgRent: 4000, subsidy: 24000, url: 'https://www.npu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 10000, rate: 0.88, note: '?Ｗ雀雿挪??' },
+    ],
+    aids: AIDS_PUB('https://osa.npu.edu.tw/') },
+
+  { name: '????憭批飛',       city: '??蝮?, tuition: 44000, avgRent: 3500, subsidy: 24000, url: 'https://www.nqu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 9000, rate: 0.90, note: '?Ｗ雀雿挪?扔擃? },
+    ],
+    aids: AIDS_PUB('https://osa.nqu.edu.tw/') },
+
+  { name: '蝘?雿?憭批飛',       city: '摰蝮?, tuition: 78000, avgRent: 4500, subsidy: 13000, url: 'https://www.fgu.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 16000, rate: 0.75 },
+    ],
+    aids: AIDS_PRI('https://osa.fgu.edu.tw/') },
+
+  { name: '蝘???蝘?憭批飛',   city: '?梯蝮?, tuition: 78000, avgRent: 4500, subsidy: 14000, url: 'https://www.tccn.edu.tw',
+    hasDorm: true,
+    dormTypes: [
+      { label: '銝??鈭箸', fee: 13000, rate: 0.82 },
+    ],
+    aids: AIDS_PRI('https://osa.tccn.edu.tw/') },
+];
+
+// 蝮??憿舐內??
+const CITY_ORDER = [
+  '?啣?撣?,'?啣?撣?,'?粹?撣?,'獢?撣?,'?啁姘撣?,'??蝮?,
+  '?唬葉撣?,'敶啣?蝮?,'??蝮?,'?脫?蝮?,
+  '?儔蝮?,'?啣?撣?,'擃?撣?,'撅蝮?,
+  '摰蝮?,'?梯蝮?,'?唳蝮?,'瞉?蝮?,'??蝮?,
+];
+
+// ????殷?靘腦撣?optgroup ??嚗?const sel = document.getElementById('school-select');
+const cityMap = {};
+SCHOOLS.forEach((s, i) => { (cityMap[s.city] = cityMap[s.city] || []).push({ s, i }); });
+CITY_ORDER.forEach(city => {
+  if (!cityMap[city]) return;
+  const grp = document.createElement('optgroup');
+  grp.label = city;
+  cityMap[city].forEach(({ s, i }) => {
+    const opt = document.createElement('option');
+    opt.value = i; opt.textContent = s.name;
+    grp.appendChild(opt);
+  });
+  sel.appendChild(grp);
+});
+
+// ??摮豢??啣挪?????sel.addEventListener('change', function () {
+  const idx = this.value;
+  if (idx === '') return;
+  updateDormUI(SCHOOLS[idx]);
+});
+
+function updateDormUI(school) {
+  const dormRadio      = document.querySelector('input[name="dorm"][value="dorm"]');
+  const dormLabel      = document.getElementById('label-dorm');
+  const rentSliderWrap = document.getElementById('rent-slider-wrap');
+  const rentSlider     = document.getElementById('rent-slider');
+
+  // 撣嗅甇斗?身????  rentSlider.value = school.avgRent;
+
+  if (!school.hasDorm) {
+    dormRadio.disabled = true;
+    dormLabel.style.color = '#aaa';
+    dormLabel.title = '甇斗?⊥?靘挪??;
+    document.querySelector('input[name="dorm"][value="rent"]').checked = true;
+    rentSliderWrap.style.display = 'block';
+  } else {
+    dormRadio.disabled = false;
+    dormLabel.style.color = '';
+    dormLabel.title = '';
+    const useDorm = document.querySelector('input[name="dorm"]:checked').value === 'dorm';
+    rentSliderWrap.style.display = useDorm ? 'none' : 'block';
+  }
+}
+
+// ??雿挪?孵???
+document.querySelectorAll('input[name="dorm"]').forEach(r => {
+  r.addEventListener('change', function () {
+    const idx = selectedSchoolIdx;
+    if (idx === '') return;
+    const rentSliderWrap = document.getElementById('rent-slider-wrap');
+    rentSliderWrap.style.display = this.value === 'rent' ? 'block' : 'none';
+    calculate();
+  });
+});
+
+function updateLabel(sliderId, labelId) {
+  document.getElementById(labelId).textContent =
+    Number(document.getElementById(sliderId).value).toLocaleString();
+}
+
+// ?脣???啗?蝞???銴ˊ??let _lastSummary = '';
+
+function calculate() {
+  const idx = selectedSchoolIdx;
+  const rs  = document.getElementById('result-section');
+  const es  = document.getElementById('empty-state');
+  const schoolLink = document.getElementById('school-website');
+
+  if (idx === null || idx === undefined) {
+    rs.style.display = 'none'; es.style.display = 'block';
+    schoolLink.style.display = 'none';
+    return;
+  }
+
+  const school      = SCHOOLS[idx];
+  const useDorm     = document.querySelector('input[name="dorm"]:checked').value === 'dorm';
+  const monthFood   = Math.max(0, Number(document.getElementById('food-input').value)||0);
+  const monthInc    = Math.max(0, Number(document.getElementById('income-input').value)||0);
+  const monthMisc   = Number(document.getElementById('misc-slider').value);
+  const scholarship = Number(document.getElementById('scholarship-input').value);
+
+  // 摰雯???
+  schoolLink.href = school.url;
+  schoolLink.style.display = 'inline-flex';
+
+  // 雿挪鞎餉?蝞?  const monthRent = Number(document.getElementById('rent-slider').value);
+  let housingYear, dormNoteText;
+  if (useDorm && school.hasDorm) {
+    const dt    = school.dormTypes[0];
+    housingYear  = dt.fee;
+    dormNoteText = `摰輯?撟渲祥 ${dt.fee.toLocaleString()} ?銝剔惜?? ${Math.round(dt.rate * 100)}%嚗銝剔惜?蝘?嚗?蝘?${monthRent.toLocaleString()} ??`;
+  } else {
+    housingYear  = monthRent * 10;
+    dormNoteText = school.hasDorm
+      ? `?? ${monthRent.toLocaleString()} ??隞?10 ??閮?`
+      : `甇斗?∪挪??? ${monthRent.toLocaleString()} ??隞?10 ??閮?`;
+  }
+  document.getElementById('dorm-note').textContent = dormNoteText;
+
+  const yearTuition = school.tuition;
+  const yearFood    = monthFood * 10;
+  const yearMisc    = monthMisc * 10;
+  const yearTotal   = yearTuition + housingYear + yearFood + yearMisc;
+  const yearIncome  = monthInc * 10;
+  const yearNet     = yearTotal - yearIncome - school.subsidy - scholarship;
+
+  const y4Total  = yearTotal * 4;
+  const y4Income = yearIncome * 4;
+  const y4Gap    = Math.max(0, yearNet * 4);
+
+  // ??撟唾﹛撌亥??嚗???76嚗????梧?
+  const monthlyGap    = Math.max(0, yearNet / 10);
+  const weeklyHours   = monthlyGap > 0 ? Math.ceil(monthlyGap / (176 * 4)) : 0;
+
+  const pressure = Math.min(1, Math.max(0, yearNet / yearTotal));
+  const pPct     = Math.round(pressure * 100);
+
+  let rating, ratingClass, ratingDesc;
+  if (pressure < 0.35) {
+    rating = '? 雿?'; ratingClass = 'badge-green';
+    ratingDesc = '鞎∪?蝻箏銝之嚗雁?極霈?嗅????抬????舫??拙??飛璆准?;
+  } else if (pressure < 0.65) {
+    rating = '? 銝剖?'; ratingClass = 'badge-yellow';
+    ratingDesc = '鞎∪???摰???撱箄降蝛扔?唾??拙飛?蒂閬?蝛拙??極霈靘???;
+  } else {
+    rating = '? 擃?'; ratingClass = 'badge-red';
+    ratingDesc = '鞎∪?蝻箏?之嚗撥?遣霅啁隢停摮貉硫甈整摹?Ｗ摮賊?嚗蒂??撌亥????挪??雿?摰踵??研?;
+  }
+
+  rs.style.display = 'flex'; es.style.display = 'none';
+
+  // 閰?
+  const badge = document.getElementById('rating-badge');
+  badge.textContent = rating;
+  badge.className   = 'rating-badge ' + ratingClass;
+  document.getElementById('rating-desc').textContent = ratingDesc;
+
+  // 憯?璇?  document.getElementById('pressure-pct').textContent = pPct + '%';
+  const bar = document.getElementById('pressure-bar');
+  bar.style.width      = pPct + '%';
+  bar.style.background = pressure < 0.35 ? '#15803d' : pressure < 0.65 ? '#b45309' : '#dc2626';
+
+  // 撌亥??
+  document.getElementById('wh-value').textContent = weeklyHours > 0 ? weeklyHours : '撌脫?撟?;
+
+  // ?詨?
+  const fmt = n => Math.round(n).toLocaleString();
+  document.getElementById('s-tuition').textContent = fmt(yearTuition);
+  document.getElementById('s-housing').textContent = fmt(housingYear);
+  document.getElementById('s-food').textContent    = fmt(yearFood);
+  document.getElementById('s-misc').textContent    = fmt(yearMisc);
+  document.getElementById('s-net').textContent     = fmt(Math.max(0, yearNet));
+  document.getElementById('s-4y-total').textContent = fmt(y4Total);
+  document.getElementById('s-4y-income').textContent= fmt(y4Income);
+  document.getElementById('s-4y-gap').textContent   = fmt(y4Gap);
+
+  // 銴ˊ???
+  _lastSummary =
+    `?之摮貊?摮??祈?隡唳?閬n` +
+    `摮豢嚗?{school.name}嚗?{useDorm ? '雿挪?? : '蝘?憭?'}嚗n` +
+    `銝撟游飛?祥嚗?{fmt(yearTuition)} ?n` +
+    `銝撟港?摰輯祥嚗?{fmt(housingYear)} ?n` +
+    `銝撟港?憌祥嚗?{fmt(yearFood)} ?n` +
+    `銝撟游隞?鞎鳴?${fmt(yearMisc)} ?n` +
+    `銝撟湔楊?臬嚗?{fmt(Math.max(0, yearNet))} ?n` +
+    `?僑蝮賣??穿?${fmt(y4Total)} ?n` +
+    `?僑??芰?嚗?{fmt(y4Gap)} ?n` +
+    `鞎∪?憯?閰?嚗?{rating}\n` +
+    `??撟唾﹛撌亥??嚗???${weeklyHours > 0 ? weeklyHours + ' 撠?' : '撌脫?撟?}`;
+
+  // ????  drawPie([
+    { label: '摮賊?鞎?, value: yearTuition, color: '#3b82d4' },
+    { label: '雿挪鞎?, value: housingYear, color: '#1f2328' },
+    { label: '隡?鞎?, value: yearFood,    color: '#7c5cd8' },
+    { label: '?嗡??祥', value: yearMisc,  color: '#f59e0b' },
+  ]);
+
+  // 鋆皜
+  document.getElementById('aid-list').innerHTML = school.aids.map(a => `
+    <div class="aid-item">
+      <div>
+        <div class="aid-name">${a.name}</div>
+        <div class="aid-amount">${a.amount > 0 ? '?擃?' + a.amount.toLocaleString() + ' ??撟? : '閬犖???詨?'}</div>
+      </div>
+      <a href="${a.url}" target="_blank" rel="noopener noreferrer" class="aid-link">?唾?隤芣? ??/a>
+    </div>
+  `).join('');
+}
+
+function drawPie(slices) {
+  const svg    = document.getElementById('pie-svg');
+  const legend = document.getElementById('pie-legend');
+  const R = 50, CX = 60, CY = 60;
+  const total = slices.reduce((s, d) => s + d.value, 0);
+
+  let paths = '<circle cx="60" cy="60" r="50" fill="#f7f8fa"/>';
+  let start = 0;
+  slices.forEach(sl => {
+    const angle = (sl.value / total) * 2 * Math.PI;
+    const x1 = CX + R * Math.cos(start), y1 = CY + R * Math.sin(start);
+    const x2 = CX + R * Math.cos(start + angle), y2 = CY + R * Math.sin(start + angle);
+    paths += `<path d="M${CX},${CY} L${x1},${y1} A${R},${R} 0 ${angle > Math.PI ? 1 : 0},1 ${x2},${y2} Z" fill="${sl.color}" opacity="0.9"/>`;
+    start += angle;
+  });
+  paths += '<circle cx="60" cy="60" r="28" fill="#fff"/>';
+  svg.innerHTML = paths;
+
+  legend.innerHTML = slices.map(sl => `
+    <div class="pie-legend-item">
+      <span class="pie-dot" style="background:${sl.color}"></span>
+      <span>${sl.label}嚗?{Math.round(sl.value / total * 100)}%嚗?/span>
+    </div>
+  `).join('');
+}
+
+function copySummary() {
+  if (!_lastSummary) return;
+  navigator.clipboard.writeText(_lastSummary).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '??撌脰?鋆?;
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M3 11H2a1 1 0 01-1-1V2a1 1 0 011-1h8a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.5"/></svg> 銴ˊ??`;
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// Init labels
+updateLabel('misc-slider', 'misc-label');
+updateLabel('scholarship-input', 'scholarship-label');
+</script>
+</body>
+</html>
+
+
