@@ -208,6 +208,45 @@
 
     </div>
   </div>
+ <!-- 圓餅 + 補助 -->
+    <div class="two-col fade-up">
+      <div class="c-card p-5">
+        <h3 class="text-xs font-semibold text-ink uppercase mb-4" style="letter-spacing:.08em;">一年支出佔比</h3>
+        <div class="flex items-center gap-5">
+          <svg id="pie-svg" width="110" height="110" viewBox="0 0 120 120">
+            <circle cx="60" cy="60" r="50" fill="#f4f4f4"/>
+          </svg>
+          <div id="pie-legend" class="flex flex-col gap-2 text-xs text-ink-muted"></div>
+        </div>
+      </div>
+      <div class="c-card p-5">
+        <h3 class="text-xs font-semibold text-ink uppercase mb-4" style="letter-spacing:.08em;">可申請的弱勢補助</h3>
+        <div id="aid-list"></div>
+      </div>
+    </div>
+
+    <!-- 四年總覽 -->
+    <div class="c-card p-5 fade-up">
+      <h3 class="text-xs font-semibold text-ink uppercase mb-4" style="letter-spacing:.08em;">四年財務總覽</h3>
+      <div class="y4-grid">
+        <div class="stat-tile">
+          <p class="text-xs text-ink-subtle mb-1">四年總成本</p>
+          <p id="s-4y-total" class="text-2xl font-light text-ink">—</p>
+          <p class="text-xs text-ink-subtle">元</p>
+        </div>
+        <div class="stat-tile">
+          <p class="text-xs text-ink-subtle mb-1">四年工讀總收入</p>
+          <p id="s-4y-income" class="text-2xl font-light text-ink">—</p>
+          <p class="text-xs text-ink-subtle">元（10 個月／年）</p>
+        </div>
+        <div class="stat-tile">
+          <p class="text-xs text-ink-subtle mb-1">四年需自籌</p>
+          <p id="s-4y-gap" class="text-2xl font-light text-ink">—</p>
+          <p class="text-xs text-ink-subtle">元</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- 結果區 -->
   <div id="result-section" style="display:none; flex-direction:column; gap:16px;">
