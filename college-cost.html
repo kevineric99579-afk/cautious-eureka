@@ -124,20 +124,22 @@
 
         <!-- 每月可負擔伙食費 -->
         <div>
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="food-slider">
-            每月伙食費預算：<span id="food-label" class="text-ink font-semibold">5,000</span> 元
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="food-input">
+            每月伙食費預算 元
           </label>
-          <input type="range" id="food-slider" class="c-range" min="3000" max="10000" step="500" value="5000" oninput="updateFoodLabel();calculate()" />
-          <div class="flex justify-between text-xs text-ink-subtle mt-1"><span>3,000</span><span>10,000</span></div>
+          <input type="number" id="food-input" min="0" step="100" value="5000" oninput="calculate()"
+            style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
+            onfocus="this.style.borderBottom='2px solid #0f62fe'" onblur="this.style.borderBottom='1px solid #8c8c8c'" />
         </div>
 
         <!-- 每月工讀收入 -->
         <div>
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="income-slider">
-            每月工讀收入：<span id="income-label" class="text-ink font-semibold">6,000</span> 元
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="income-input">
+            每月工讀收入 元
           </label>
-          <input type="range" id="income-slider" class="c-range" min="0" max="20000" step="1000" value="6000" oninput="updateIncomeLabel();calculate()" />
-          <div class="flex justify-between text-xs text-ink-subtle mt-1"><span>0</span><span>20,000</span></div>
+          <input type="number" id="income-input" min="0" step="100" value="6000" oninput="calculate()"
+            style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
+            onfocus="this.style.borderBottom='2px solid #0f62fe'" onblur="this.style.borderBottom='1px solid #8c8c8c'" />
         </div>
       </div>
     </div>
@@ -356,16 +358,6 @@
     sel.appendChild(opt);
   });
 
-  // ── 標籤更新 ──
-  function updateFoodLabel() {
-    document.getElementById('food-label').textContent =
-      Number(document.getElementById('food-slider').value).toLocaleString();
-  }
-  function updateIncomeLabel() {
-    document.getElementById('income-label').textContent =
-      Number(document.getElementById('income-slider').value).toLocaleString();
-  }
-
   // ── 主計算 ──
   function calculate() {
     const idx = sel.value;
@@ -377,8 +369,8 @@
 
     const school    = SCHOOLS[idx];
     const useDorm   = document.querySelector('input[name="dorm"]:checked').value === 'dorm';
-    const monthFood = Number(document.getElementById('food-slider').value);
-    const monthInc  = Number(document.getElementById('income-slider').value);
+    const monthFood = Math.max(0, Number(document.getElementById('food-input').value) || 0);
+    const monthInc  = Math.max(0, Number(document.getElementById('income-input').value) || 0);
 
     // 住宿費
     const housingYear = useDorm ? school.dormFee : school.avgRent * 10;
@@ -502,8 +494,6 @@
   }
 
   // ── Init ──
-  updateFoodLabel();
-  updateIncomeLabel();
   </script>
 </body>
 </html>
