@@ -98,17 +98,14 @@
       <h2 class="text-base font-semibold text-ink mb-5">① 選擇學校與收入設定</h2>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <!-- 學校搜尋 -->
-        <div style="position:relative;">
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="school-input">選擇大學</label>
-          <input type="text" id="school-input" autocomplete="off" placeholder="輸入學校名稱搜尋…"
-            oninput="filterSchools()" onfocus="filterSchools()" onblur="setTimeout(hideDropdown,180)"
-            style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
-            onfocusin="this.style.borderBottom='2px solid #0f62fe'" onfocusout="this.style.borderBottom='1px solid #8c8c8c'" />
-          <div id="school-dropdown"
-            style="display:none;position:absolute;z-index:100;left:0;right:0;top:100%;max-height:220px;overflow-y:auto;background:#fff;border:1px solid #e0e0e0;border-top:none;box-shadow:0 4px 12px rgba(0,0,0,.08);">
+        <!-- 學校選單 -->
+        <div>
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="school-select">選擇大學</label>
+          <div class="relative">
+            <select id="school-select" class="c-select" onchange="calculate()">
+              <option value="">— 請選擇 —</option>
+            </select>
           </div>
-          <p id="school-chosen" class="text-xs text-primary mt-1" style="min-height:1.2em;"></p>
         </div>
 
         <!-- 住宿方式 -->
@@ -127,22 +124,20 @@
 
         <!-- 每月可負擔伙食費 -->
         <div>
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="food-input">
-            每月伙食費預算 元
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="food-slider">
+            每月伙食費預算：<span id="food-label" class="text-ink font-semibold">5,000</span> 元
           </label>
-          <input type="number" id="food-input" min="0" step="100" value="5000" oninput="calculate()"
-            style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
-            onfocus="this.style.borderBottom='2px solid #0f62fe'" onblur="this.style.borderBottom='1px solid #8c8c8c'" />
+          <input type="range" id="food-slider" class="c-range" min="3000" max="10000" step="500" value="5000" oninput="updateFoodLabel();calculate()" />
+          <div class="flex justify-between text-xs text-ink-subtle mt-1"><span>3,000</span><span>10,000</span></div>
         </div>
 
         <!-- 每月工讀收入 -->
         <div>
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="income-input">
-            每月工讀收入 元
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="income-slider">
+            每月工讀收入：<span id="income-label" class="text-ink font-semibold">6,000</span> 元
           </label>
-          <input type="number" id="income-input" min="0" step="100" value="6000" oninput="calculate()"
-            style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
-            onfocus="this.style.borderBottom='2px solid #0f62fe'" onblur="this.style.borderBottom='1px solid #8c8c8c'" />
+          <input type="range" id="income-slider" class="c-range" min="0" max="20000" step="1000" value="6000" oninput="updateIncomeLabel();calculate()" />
+          <div class="flex justify-between text-xs text-ink-subtle mt-1"><span>0</span><span>20,000</span></div>
         </div>
       </div>
     </div>
@@ -272,165 +267,159 @@
   //   aids         可申請補助清單 [{name, amount, url}]
   // ══════════════════════════════════════════════════════════════════
   // 共用補助（每所學校都有）
-  const AIDS_PUBLIC  = [
+  const GOV_AID = [
     { name: '教育部弱勢助學金', amount: 36000, url: 'https://www.edu.tw/News.aspx?n=829446EED325AD02' },
-    { name: '就學貸款（無息）',  amount: 0,     url: 'https://www.edu.tw/heloan/' },
+    { name: '就學貸款（無息）',  amount: 0,     url: 'https://heloan.moe.edu.tw/' },
   ];
-  const AIDS_PRIVATE = [
-    { name: '教育部私校助學金', amount: 36000, url: 'https://www.edu.tw/News.aspx?n=829446EED325AD02' },
-    { name: '就學貸款（無息）',  amount: 0,     url: 'https://www.edu.tw/heloan/' },
-  ];
-
-  function pub(name, tuition, dormFee, dormRate, avgRent, subsidy, schoolAid, aidUrl) {
-    return { name, tuition, dormFee, dormRate, avgRent, subsidy,
-      aids: [{ name: schoolAid, amount: subsidy, url: aidUrl }, ...AIDS_PUBLIC] };
-  }
-  function priv(name, tuition, dormFee, dormRate, avgRent, subsidy, schoolAid, aidUrl) {
-    return { name, tuition, dormFee, dormRate, avgRent, subsidy,
-      aids: [{ name: schoolAid, amount: subsidy, url: aidUrl }, ...AIDS_PRIVATE] };
-  }
 
   const SCHOOLS = [
-    // ── 國立綜合大學 ──
-    pub('國立臺灣大學',     53000, 28000, 0.55, 10000, 40000, '臺大弱勢助學金',     'https://osa.ntu.edu.tw/scholarship'),
-    pub('國立成功大學',     50000, 24000, 0.65,  7000, 35000, '成大弱勢助學計畫',   'https://www.ncku.edu.tw/p/412-1000-13707.php'),
-    pub('國立政治大學',     50000, 26000, 0.50,  9000, 35000, '政大弱勢助學金',     'https://osa.nccu.edu.tw/'),
-    pub('國立陽明交通大學', 50000, 25000, 0.60,  8500, 35000, '陽明交大助學金',     'https://osa.nycu.edu.tw/'),
-    pub('國立清華大學',     50000, 24000, 0.60,  8000, 35000, '清大助學金',         'https://osa.nthu.edu.tw/'),
-    pub('國立中興大學',     48000, 22000, 0.70,  6500, 30000, '興大急難救助金',     'https://osa.nchu.edu.tw/'),
-    pub('國立中山大學',     48000, 22000, 0.70,  6500, 30000, '中山大學助學金',     'https://osa.nsysu.edu.tw/'),
-    pub('國立中央大學',     49000, 23000, 0.65,  8000, 30000, '中大弱勢助學金',     'https://osa.ncu.edu.tw/'),
-    pub('國立中正大學',     47000, 21000, 0.72,  5500, 28000, '中正大學助學金',     'https://osa.ccu.edu.tw/'),
-    pub('國立暨南國際大學', 46000, 20000, 0.80,  5000, 27000, '暨大助學金',         'https://osa.ncnu.edu.tw/'),
-    pub('國立東華大學',     45000, 19000, 0.82,  4500, 27000, '東華助學金',         'https://osa.ndhu.edu.tw/'),
-    pub('國立臺灣師範大學', 49000, 25000, 0.58,  9000, 32000, '師大助學金',         'https://osa.ntnu.edu.tw/'),
-    pub('國立彰化師範大學', 46000, 20000, 0.75,  5500, 26000, '彰師大助學金',       'https://osa.ncue.edu.tw/'),
-    pub('國立高雄師範大學', 45000, 19000, 0.78,  5000, 25000, '高師大助學金',       'https://osa.nknu.edu.tw/'),
-    pub('國立臺北教育大學', 47000, 22000, 0.65,  8500, 28000, '北教大助學金',       'https://osa.ntue.edu.tw/'),
-    pub('國立臺中教育大學', 46000, 21000, 0.68,  6000, 27000, '中教大助學金',       'https://osa.ntcu.edu.tw/'),
-    pub('國立臺南大學',     45000, 19000, 0.78,  5000, 25000, '台南大學助學金',     'https://osa.nutn.edu.tw/'),
-    pub('國立屏東大學',     44000, 18000, 0.80,  5000, 25000, '屏大弱勢助學',       'https://www.nptu.edu.tw/p/412-1003-6380.php'),
-    pub('國立花蓮教育大學', 44000, 18000, 0.82,  4000, 24000, '花教大助學金',       'https://osa.ndhu.edu.tw/'),
-    pub('國立臺東大學',     43000, 17000, 0.85,  4000, 24000, '台東大學助學金',     'https://osa.nttu.edu.tw/'),
-    // ── 國立科技大學 ──
-    pub('國立臺灣科技大學', 50000, 24000, 0.62,  9000, 32000, '臺科大助學金',       'https://osa.ntust.edu.tw/'),
-    pub('國立臺北科技大學', 49000, 23000, 0.63,  9000, 30000, '北科大助學金',       'https://osa.ntut.edu.tw/'),
-    pub('國立雲林科技大學', 47000, 21000, 0.72,  5500, 27000, '雲科大助學金',       'https://osa.yuntech.edu.tw/'),
-    pub('國立高雄科技大學', 47000, 20000, 0.73,  5500, 27000, '高科大助學金',       'https://osa.nkust.edu.tw/'),
-    pub('國立屏東科技大學', 46000, 19000, 0.78,  4800, 26000, '屏科大助學金',       'https://osa.npust.edu.tw/'),
-    pub('國立宜蘭大學',     45000, 19000, 0.80,  4500, 25000, '宜大助學金',         'https://osa.niu.edu.tw/'),
-    pub('國立勤益科技大學', 46000, 20000, 0.76,  5500, 26000, '勤益助學金',         'https://osa.ncut.edu.tw/'),
-    pub('國立虎尾科技大學', 45000, 19000, 0.78,  4800, 25000, '虎科大助學金',       'https://osa.nfu.edu.tw/'),
-    pub('國立澎湖科技大學', 43000, 17000, 0.88,  3500, 24000, '澎科大助學金',       'https://osa.npu.edu.tw/'),
-    pub('國立金門大學',     43000, 17000, 0.88,  3500, 24000, '金大助學金',         'https://osa.nqu.edu.tw/'),
-    pub('國立聯合大學',     45000, 19000, 0.80,  5000, 25000, '聯大助學金',         'https://osa.nuu.edu.tw/'),
-    pub('國立臺灣海洋大學', 47000, 21000, 0.72,  7000, 27000, '海大助學金',         'https://osa.ntou.edu.tw/'),
-    // ── 國立藝術/體育/醫學 ──
-    pub('國立臺灣藝術大學', 48000, 22000, 0.65,  8000, 28000, '藝大助學金',         'https://osa.ntua.edu.tw/'),
-    pub('國立臺南藝術大學', 47000, 21000, 0.70,  5500, 27000, '南藝大助學金',       'https://osa.tnnua.edu.tw/'),
-    pub('國立體育大學',     46000, 20000, 0.75,  6000, 26000, '國體大助學金',       'https://osa.ntsu.edu.tw/'),
-    pub('國立臺灣體育運動大學', 45000, 20000, 0.76, 5500, 25000, '台體大助學金',   'https://osa.ntus.edu.tw/'),
-    pub('國立陽明大學',     50000, 24000, 0.60,  9000, 32000, '陽明助學金',         'https://osa.ym.edu.tw/'),
-    // ── 私立綜合大學（北部）──
-    priv('私立輔仁大學',     95000, 32000, 0.45,  8000, 30000, '輔大弱勢助學獎學金', 'https://dosa.fju.edu.tw/scholarship.php'),
-    priv('私立淡江大學',     92000, 30000, 0.45,  8500, 25000, '淡大助學金',         'https://osa.tku.edu.tw/'),
-    priv('私立東吳大學',     90000, 30000, 0.40,  9500, 22000, '東吳急難助學金',     'https://www.scu.edu.tw/osa/'),
-    priv('私立文化大學',     90000, 28000, 0.42,  9000, 22000, '文化大學助學金',     'https://osa.pccu.edu.tw/'),
-    priv('私立銘傳大學',     90000, 28000, 0.44,  8500, 22000, '銘傳助學金',         'https://osa.mcu.edu.tw/'),
-    priv('私立世新大學',     90000, 27000, 0.45,  9000, 20000, '世新助學金',         'https://osa.shu.edu.tw/'),
-    priv('私立臺北醫學大學', 110000, 33000, 0.38, 9500, 30000, '北醫助學金',         'https://osa.tmu.edu.tw/'),
-    priv('私立長庚大學',     105000, 32000, 0.42, 8000, 30000, '長庚助學金',         'https://osa.cgu.edu.tw/'),
-    priv('私立元智大學',     90000, 27000, 0.48,  7500, 22000, '元智助學金',         'https://osa.yzu.edu.tw/'),
-    priv('私立中原大學',     92000, 28000, 0.47,  7500, 22000, '中原助學金',         'https://osa.cycu.edu.tw/'),
-    priv('私立逢甲大學',     90000, 27000, 0.48,  6000, 22000, '逢甲助學金',         'https://osa.fcu.edu.tw/'),
-    priv('私立東海大學',     90000, 27000, 0.48,  6000, 22000, '東海助學金',         'https://osa.thu.edu.tw/'),
-    priv('私立靜宜大學',     88000, 26000, 0.50,  6000, 20000, '靜宜助學金',         'https://osa.pu.edu.tw/'),
-    priv('私立朝陽科技大學', 88000, 26000, 0.50,  5800, 20000, '朝陽助學金',         'https://osa.cyut.edu.tw/'),
-    priv('私立中國醫藥大學', 108000, 32000, 0.40, 6000, 30000, '中醫大助學金',       'https://osa.cmu.edu.tw/'),
-    priv('私立亞洲大學',     88000, 26000, 0.50,  5800, 20000, '亞洲大學助學金',     'https://osa.asia.edu.tw/'),
-    // ── 私立大學（中南部）──
-    priv('私立義守大學',     90000, 27000, 0.48,  5500, 20000, '義守助學金',         'https://osa.isu.edu.tw/'),
-    priv('私立高雄醫學大學', 108000, 32000, 0.40, 5500, 30000, '高醫助學金',         'https://osa.kmu.edu.tw/'),
-    priv('私立中山醫學大學', 108000, 32000, 0.40, 6000, 30000, '中山醫助學金',       'https://osa.csmu.edu.tw/'),
-    priv('私立輔英科技大學', 85000, 25000, 0.52,  5000, 18000, '輔英助學金',         'https://osa.feu.edu.tw/'),
-    priv('私立崑山科技大學', 85000, 25000, 0.52,  5000, 18000, '崑山助學金',         'https://osa.ksu.edu.tw/'),
-    priv('私立南台科技大學', 86000, 25000, 0.52,  5000, 18000, '南台助學金',         'https://osa.stust.edu.tw/'),
-    priv('私立正修科技大學', 84000, 24000, 0.53,  5000, 18000, '正修助學金',         'https://osa.csu.edu.tw/'),
-    priv('私立大仁科技大學', 84000, 24000, 0.55,  4800, 17000, '大仁助學金',         'https://osa.tajen.edu.tw/'),
-    priv('私立嘉南藥理大學', 85000, 24000, 0.55,  5000, 18000, '嘉藥助學金',         'https://osa.cnu.edu.tw/'),
-    priv('私立慈濟大學',     90000, 26000, 0.50,  4500, 22000, '慈濟助學金',         'https://osa.tcu.edu.tw/'),
-    priv('私立佛光大學',     86000, 25000, 0.52,  4500, 18000, '佛光助學金',         'https://osa.fgu.edu.tw/'),
-    priv('私立大葉大學',     86000, 25000, 0.52,  5500, 18000, '大葉助學金',         'https://osa.dyu.edu.tw/'),
-    priv('私立明道大學',     84000, 24000, 0.54,  5500, 17000, '明道助學金',         'https://osa.mdu.edu.tw/'),
-    priv('私立弘光科技大學', 86000, 25000, 0.52,  6000, 18000, '弘光助學金',         'https://osa.hk.edu.tw/'),
-    priv('私立修平科技大學', 84000, 24000, 0.54,  5500, 17000, '修平助學金',         'https://osa.hfu.edu.tw/'),
-    priv('私立嶺東科技大學', 86000, 25000, 0.52,  5800, 18000, '嶺東助學金',         'https://osa.ltu.edu.tw/'),
-    priv('私立中華大學',     87000, 25000, 0.52,  7500, 18000, '中華大學助學金',     'https://osa.chu.edu.tw/'),
-    priv('私立玄奘大學',     87000, 25000, 0.52,  7000, 18000, '玄奘助學金',         'https://osa.hcu.edu.tw/'),
-    // ── 私立大學（北部其他）──
-    priv('私立輔大（醫學）', 110000, 33000, 0.40, 8000, 30000, '輔大醫學助學金',     'https://dosa.fju.edu.tw/'),
-    priv('私立開南大學',     86000, 25000, 0.52,  7500, 18000, '開南助學金',         'https://osa.knu.edu.tw/'),
-    priv('私立大同大學',     90000, 27000, 0.48,  9000, 20000, '大同助學金',         'https://osa.ttu.edu.tw/'),
-    priv('私立台北城市科技大學', 86000, 25000, 0.50, 8500, 18000,'城市科大助學金',   'https://osa.utica.edu.tw/'),
-    priv('私立德明財經科技大學', 86000, 24000, 0.50, 8500, 17000,'德明助學金',       'https://osa.takming.edu.tw/'),
-    priv('私立景文科技大學', 84000, 24000, 0.52,  8000, 17000, '景文助學金',         'https://osa.just.edu.tw/'),
-    priv('私立萬能科技大學', 84000, 24000, 0.53,  7500, 17000, '萬能助學金',         'https://osa.vnu.edu.tw/'),
-    priv('私立龍華科技大學', 85000, 25000, 0.52,  7500, 18000, '龍華助學金',         'https://osa.lhu.edu.tw/'),
-    priv('私立明新科技大學', 84000, 24000, 0.54,  6500, 17000, '明新助學金',         'https://osa.must.edu.tw/'),
-    priv('私立中國科技大學', 84000, 24000, 0.53,  8500, 17000, '中國科大助學金',     'https://osa.cute.edu.tw/'),
-    priv('私立聖約翰科技大學', 84000, 24000, 0.52, 8000, 17000, '聖約翰助學金',     'https://osa.sju.edu.tw/'),
-    priv('私立真理大學',     86000, 25000, 0.51,  8000, 18000, '真理助學金',         'https://osa.au.edu.tw/'),
-    priv('私立臺灣首府大學', 84000, 24000, 0.54,  5000, 17000, '首府助學金',         'https://osa.tsu.edu.tw/'),
-    priv('私立稻江科技暨管理學院', 83000, 23000, 0.55, 5500, 16000, '稻江助學金',   'https://osa.dj.edu.tw/'),
-    priv('私立環球科技大學', 83000, 23000, 0.55,  5000, 16000, '環球助學金',         'https://osa.twu.edu.tw/'),
-    priv('私立吳鳳科技大學', 83000, 23000, 0.55,  5200, 16000, '吳鳳助學金',         'https://osa.wfu.edu.tw/'),
-    priv('私立遠東科技大學', 83000, 23000, 0.55,  5000, 16000, '遠東助學金',         'https://osa.feu.edu.tw/'),
-    priv('私立和春技術學院', 80000, 22000, 0.58,  5000, 15000, '和春助學金',         'https://osa.hsc.edu.tw/'),
+    // ── 台北 ──
+    {
+      name: '國立臺灣大學',
+      tuition: 53000, dormFee: 28000, dormRate: 0.55, avgRent: 10000, subsidy: 30000,
+      aids: [{ name: '臺大弱勢助學金', amount: 40000, url: 'https://osa.ntu.edu.tw/scholarship' }, ...GOV_AID],
+    },
+    {
+      name: '國立臺灣師範大學',
+      tuition: 50000, dormFee: 26000, dormRate: 0.50, avgRent: 10000, subsidy: 25000,
+      aids: [{ name: '師大急難救助金', amount: 20000, url: 'https://osa.ntnu.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '國立臺灣科技大學',
+      tuition: 52000, dormFee: 27000, dormRate: 0.52, avgRent: 10000, subsidy: 25000,
+      aids: [{ name: '臺科大助學金', amount: 25000, url: 'https://osa.ntust.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '國立政治大學',
+      tuition: 51000, dormFee: 26000, dormRate: 0.53, avgRent: 9500, subsidy: 26000,
+      aids: [{ name: '政大弱勢助學金', amount: 30000, url: 'https://osa.nccu.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '私立淡江大學',
+      tuition: 92000, dormFee: 30000, dormRate: 0.42, avgRent: 7000, subsidy: 18000,
+      aids: [{ name: '淡江助學獎學金', amount: 20000, url: 'https://osa.tku.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '私立輔仁大學',
+      tuition: 95000, dormFee: 32000, dormRate: 0.45, avgRent: 8000, subsidy: 20000,
+      aids: [{ name: '輔大弱勢助學獎學金', amount: 30000, url: 'https://dosa.fju.edu.tw/scholarship.php' }, ...GOV_AID],
+    },
+    {
+      name: '私立東吳大學',
+      tuition: 90000, dormFee: 30000, dormRate: 0.40, avgRent: 9500, subsidy: 18000,
+      aids: [{ name: '東吳急難助學金', amount: 20000, url: 'https://www.scu.edu.tw/osa/' }, ...GOV_AID],
+    },
+    {
+      name: '私立中國文化大學',
+      tuition: 93000, dormFee: 31000, dormRate: 0.38, avgRent: 9000, subsidy: 17000,
+      aids: [{ name: '文大弱勢助學金', amount: 18000, url: 'https://osa.pccu.edu.tw/' }, ...GOV_AID],
+    },
+    // ── 桃竹 ──
+    {
+      name: '國立中央大學',
+      tuition: 50000, dormFee: 24000, dormRate: 0.60, avgRent: 7000, subsidy: 25000,
+      aids: [{ name: '中央大學急難助學', amount: 20000, url: 'https://osa.ncu.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '國立交通大學（陽明交大）',
+      tuition: 52000, dormFee: 25000, dormRate: 0.58, avgRent: 7500, subsidy: 26000,
+      aids: [{ name: '陽明交大助學金', amount: 28000, url: 'https://osa.nycu.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '國立清華大學',
+      tuition: 53000, dormFee: 26000, dormRate: 0.60, avgRent: 7500, subsidy: 27000,
+      aids: [{ name: '清大弱勢助學金', amount: 30000, url: 'https://osa.nthu.edu.tw/' }, ...GOV_AID],
+    },
+    // ── 台中 ──
+    {
+      name: '國立中興大學',
+      tuition: 48000, dormFee: 22000, dormRate: 0.70, avgRent: 6500, subsidy: 25000,
+      aids: [{ name: '興大急難救助金', amount: 20000, url: 'https://osa.nchu.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '私立逢甲大學',
+      tuition: 92000, dormFee: 28000, dormRate: 0.43, avgRent: 6500, subsidy: 17000,
+      aids: [{ name: '逢甲助學獎學金', amount: 18000, url: 'https://osa.fcu.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '私立東海大學',
+      tuition: 90000, dormFee: 27000, dormRate: 0.45, avgRent: 6000, subsidy: 16000,
+      aids: [{ name: '東海急難助學金', amount: 15000, url: 'https://osa.thu.edu.tw/' }, ...GOV_AID],
+    },
+    // ── 台南 ──
+    {
+      name: '國立成功大學',
+      tuition: 50000, dormFee: 24000, dormRate: 0.65, avgRent: 7000, subsidy: 28000,
+      aids: [{ name: '成大弱勢助學計畫', amount: 35000, url: 'https://www.ncku.edu.tw/p/412-1000-13707.php' }, ...GOV_AID],
+    },
+    {
+      name: '國立臺南大學',
+      tuition: 44000, dormFee: 20000, dormRate: 0.72, avgRent: 5500, subsidy: 22000,
+      aids: [{ name: '南大助學金', amount: 20000, url: 'https://osa.nutn.edu.tw/' }, ...GOV_AID],
+    },
+    // ── 高雄 ──
+    {
+      name: '國立中山大學',
+      tuition: 50000, dormFee: 23000, dormRate: 0.65, avgRent: 6500, subsidy: 26000,
+      aids: [{ name: '中山大學助學金', amount: 28000, url: 'https://osa.nsysu.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '國立高雄大學',
+      tuition: 45000, dormFee: 20000, dormRate: 0.73, avgRent: 5500, subsidy: 22000,
+      aids: [{ name: '高大弱勢助學金', amount: 20000, url: 'https://osa.nuk.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '私立義守大學',
+      tuition: 88000, dormFee: 26000, dormRate: 0.48, avgRent: 5500, subsidy: 15000,
+      aids: [{ name: '義守助學獎學金', amount: 15000, url: 'https://osa.isu.edu.tw/' }, ...GOV_AID],
+    },
+    // ── 東部 ──
+    {
+      name: '國立東華大學',
+      tuition: 44000, dormFee: 18000, dormRate: 0.82, avgRent: 4500, subsidy: 23000,
+      aids: [{ name: '東華弱勢助學金', amount: 22000, url: 'https://osa.ndhu.edu.tw/' }, ...GOV_AID],
+    },
+    {
+      name: '國立臺東大學',
+      tuition: 43000, dormFee: 17000, dormRate: 0.85, avgRent: 4000, subsidy: 22000,
+      aids: [{ name: '臺東大學助學金', amount: 20000, url: 'https://osa.nttu.edu.tw/' }, ...GOV_AID],
+    },
+    // ── 南部偏鄉 ──
+    {
+      name: '國立屏東大學',
+      tuition: 44000, dormFee: 18000, dormRate: 0.80, avgRent: 5000, subsidy: 22000,
+      aids: [{ name: '屏大弱勢助學', amount: 25000, url: 'https://www.nptu.edu.tw/p/412-1003-6380.php' }, ...GOV_AID],
+    },
+    {
+      name: '國立嘉義大學',
+      tuition: 44000, dormFee: 19000, dormRate: 0.78, avgRent: 5000, subsidy: 22000,
+      aids: [{ name: '嘉大助學金', amount: 20000, url: 'https://osa.ncyu.edu.tw/' }, ...GOV_AID],
+    },
   ];
 
-  // ── 搜尋下拉 ──
-  let selectedSchoolIdx = null;
+  // ── 初始化選單 ──
+  const sel = document.getElementById('school-select');
+  SCHOOLS.forEach((s, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = s.name;
+    sel.appendChild(opt);
+  });
 
-  const schoolInput    = document.getElementById('school-input');
-  const schoolDropdown = document.getElementById('school-dropdown');
-  const schoolChosen   = document.getElementById('school-chosen');
-
-  function filterSchools() {
-    const q = schoolInput.value.trim();
-    const matched = q.length === 0
-      ? SCHOOLS.map((s, i) => ({ s, i })).slice(0, 20)   // 未輸入時顯示前20筆
-      : SCHOOLS.map((s, i) => ({ s, i })).filter(({ s }) => s.name.includes(q));
-
-    if (matched.length === 0) {
-      schoolDropdown.innerHTML = '<div style="padding:10px 16px;font-size:13px;color:#8c8c8c;">查無相符學校</div>';
-    } else {
-      schoolDropdown.innerHTML = matched.map(({ s, i }) =>
-        `<div data-idx="${i}" onmousedown="selectSchool(${i})"
-          style="padding:9px 16px;font-size:14px;color:#161616;cursor:pointer;border-bottom:1px solid #f4f4f4;"
-          onmouseover="this.style.background='#e8f0fe'" onmouseout="this.style.background='#fff'">
-          ${s.name}
-        </div>`
-      ).join('');
-    }
-    schoolDropdown.style.display = 'block';
+  // ── 標籤更新 ──
+  function updateFoodLabel() {
+    document.getElementById('food-label').textContent =
+      Number(document.getElementById('food-slider').value).toLocaleString();
   }
-
-  function selectSchool(idx) {
-    selectedSchoolIdx = idx;
-    schoolInput.value = SCHOOLS[idx].name;
-    schoolChosen.textContent = '✓ 已選擇：' + SCHOOLS[idx].name;
-    schoolDropdown.style.display = 'none';
-    calculate();
-  }
-
-  function hideDropdown() {
-    schoolDropdown.style.display = 'none';
+  function updateIncomeLabel() {
+    document.getElementById('income-label').textContent =
+      Number(document.getElementById('income-slider').value).toLocaleString();
   }
 
   // ── 主計算 ──
   function calculate() {
-    const idx = selectedSchoolIdx;
-    if (idx === null || idx === undefined) {
+    const idx = sel.value;
+    if (idx === '') {
       document.getElementById('result-section').classList.add('hidden');
       document.getElementById('empty-state').classList.remove('hidden');
       return;
@@ -438,8 +427,8 @@
 
     const school    = SCHOOLS[idx];
     const useDorm   = document.querySelector('input[name="dorm"]:checked').value === 'dorm';
-    const monthFood = Math.max(0, Number(document.getElementById('food-input').value) || 0);
-    const monthInc  = Math.max(0, Number(document.getElementById('income-input').value) || 0);
+    const monthFood = Number(document.getElementById('food-slider').value);
+    const monthInc  = Number(document.getElementById('income-slider').value);
 
     // 住宿費
     const housingYear = useDorm ? school.dormFee : school.avgRent * 10;
@@ -563,6 +552,8 @@
   }
 
   // ── Init ──
+  updateFoodLabel();
+  updateIncomeLabel();
   </script>
 </body>
 </html>
