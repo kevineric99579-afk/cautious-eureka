@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>大學生存成本評估儀表板</title>
+  <title>憭批飛???閰摯?銵冽</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
@@ -74,7 +74,7 @@
       <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
         <path d="M10 2L2 7v11h6v-5h4v5h6V7z" fill="#0f62fe"/>
       </svg>
-      <span class="font-semibold text-ink text-sm sm:text-base">大學生存成本評估儀表板</span>
+      <span class="font-semibold text-ink text-sm sm:text-base">憭批飛???閰摯?銵冽</span>
       <span class="ml-auto text-xs text-ink-subtle hidden sm:inline">College Survival Cost Calculator</span>
     </div>
   </header>
@@ -82,10 +82,10 @@
   <!-- HERO -->
   <section class="bg-white border-b border-hairline">
     <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
-      <p class="text-xs text-primary font-medium mb-2 uppercase" style="letter-spacing:.08em;">免費工具 · 資訊透明</p>
-      <h1 class="text-3xl sm:text-4xl font-light text-ink mb-3" style="letter-spacing:-0.2px;">上大學，你準備好了嗎？</h1>
+      <p class="text-xs text-primary font-medium mb-2 uppercase" style="letter-spacing:.08em;">?祥撌亙 繚 鞈???</p>
+      <h1 class="text-3xl sm:text-4xl font-light text-ink mb-3" style="letter-spacing:-0.2px;">銝之摮賂?雿??末鈭?嚗?/h1>
       <p class="text-base text-ink-muted max-w-xl" style="line-height:1.6;">
-        選擇學校、設定你的每月工讀收入，系統自動計算四年財務壓力，幫你做出更好的升學決策。
+        ?豢?摮豢?身摰????極霈?嗅嚗頂蝯梯??蝞?撟渲瓷????撟思???游末??摮豢捱蝑?
       </p>
     </div>
   </section>
@@ -93,15 +93,15 @@
   <!-- MAIN -->
   <main class="max-w-4xl mx-auto px-4 py-8 flex flex-col gap-6">
 
-    <!-- ── 輸入區 ── -->
+    <!-- ?? 頛詨? ?? -->
     <div class="card p-6 fade-up" style="animation-delay:0ms">
-      <h2 class="text-base font-semibold text-ink mb-5">① 選擇學校與收入設定</h2>
+      <h2 class="text-base font-semibold text-ink mb-5">???豢?摮豢??亥身摰?/h2>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <!-- 學校搜尋 -->
+        <!-- 摮豢?? -->
         <div style="position:relative;">
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="school-input">選擇大學</label>
-          <input type="text" id="school-input" autocomplete="off" placeholder="輸入學校名稱搜尋…"
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="school-input">?豢?憭批飛</label>
+          <input type="text" id="school-input" autocomplete="off" placeholder="頛詨摮豢?迂????
             oninput="filterSchools()" onfocus="filterSchools()" onblur="setTimeout(hideDropdown,180)"
             style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
             onfocusin="this.style.borderBottom='2px solid #0f62fe'" onfocusout="this.style.borderBottom='1px solid #8c8c8c'" />
@@ -111,34 +111,34 @@
           <p id="school-chosen" class="text-xs text-primary mt-1" style="min-height:1.2em;"></p>
         </div>
 
-        <!-- 住宿方式 -->
+        <!-- 雿挪?孵? -->
         <div>
-          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;">住宿方式</label>
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;">雿挪?孵?</label>
           <div class="flex gap-3 mt-1">
             <label class="flex items-center gap-2 cursor-pointer text-sm text-ink">
-              <input type="radio" name="dorm" value="dorm" checked onchange="calculate()" style="accent-color:#0f62fe;" /> 住宿舍
+              <input type="radio" name="dorm" value="dorm" checked onchange="calculate()" style="accent-color:#0f62fe;" /> 雿挪??
             </label>
             <label class="flex items-center gap-2 cursor-pointer text-sm text-ink">
-              <input type="radio" name="dorm" value="rent" onchange="calculate()" style="accent-color:#0f62fe;" /> 租屋外住
+              <input type="radio" name="dorm" value="rent" onchange="calculate()" style="accent-color:#0f62fe;" /> 蝘?憭?
             </label>
           </div>
           <p id="dorm-note" class="text-xs text-ink-subtle mt-2"></p>
         </div>
 
-        <!-- 每月可負擔伙食費 -->
+        <!-- 瘥??航???憌祥 -->
         <div>
           <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="food-input">
-            每月伙食費預算 元
+            瘥?隡?鞎駁?蝞???
           </label>
           <input type="number" id="food-input" min="0" step="100" value="5000" oninput="calculate()"
             style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
             onfocus="this.style.borderBottom='2px solid #0f62fe'" onblur="this.style.borderBottom='1px solid #8c8c8c'" />
         </div>
 
-        <!-- 每月工讀收入 -->
+        <!-- 瘥?撌亥??嗅 -->
         <div>
           <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="income-input">
-            每月工讀收入 元
+            瘥?撌亥??嗅 ??
           </label>
           <input type="number" id="income-input" min="0" step="100" value="6000" oninput="calculate()"
             style="width:100%;border:none;border-bottom:1px solid #8c8c8c;background:#f4f4f4;padding:8px 0 7px;font-size:14px;color:#161616;outline:none;"
@@ -147,14 +147,14 @@
       </div>
     </div>
 
-    <!-- ── 結果區（初始隱藏）── -->
+    <!-- ?? 蝯??嚗?憪???? -->
     <div id="result-section" class="hidden flex flex-col gap-6">
 
-      <!-- 財務壓力評級 -->
+      <!-- 鞎∪?憯?閰? -->
       <div id="rating-card" class="card p-6 fade-up" style="animation-delay:60ms">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 class="text-base font-semibold text-ink mb-1">四年財務壓力評級</h2>
+            <h2 class="text-base font-semibold text-ink mb-1">?僑鞎∪?憯?閰?</h2>
             <p id="rating-desc" class="text-sm text-ink-muted max-w-md" style="line-height:1.55;"></p>
           </div>
           <div id="rating-badge" class="text-2xl font-semibold px-6 py-3 border text-center shrink-0" style="min-width:120px;border-radius:0;"></div>
@@ -162,7 +162,7 @@
         <!-- Pressure bar -->
         <div class="mt-5">
           <div class="flex justify-between text-xs text-ink-muted mb-1">
-            <span>財務壓力指數</span>
+            <span>鞎∪?憯??</span>
             <span id="pressure-pct">0%</span>
           </div>
           <div class="bar-track">
@@ -171,36 +171,36 @@
         </div>
       </div>
 
-      <!-- 數字摘要 -->
+      <!-- ?詨??? -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-hairline border border-hairline fade-up" style="animation-delay:90ms">
         <div class="stat-box">
-          <p class="text-xs text-ink-subtle mb-1">一年學雜費</p>
-          <p id="s-tuition" class="text-xl font-semibold text-ink">—</p>
-          <p class="text-xs text-ink-subtle">元</p>
+          <p class="text-xs text-ink-subtle mb-1">銝撟游飛?祥</p>
+          <p id="s-tuition" class="text-xl font-semibold text-ink">??/p>
+          <p class="text-xs text-ink-subtle">??/p>
         </div>
         <div class="stat-box">
-          <p class="text-xs text-ink-subtle mb-1">一年住宿/房租</p>
-          <p id="s-housing" class="text-xl font-semibold text-ink">—</p>
-          <p class="text-xs text-ink-subtle">元</p>
+          <p class="text-xs text-ink-subtle mb-1">銝撟港?摰??輻?</p>
+          <p id="s-housing" class="text-xl font-semibold text-ink">??/p>
+          <p class="text-xs text-ink-subtle">??/p>
         </div>
         <div class="stat-box">
-          <p class="text-xs text-ink-subtle mb-1">一年伙食費</p>
-          <p id="s-food" class="text-xl font-semibold text-ink">—</p>
-          <p class="text-xs text-ink-subtle">元</p>
+          <p class="text-xs text-ink-subtle mb-1">銝撟港?憌祥</p>
+          <p id="s-food" class="text-xl font-semibold text-ink">??/p>
+          <p class="text-xs text-ink-subtle">??/p>
         </div>
         <div class="stat-box">
-          <p class="text-xs text-ink-subtle mb-1">一年淨支出</p>
-          <p id="s-net" class="text-xl font-semibold text-ink">—</p>
-          <p class="text-xs text-ink-subtle">元（扣除收入）</p>
+          <p class="text-xs text-ink-subtle mb-1">銝撟湔楊?臬</p>
+          <p id="s-net" class="text-xl font-semibold text-ink">??/p>
+          <p class="text-xs text-ink-subtle">?????嗅嚗?/p>
         </div>
       </div>
 
-      <!-- 圓餅圖 + 弱勢補助 -->
+      <!-- ????+ 撘勗鋆 -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 fade-up" style="animation-delay:120ms">
 
-        <!-- 圓餅圖 -->
+        <!-- ????-->
         <div class="card p-6">
-          <h3 class="text-sm font-semibold text-ink mb-4">一年支出佔比</h3>
+          <h3 class="text-sm font-semibold text-ink mb-4">銝撟湔?箔?瘥?/h3>
           <div class="flex items-center gap-6">
             <svg id="pie-svg" width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
               <circle cx="60" cy="60" r="50" fill="#f4f4f4"/>
@@ -210,44 +210,44 @@
           </div>
         </div>
 
-        <!-- 弱勢補助 -->
+        <!-- 撘勗鋆 -->
         <div class="card p-6">
-          <h3 class="text-sm font-semibold text-ink mb-4">可申請的弱勢補助</h3>
+          <h3 class="text-sm font-semibold text-ink mb-4">?舐隢?撘勗鋆</h3>
           <div id="aid-list" class="flex flex-col gap-3"></div>
         </div>
       </div>
 
-      <!-- 四年總覽 -->
+      <!-- ?僑蝮質汗 -->
       <div class="card p-6 fade-up" style="animation-delay:150ms">
-        <h3 class="text-sm font-semibold text-ink mb-4">四年財務總覽</h3>
+        <h3 class="text-sm font-semibold text-ink mb-4">?僑鞎∪?蝮質汗</h3>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="stat-box">
-            <p class="text-xs text-ink-subtle mb-1">四年總成本</p>
-            <p id="s-4y-total" class="text-2xl font-light text-ink">—</p>
-            <p class="text-xs text-ink-subtle">元</p>
+            <p class="text-xs text-ink-subtle mb-1">?僑蝮賣???/p>
+            <p id="s-4y-total" class="text-2xl font-light text-ink">??/p>
+            <p class="text-xs text-ink-subtle">??/p>
           </div>
           <div class="stat-box">
-            <p class="text-xs text-ink-subtle mb-1">四年工讀總收入</p>
-            <p id="s-4y-income" class="text-2xl font-light text-ink">—</p>
-            <p class="text-xs text-ink-subtle">元（10 個月/年）</p>
+            <p class="text-xs text-ink-subtle mb-1">?僑撌亥?蝮賣??/p>
+            <p id="s-4y-income" class="text-2xl font-light text-ink">??/p>
+            <p class="text-xs text-ink-subtle">??10 ??/撟湛?</p>
           </div>
           <div class="stat-box">
-            <p class="text-xs text-ink-subtle mb-1">四年需自籌</p>
-            <p id="s-4y-gap" class="text-2xl font-light text-ink">—</p>
-            <p class="text-xs text-ink-subtle">元</p>
+            <p class="text-xs text-ink-subtle mb-1">?僑??芰?</p>
+            <p id="s-4y-gap" class="text-2xl font-light text-ink">??/p>
+            <p class="text-xs text-ink-subtle">??/p>
           </div>
         </div>
       </div>
 
     </div><!-- /result-section -->
 
-    <!-- 空狀態 -->
+    <!-- 蝛箇???-->
     <div id="empty-state" class="card p-12 flex flex-col items-center gap-4 text-ink-subtle fade-up" style="animation-delay:60ms">
       <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
         <rect x="8" y="8" width="32" height="32" rx="0" stroke="#8c8c8c" stroke-width="2"/>
         <path d="M16 24h16M24 16v16" stroke="#8c8c8c" stroke-width="2"/>
       </svg>
-      <p class="text-base">請先選擇學校，開始評估財務壓力。</p>
+      <p class="text-base">隢??豢?摮豢嚗?憪?隡啗瓷????/p>
     </div>
 
   </main>
@@ -255,30 +255,30 @@
   <!-- FOOTER -->
   <footer style="background:#161616;" class="mt-8">
     <div class="max-w-4xl mx-auto px-4 py-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <p class="text-xs" style="color:#a8a8a8;letter-spacing:.16px;">資料僅供參考，實際費用依各校公告為準。</p>
-      <p class="text-xs" style="color:#6f6f6f;">以 IBM Bob AI 協助開發 · 星火學習導航</p>
+      <p class="text-xs" style="color:#a8a8a8;letter-spacing:.16px;">鞈?????撖阡?鞎餌靘??∪?皞?/p>
+      <p class="text-xs" style="color:#6f6f6f;">隞?IBM Bob AI ?? 繚 ?摮貊?撠</p>
     </div>
   </footer>
 
   <script>
-  // ══════════════════════════════════════════════════════════════════
-  // 📌 學校資料庫 — 可自由新增 / 修改
+  // ??????????????????????????????????????????????????????????????????
+  // ?? 摮豢鞈?摨????航?望憓?/ 靽格
   //
-  //   tuition      年學雜費（元）
-  //   dormFee      宿舍一年費用（含寒暑假）
-  //   dormRate     宿舍中籤率（0~1）
-  //   avgRent      校外月租（元）
-  //   subsidy      學校弱勢補助年金額（元，保守估計）
-  //   aids         可申請補助清單 [{name, amount, url}]
-  // ══════════════════════════════════════════════════════════════════
-  // 共用補助（每所學校都有）
+  //   tuition      撟游飛?祥嚗?嚗?
+  //   dormFee      摰輯?銝撟渲祥?剁??怠???嚗?
+  //   dormRate     摰輯?銝剔惜??0~1嚗?
+  //   avgRent      ?∪???嚗?嚗?
+  //   subsidy      摮豢撘勗鋆撟湧?憿???靽?隡啗?嚗?
+  //   aids         ?舐隢??拇???[{name, amount, url}]
+  // ??????????????????????????????????????????????????????????????????
+  // ?梁鋆嚗??摮豢?賣?嚗?
   const AIDS_PUBLIC  = [
-    { name: '教育部弱勢助學金', amount: 36000, url: 'https://www.edu.tw/News.aspx?n=829446EED325AD02' },
-    { name: '就學貸款（無息）',  amount: 0,     url: 'https://www.edu.tw/heloan/' },
+    { name: '??典摹?Ｗ摮賊?', amount: 36000, url: 'https://www.edu.tw/News.aspx?n=829446EED325AD02' },
+    { name: '撠勗飛鞎豢狡嚗?荔?',  amount: 0,     url: 'https://www.edu.tw/heloan/' },
   ];
   const AIDS_PRIVATE = [
-    { name: '教育部私校助學金', amount: 36000, url: 'https://www.edu.tw/News.aspx?n=829446EED325AD02' },
-    { name: '就學貸款（無息）',  amount: 0,     url: 'https://www.edu.tw/heloan/' },
+    { name: '??函??∪摮賊?', amount: 36000, url: 'https://www.edu.tw/News.aspx?n=829446EED325AD02' },
+    { name: '撠勗飛鞎豢狡嚗?荔?',  amount: 0,     url: 'https://www.edu.tw/heloan/' },
   ];
 
   function pub(name, tuition, dormFee, dormRate, avgRent, subsidy, schoolAid, aidUrl) {
@@ -291,120 +291,104 @@
   }
 
   const SCHOOLS = [
-    // ── 國立綜合大學 ──
-    pub('國立臺灣大學',         53000, 28000, 0.55, 10000, 40000, '臺大弱勢助學金',       'https://osa.ntu.edu.tw/scholarship'),
-    pub('國立成功大學',         50000, 24000, 0.65,  7000, 35000, '成大弱勢助學計畫',     'https://www.ncku.edu.tw/p/412-1000-13707.php'),
-    pub('國立政治大學',         50000, 26000, 0.50,  9000, 35000, '政大弱勢助學金',       'https://osa.nccu.edu.tw/'),
-    pub('國立陽明交通大學',     50000, 25000, 0.60,  8500, 35000, '陽明交大助學金',       'https://osa.nycu.edu.tw/'),
-    pub('國立清華大學',         50000, 24000, 0.60,  8000, 35000, '清大助學金',           'https://osa.nthu.edu.tw/'),
-    pub('國立中興大學',         48000, 22000, 0.70,  6500, 30000, '興大急難救助金',       'https://osa.nchu.edu.tw/'),
-    pub('國立中山大學',         48000, 22000, 0.70,  6500, 30000, '中山大學助學金',       'https://osa.nsysu.edu.tw/'),
-    pub('國立中央大學',         49000, 23000, 0.65,  8000, 30000, '中大弱勢助學金',       'https://osa.ncu.edu.tw/'),
-    pub('國立中正大學',         47000, 21000, 0.72,  5500, 28000, '中正大學助學金',       'https://osa.ccu.edu.tw/'),
-    pub('國立暨南國際大學',     46000, 20000, 0.80,  5000, 27000, '暨大助學金',           'https://osa.ncnu.edu.tw/'),
-    pub('國立東華大學',         45000, 19000, 0.82,  4500, 27000, '東華助學金',           'https://osa.ndhu.edu.tw/'),
-    pub('國立臺灣師範大學',     49000, 25000, 0.58,  9000, 32000, '師大助學金',           'https://osa.ntnu.edu.tw/'),
-    pub('國立彰化師範大學',     46000, 20000, 0.75,  5500, 26000, '彰師大助學金',         'https://osa.ncue.edu.tw/'),
-    pub('國立高雄師範大學',     45000, 19000, 0.78,  5000, 25000, '高師大助學金',         'https://osa.nknu.edu.tw/'),
-    pub('國立臺北教育大學',     47000, 22000, 0.65,  8500, 28000, '北教大助學金',         'https://osa.ntue.edu.tw/'),
-    pub('國立臺中教育大學',     46000, 21000, 0.68,  6000, 27000, '中教大助學金',         'https://osa.ntcu.edu.tw/'),
-    pub('國立臺南大學',         45000, 19000, 0.78,  5000, 25000, '台南大學助學金',       'https://osa.nutn.edu.tw/'),
-    pub('國立屏東大學',         44000, 18000, 0.80,  5000, 25000, '屏大弱勢助學',         'https://www.nptu.edu.tw/p/412-1003-6380.php'),
-    pub('國立臺東大學',         43000, 17000, 0.85,  4000, 24000, '台東大學助學金',       'https://osa.nttu.edu.tw/'),
-    pub('國立臺灣海洋大學',     47000, 21000, 0.72,  7000, 27000, '海大助學金',           'https://osa.ntou.edu.tw/'),
-    pub('國立臺灣藝術大學',     48000, 22000, 0.65,  8000, 28000, '藝大助學金',           'https://osa.ntua.edu.tw/'),
-    pub('國立臺南藝術大學',     47000, 21000, 0.70,  5500, 27000, '南藝大助學金',         'https://osa.tnnua.edu.tw/'),
-    pub('國立體育大學',         46000, 20000, 0.75,  6000, 26000, '國體大助學金',         'https://osa.ntsu.edu.tw/'),
-    pub('國立臺灣體育運動大學', 45000, 20000, 0.76,  5500, 25000, '台體大助學金',         'https://osa.ntus.edu.tw/'),
-    pub('國立臺灣科技大學',     50000, 24000, 0.62,  9000, 32000, '臺科大助學金',         'https://osa.ntust.edu.tw/'),
-    pub('國立臺北科技大學',     49000, 23000, 0.63,  9000, 30000, '北科大助學金',         'https://osa.ntut.edu.tw/'),
-    pub('國立雲林科技大學',     47000, 21000, 0.72,  5500, 27000, '雲科大助學金',         'https://osa.yuntech.edu.tw/'),
-    pub('國立高雄科技大學',     47000, 20000, 0.73,  5500, 27000, '高科大助學金',         'https://osa.nkust.edu.tw/'),
-    pub('國立屏東科技大學',     46000, 19000, 0.78,  4800, 26000, '屏科大助學金',         'https://osa.npust.edu.tw/'),
-    pub('國立宜蘭大學',         45000, 19000, 0.80,  4500, 25000, '宜大助學金',           'https://osa.niu.edu.tw/'),
-    pub('國立勤益科技大學',     46000, 20000, 0.76,  5500, 26000, '勤益助學金',           'https://osa.ncut.edu.tw/'),
-    pub('國立虎尾科技大學',     45000, 19000, 0.78,  4800, 25000, '虎科大助學金',         'https://osa.nfu.edu.tw/'),
-    pub('國立澎湖科技大學',     43000, 17000, 0.88,  3500, 24000, '澎科大助學金',         'https://osa.npu.edu.tw/'),
-    pub('國立金門大學',         43000, 17000, 0.88,  3500, 24000, '金大助學金',           'https://osa.nqu.edu.tw/'),
-    pub('國立聯合大學',         45000, 19000, 0.80,  5000, 25000, '聯大助學金',           'https://osa.nuu.edu.tw/'),
-    pub('國立嘉義大學',         46000, 20000, 0.78,  5000, 26000, '嘉義大學助學金',       'https://osa.ncyu.edu.tw/'),
-    pub('國立臺北大學',         48000, 22000, 0.65,  9000, 28000, '北大助學金',           'https://osa.ntpu.edu.tw/'),
-    pub('國立高雄大學',         46000, 20000, 0.75,  5500, 26000, '高雄大學助學金',       'https://osa.nuk.edu.tw/'),
-    pub('國立臺灣大學（醫學）', 55000, 29000, 0.55, 10000, 42000, '臺大醫學助學金',       'https://osa.ntu.edu.tw/scholarship'),
-    // ── 私立綜合大學（北部）──
-    priv('輔仁大學',             95000, 32000, 0.45,  8000, 30000, '輔大弱勢助學獎學金',   'https://dosa.fju.edu.tw/scholarship.php'),
-    priv('淡江大學',             92000, 30000, 0.45,  8500, 25000, '淡大助學金',           'https://osa.tku.edu.tw/'),
-    priv('東吳大學',             90000, 30000, 0.40,  9500, 22000, '東吳急難助學金',       'https://www.scu.edu.tw/osa/'),
-    priv('中國文化大學',         90000, 28000, 0.42,  9000, 22000, '文化大學助學金',       'https://osa.pccu.edu.tw/'),
-    priv('銘傳大學',             90000, 28000, 0.44,  8500, 22000, '銘傳助學金',           'https://osa.mcu.edu.tw/'),
-    priv('世新大學',             90000, 27000, 0.45,  9000, 20000, '世新助學金',           'https://osa.shu.edu.tw/'),
-    priv('臺北醫學大學',         110000, 33000, 0.38, 9500, 30000, '北醫助學金',           'https://osa.tmu.edu.tw/'),
-    priv('長庚大學',             105000, 32000, 0.42, 8000, 30000, '長庚助學金',           'https://osa.cgu.edu.tw/'),
-    priv('元智大學',             90000, 27000, 0.48,  7500, 22000, '元智助學金',           'https://osa.yzu.edu.tw/'),
-    priv('中原大學',             92000, 28000, 0.47,  7500, 22000, '中原助學金',           'https://osa.cycu.edu.tw/'),
-    priv('大同大學',             90000, 27000, 0.48,  9000, 20000, '大同助學金',           'https://osa.ttu.edu.tw/'),
-    priv('實踐大學',             90000, 27000, 0.46,  9000, 20000, '實踐助學金',           'https://osa.usc.edu.tw/'),
-    priv('東方設計大學',         84000, 24000, 0.54,  5500, 17000, '東方設計助學金',       'https://osa.odc.edu.tw/'),
-    priv('開南大學',             86000, 25000, 0.52,  7500, 18000, '開南助學金',           'https://osa.knu.edu.tw/'),
-    priv('台北城市科技大學',     86000, 25000, 0.50,  8500, 18000, '城市科大助學金',       'https://osa.utica.edu.tw/'),
-    priv('德明財經科技大學',     86000, 24000, 0.50,  8500, 17000, '德明助學金',           'https://osa.takming.edu.tw/'),
-    priv('景文科技大學',         84000, 24000, 0.52,  8000, 17000, '景文助學金',           'https://osa.just.edu.tw/'),
-    priv('萬能科技大學',         84000, 24000, 0.53,  7500, 17000, '萬能助學金',           'https://osa.vnu.edu.tw/'),
-    priv('龍華科技大學',         85000, 25000, 0.52,  7500, 18000, '龍華助學金',           'https://osa.lhu.edu.tw/'),
-    priv('明新科技大學',         84000, 24000, 0.54,  6500, 17000, '明新助學金',           'https://osa.must.edu.tw/'),
-    priv('中華大學',             87000, 25000, 0.52,  7500, 18000, '中華大學助學金',       'https://osa.chu.edu.tw/'),
-    priv('玄奘大學',             87000, 25000, 0.52,  7000, 18000, '玄奘助學金',           'https://osa.hcu.edu.tw/'),
-    priv('真理大學',             86000, 25000, 0.51,  8000, 18000, '真理助學金',           'https://osa.au.edu.tw/'),
-    priv('聖約翰科技大學',       84000, 24000, 0.52,  8000, 17000, '聖約翰助學金',         'https://osa.sju.edu.tw/'),
-    priv('中國科技大學',         84000, 24000, 0.53,  8500, 17000, '中國科大助學金',       'https://osa.cute.edu.tw/'),
-    priv('華夏科技大學',         84000, 24000, 0.53,  8000, 17000, '華夏助學金',           'https://osa.hwh.edu.tw/'),
-    priv('醒吾科技大學',         84000, 24000, 0.53,  8000, 17000, '醒吾助學金',           'https://osa.hwng.edu.tw/'),
-    priv('東南科技大學',         84000, 24000, 0.54,  7500, 17000, '東南助學金',           'https://osa.tnu.edu.tw/'),
-    priv('致理科技大學',         84000, 24000, 0.53,  8000, 17000, '致理助學金',           'https://osa.chihlee.edu.tw/'),
-    priv('輔大（醫學院）',       112000, 33000, 0.40, 8000, 30000, '輔大醫學助學金',       'https://dosa.fju.edu.tw/'),
-    // ── 私立大學（中部）──
-    priv('逢甲大學',             90000, 27000, 0.48,  6000, 22000, '逢甲助學金',           'https://osa.fcu.edu.tw/'),
-    priv('東海大學',             90000, 27000, 0.48,  6000, 22000, '東海助學金',           'https://osa.thu.edu.tw/'),
-    priv('靜宜大學',             88000, 26000, 0.50,  6000, 20000, '靜宜助學金',           'https://osa.pu.edu.tw/'),
-    priv('朝陽科技大學',         88000, 26000, 0.50,  5800, 20000, '朝陽助學金',           'https://osa.cyut.edu.tw/'),
-    priv('中國醫藥大學',         108000, 32000, 0.40, 6000, 30000, '中醫大助學金',         'https://osa.cmu.edu.tw/'),
-    priv('亞洲大學',             88000, 26000, 0.50,  5800, 20000, '亞洲大學助學金',       'https://osa.asia.edu.tw/'),
-    priv('大葉大學',             86000, 25000, 0.52,  5500, 18000, '大葉助學金',           'https://osa.dyu.edu.tw/'),
-    priv('明道大學',             84000, 24000, 0.54,  5500, 17000, '明道助學金',           'https://osa.mdu.edu.tw/'),
-    priv('弘光科技大學',         86000, 25000, 0.52,  6000, 18000, '弘光助學金',           'https://osa.hk.edu.tw/'),
-    priv('修平科技大學',         84000, 24000, 0.54,  5500, 17000, '修平助學金',           'https://osa.hfu.edu.tw/'),
-    priv('嶺東科技大學',         86000, 25000, 0.52,  5800, 18000, '嶺東助學金',           'https://osa.ltu.edu.tw/'),
-    priv('中山醫學大學',         108000, 32000, 0.40, 6000, 30000, '中山醫助學金',         'https://osa.csmu.edu.tw/'),
-    priv('僑光科技大學',         83000, 23000, 0.55,  5800, 16000, '僑光助學金',           'https://osa.ocu.edu.tw/'),
-    priv('環球科技大學',         83000, 23000, 0.55,  5000, 16000, '環球助學金',           'https://osa.twu.edu.tw/'),
-    priv('吳鳳科技大學',         83000, 23000, 0.55,  5200, 16000, '吳鳳助學金',           'https://osa.wfu.edu.tw/'),
-    priv('建國科技大學',         83000, 23000, 0.55,  5500, 16000, '建國助學金',           'https://osa.ctu.edu.tw/'),
-    // ── 私立大學（南部）──
-    priv('義守大學',             90000, 27000, 0.48,  5500, 20000, '義守助學金',           'https://osa.isu.edu.tw/'),
-    priv('高雄醫學大學',         108000, 32000, 0.40, 5500, 30000, '高醫助學金',           'https://osa.kmu.edu.tw/'),
-    priv('輔英科技大學',         85000, 25000, 0.52,  5000, 18000, '輔英助學金',           'https://osa.feu.edu.tw/'),
-    priv('崑山科技大學',         85000, 25000, 0.52,  5000, 18000, '崑山助學金',           'https://osa.ksu.edu.tw/'),
-    priv('南台科技大學',         86000, 25000, 0.52,  5000, 18000, '南台助學金',           'https://osa.stust.edu.tw/'),
-    priv('正修科技大學',         84000, 24000, 0.53,  5000, 18000, '正修助學金',           'https://osa.csu.edu.tw/'),
-    priv('大仁科技大學',         84000, 24000, 0.55,  4800, 17000, '大仁助學金',           'https://osa.tajen.edu.tw/'),
-    priv('嘉南藥理大學',         85000, 24000, 0.55,  5000, 18000, '嘉藥助學金',           'https://osa.cnu.edu.tw/'),
-    priv('長榮大學',             88000, 26000, 0.50,  5000, 20000, '長榮助學金',           'https://osa.cjcu.edu.tw/'),
-    priv('南華大學',             86000, 25000, 0.52,  4800, 18000, '南華助學金',           'https://osa.nhu.edu.tw/'),
-    priv('永達技術學院',         80000, 22000, 0.58,  4800, 15000, '永達助學金',           'https://osa.ydu.edu.tw/'),
-    priv('遠東科技大學',         83000, 23000, 0.55,  5000, 16000, '遠東助學金',           'https://osa.feu.edu.tw/'),
-    priv('和春技術學院',         80000, 22000, 0.58,  5000, 15000, '和春助學金',           'https://osa.hsc.edu.tw/'),
-    priv('台南應用科技大學',     83000, 23000, 0.55,  5000, 16000, '台南應科助學金',       'https://osa.tut.edu.tw/'),
-    priv('高苑科技大學',         82000, 23000, 0.56,  5000, 16000, '高苑助學金',           'https://osa.kyu.edu.tw/'),
-    priv('育達科技大學',         82000, 22000, 0.57,  6000, 15000, '育達助學金',           'https://osa.ydu.edu.tw/'),
-    priv('美和科技大學',         82000, 22000, 0.57,  4800, 15000, '美和助學金',           'https://osa.meiho.edu.tw/'),
-    priv('台灣首府大學',         84000, 24000, 0.54,  5000, 17000, '首府助學金',           'https://osa.tsu.edu.tw/'),
-    // ── 私立大學（東部 / 離島）──
-    priv('慈濟大學',             90000, 26000, 0.50,  4500, 22000, '慈濟助學金',           'https://osa.tcu.edu.tw/'),
-    priv('佛光大學',             86000, 25000, 0.52,  4500, 18000, '佛光助學金',           'https://osa.fgu.edu.tw/'),
-    priv('稻江科技暨管理學院',   83000, 23000, 0.55,  5500, 16000, '稻江助學金',           'https://osa.dj.edu.tw/'),
+    // ?? ??蝬?憭批飛 ??
+    pub('???箇憭批飛',     53000, 28000, 0.55, 10000, 40000, '?箏之撘勗?拙飛??,     'https://osa.ntu.edu.tw/scholarship'),
+    pub('????憭批飛',     50000, 24000, 0.65,  7000, 35000, '?之撘勗?拙飛閮',   'https://www.ncku.edu.tw/p/412-1000-13707.php'),
+    pub('???踵祥憭批飛',     50000, 26000, 0.50,  9000, 35000, '?踹之撘勗?拙飛??,     'https://osa.nccu.edu.tw/'),
+    pub('???賣?鈭日之摮?, 50000, 25000, 0.60,  8500, 35000, '?賣?鈭文之?拙飛??,     'https://osa.nycu.edu.tw/'),
+    pub('??皜憭批飛',     50000, 24000, 0.60,  8000, 35000, '皜之?拙飛??,         'https://osa.nthu.edu.tw/'),
+    pub('??銝剛?憭批飛',     48000, 22000, 0.70,  6500, 30000, '?之?仿???,     'https://osa.nchu.edu.tw/'),
+    pub('??銝剖控憭批飛',     48000, 22000, 0.70,  6500, 30000, '銝剖控憭批飛?拙飛??,     'https://osa.nsysu.edu.tw/'),
+    pub('??銝剖亢憭批飛',     49000, 23000, 0.65,  8000, 30000, '銝剖之撘勗?拙飛??,     'https://osa.ncu.edu.tw/'),
+    pub('??銝剜迤憭批飛',     47000, 21000, 0.72,  5500, 28000, '銝剜迤憭批飛?拙飛??,     'https://osa.ccu.edu.tw/'),
+    pub('???典???憭批飛', 46000, 20000, 0.80,  5000, 27000, '?典之?拙飛??,         'https://osa.ncnu.edu.tw/'),
+    pub('???梯憭批飛',     45000, 19000, 0.82,  4500, 27000, '?梯?拙飛??,         'https://osa.ndhu.edu.tw/'),
+    pub('???箇撣怎?憭批飛', 49000, 25000, 0.58,  9000, 32000, '撣怠之?拙飛??,         'https://osa.ntnu.edu.tw/'),
+    pub('??敶啣?撣怎?憭批飛', 46000, 20000, 0.75,  5500, 26000, '敶啣葦憭批摮賊?',       'https://osa.ncue.edu.tw/'),
+    pub('??擃?撣怎?憭批飛', 45000, 19000, 0.78,  5000, 25000, '擃葦憭批摮賊?',       'https://osa.nknu.edu.tw/'),
+    pub('???箏??憭批飛', 47000, 22000, 0.65,  8500, 28000, '??憭批摮賊?',       'https://osa.ntue.edu.tw/'),
+    pub('???箔葉?憭批飛', 46000, 21000, 0.68,  6000, 27000, '銝剜?憭批摮賊?',       'https://osa.ntcu.edu.tw/'),
+    pub('???箏?憭批飛',     45000, 19000, 0.78,  5000, 25000, '?啣?憭批飛?拙飛??,     'https://osa.nutn.edu.tw/'),
+    pub('??撅憭批飛',     44000, 18000, 0.80,  5000, 25000, '撅之撘勗?拙飛',       'https://www.nptu.edu.tw/p/412-1003-6380.php'),
+    pub('???梯?憭批飛', 44000, 18000, 0.82,  4000, 24000, '?望?憭批摮賊?',       'https://osa.ndhu.edu.tw/'),
+    pub('???箸憭批飛',     43000, 17000, 0.85,  4000, 24000, '?唳憭批飛?拙飛??,     'https://osa.nttu.edu.tw/'),
+    // ?? ??蝘?憭批飛 ??
+    pub('???箇蝘?憭批飛', 50000, 24000, 0.62,  9000, 32000, '?箇?憭批摮賊?',       'https://osa.ntust.edu.tw/'),
+    pub('???箏?蝘?憭批飛', 49000, 23000, 0.63,  9000, 30000, '??憭批摮賊?',       'https://osa.ntut.edu.tw/'),
+    pub('???脫?蝘?憭批飛', 47000, 21000, 0.72,  5500, 27000, '?脩?憭批摮賊?',       'https://osa.yuntech.edu.tw/'),
+    pub('??擃?蝘?憭批飛', 47000, 20000, 0.73,  5500, 27000, '擃?憭批摮賊?',       'https://osa.nkust.edu.tw/'),
+    pub('??撅蝘?憭批飛', 46000, 19000, 0.78,  4800, 26000, '撅?憭批摮賊?',       'https://osa.npust.edu.tw/'),
+    pub('??摰憭批飛',     45000, 19000, 0.80,  4500, 25000, '摰之?拙飛??,         'https://osa.niu.edu.tw/'),
+    pub('???斤?蝘?憭批飛', 46000, 20000, 0.76,  5500, 26000, '?斤??拙飛??,         'https://osa.ncut.edu.tw/'),
+    pub('???偏蝘?憭批飛', 45000, 19000, 0.78,  4800, 25000, '??憭批摮賊?',       'https://osa.nfu.edu.tw/'),
+    pub('??瞉?蝘?憭批飛', 43000, 17000, 0.88,  3500, 24000, '瞉?憭批摮賊?',       'https://osa.npu.edu.tw/'),
+    pub('????憭批飛',     43000, 17000, 0.88,  3500, 24000, '?之?拙飛??,         'https://osa.nqu.edu.tw/'),
+    pub('???臬?憭批飛',     45000, 19000, 0.80,  5000, 25000, '?臬之?拙飛??,         'https://osa.nuu.edu.tw/'),
+    pub('???箇瘚瑟?憭批飛', 47000, 21000, 0.72,  7000, 27000, '瘚瑕之?拙飛??,         'https://osa.ntou.edu.tw/'),
+    // ?? ????/擃/?怠飛 ??
+    pub('???箇??憭批飛', 48000, 22000, 0.65,  8000, 28000, '?之?拙飛??,         'https://osa.ntua.edu.tw/'),
+    pub('???箏???憭批飛', 47000, 21000, 0.70,  5500, 27000, '??憭批摮賊?',       'https://osa.tnnua.edu.tw/'),
+    pub('??擃憭批飛',     46000, 20000, 0.75,  6000, 26000, '??憭批摮賊?',       'https://osa.ntsu.edu.tw/'),
+    pub('???箇擃??憭批飛', 45000, 20000, 0.76, 5500, 25000, '?圈?憭批摮賊?',   'https://osa.ntus.edu.tw/'),
+    pub('???賣?憭批飛',     50000, 24000, 0.60,  9000, 32000, '?賣??拙飛??,         'https://osa.ym.edu.tw/'),
+    // ?? 蝘?蝬?憭批飛嚗??剁???
+    priv('蝘?頛?憭批飛',     95000, 32000, 0.45,  8000, 30000, '頛之撘勗?拙飛?飛??, 'https://dosa.fju.edu.tw/scholarship.php'),
+    priv('蝘?瘛⊥?憭批飛',     92000, 30000, 0.45,  8500, 25000, '瘛∪之?拙飛??,         'https://osa.tku.edu.tw/'),
+    priv('蝘??勗憭批飛',     90000, 30000, 0.40,  9500, 22000, '?勗?仿?拙飛??,     'https://www.scu.edu.tw/osa/'),
+    priv('蝘???憭批飛',     90000, 28000, 0.42,  9000, 22000, '??憭批飛?拙飛??,     'https://osa.pccu.edu.tw/'),
+    priv('蝘??憭批飛',     90000, 28000, 0.44,  8500, 22000, '??拙飛??,         'https://osa.mcu.edu.tw/'),
+    priv('蝘?銝憭批飛',     90000, 27000, 0.45,  9000, 20000, '銝?拙飛??,         'https://osa.shu.edu.tw/'),
+    priv('蝘??箏??怠飛憭批飛', 110000, 33000, 0.38, 9500, 30000, '??拙飛??,         'https://osa.tmu.edu.tw/'),
+    priv('蝘??瑕?憭批飛',     105000, 32000, 0.42, 8000, 30000, '?瑕??拙飛??,         'https://osa.cgu.edu.tw/'),
+    priv('蝘??憭批飛',     90000, 27000, 0.48,  7500, 22000, '??拙飛??,         'https://osa.yzu.edu.tw/'),
+    priv('蝘?銝剖?憭批飛',     92000, 28000, 0.47,  7500, 22000, '銝剖??拙飛??,         'https://osa.cycu.edu.tw/'),
+    priv('蝘??Ｙ憭批飛',     90000, 27000, 0.48,  6000, 22000, '?Ｙ?拙飛??,         'https://osa.fcu.edu.tw/'),
+    priv('蝘??望絲憭批飛',     90000, 27000, 0.48,  6000, 22000, '?望絲?拙飛??,         'https://osa.thu.edu.tw/'),
+    priv('蝘???憭批飛',     88000, 26000, 0.50,  6000, 20000, '???拙飛??,         'https://osa.pu.edu.tw/'),
+    priv('蝘??蝘?憭批飛', 88000, 26000, 0.50,  5800, 20000, '??拙飛??,         'https://osa.cyut.edu.tw/'),
+    priv('蝘?銝剖??怨憭批飛', 108000, 32000, 0.40, 6000, 30000, '銝剝憭批摮賊?',       'https://osa.cmu.edu.tw/'),
+    priv('蝘?鈭散憭批飛',     88000, 26000, 0.50,  5800, 20000, '鈭散憭批飛?拙飛??,     'https://osa.asia.edu.tw/'),
+    // ?? 蝘?憭批飛嚗葉?嚗??
+    priv('蝘?蝢拙?憭批飛',     90000, 27000, 0.48,  5500, 20000, '蝢拙??拙飛??,         'https://osa.isu.edu.tw/'),
+    priv('蝘?擃??怠飛憭批飛', 108000, 32000, 0.40, 5500, 30000, '擃?拙飛??,         'https://osa.kmu.edu.tw/'),
+    priv('蝘?銝剖控?怠飛憭批飛', 108000, 32000, 0.40, 6000, 30000, '銝剖控?怠摮賊?',       'https://osa.csmu.edu.tw/'),
+    priv('蝘?頛蝘?憭批飛', 85000, 25000, 0.52,  5000, 18000, '頛?拙飛??,         'https://osa.feu.edu.tw/'),
+    priv('蝘?撏控蝘?憭批飛', 85000, 25000, 0.52,  5000, 18000, '撏控?拙飛??,         'https://osa.ksu.edu.tw/'),
+    priv('蝘??蝘?憭批飛', 86000, 25000, 0.52,  5000, 18000, '??拙飛??,         'https://osa.stust.edu.tw/'),
+    priv('蝘?甇?耨蝘?憭批飛', 84000, 24000, 0.53,  5000, 18000, '甇?耨?拙飛??,         'https://osa.csu.edu.tw/'),
+    priv('蝘?憭找?蝘?憭批飛', 84000, 24000, 0.55,  4800, 17000, '憭找??拙飛??,         'https://osa.tajen.edu.tw/'),
+    priv('蝘????亦?憭批飛', 85000, 24000, 0.55,  5000, 18000, '??拙飛??,         'https://osa.cnu.edu.tw/'),
+    priv('蝘???憭批飛',     90000, 26000, 0.50,  4500, 22000, '???拙飛??,         'https://osa.tcu.edu.tw/'),
+    priv('蝘?雿?憭批飛',     86000, 25000, 0.52,  4500, 18000, '雿??拙飛??,         'https://osa.fgu.edu.tw/'),
+    priv('蝘?憭扯?憭批飛',     86000, 25000, 0.52,  5500, 18000, '憭扯??拙飛??,         'https://osa.dyu.edu.tw/'),
+    priv('蝘???憭批飛',     84000, 24000, 0.54,  5500, 17000, '???拙飛??,         'https://osa.mdu.edu.tw/'),
+    priv('蝘?撘?蝘?憭批飛', 86000, 25000, 0.52,  6000, 18000, '撘??拙飛??,         'https://osa.hk.edu.tw/'),
+    priv('蝘?靽桀像蝘?憭批飛', 84000, 24000, 0.54,  5500, 17000, '靽桀像?拙飛??,         'https://osa.hfu.edu.tw/'),
+    priv('蝘?撊箸蝘?憭批飛', 86000, 25000, 0.52,  5800, 18000, '撊箸?拙飛??,         'https://osa.ltu.edu.tw/'),
+    priv('蝘?銝剛憭批飛',     87000, 25000, 0.52,  7500, 18000, '銝剛憭批飛?拙飛??,     'https://osa.chu.edu.tw/'),
+    priv('蝘???憭批飛',     87000, 25000, 0.52,  7000, 18000, '???拙飛??,         'https://osa.hcu.edu.tw/'),
+    // ?? 蝘?憭批飛嚗??典隞???
+    priv('蝘?頛之嚗摮賂?', 110000, 33000, 0.40, 8000, 30000, '頛之?怠飛?拙飛??,     'https://dosa.fju.edu.tw/'),
+    priv('蝘???憭批飛',     86000, 25000, 0.52,  7500, 18000, '???拙飛??,         'https://osa.knu.edu.tw/'),
+    priv('蝘?憭批?憭批飛',     90000, 27000, 0.48,  9000, 20000, '憭批??拙飛??,         'https://osa.ttu.edu.tw/'),
+    priv('蝘??啣???蝘?憭批飛', 86000, 25000, 0.50, 8500, 18000,'??蝘之?拙飛??,   'https://osa.utica.edu.tw/'),
+    priv('蝘?敺瑟?鞎∠?蝘?憭批飛', 86000, 24000, 0.50, 8500, 17000,'敺瑟??拙飛??,       'https://osa.takming.edu.tw/'),
+    priv('蝘??舀?蝘?憭批飛', 84000, 24000, 0.52,  8000, 17000, '?舀??拙飛??,         'https://osa.just.edu.tw/'),
+    priv('蝘??祈蝘?憭批飛', 84000, 24000, 0.53,  7500, 17000, '?祈?拙飛??,         'https://osa.vnu.edu.tw/'),
+    priv('蝘?樴蝘?憭批飛', 85000, 25000, 0.52,  7500, 18000, '樴?拙飛??,         'https://osa.lhu.edu.tw/'),
+    priv('蝘??蝘?憭批飛', 84000, 24000, 0.54,  6500, 17000, '??拙飛??,         'https://osa.must.edu.tw/'),
+    priv('蝘?銝剖?蝘?憭批飛', 84000, 24000, 0.53,  8500, 17000, '銝剖?蝘之?拙飛??,     'https://osa.cute.edu.tw/'),
+    priv('蝘???蝧啁??憭批飛', 84000, 24000, 0.52, 8000, 17000, '??蝧啣摮賊?',     'https://osa.sju.edu.tw/'),
+    priv('蝘???憭批飛',     86000, 25000, 0.51,  8000, 18000, '???拙飛??,         'https://osa.au.edu.tw/'),
+    priv('蝘??箇擐?憭批飛', 84000, 24000, 0.54,  5000, 17000, '擐??拙飛??,         'https://osa.tsu.edu.tw/'),
+    priv('蝘?蝔餅?蝘??函恣?飛??, 83000, 23000, 0.55, 5500, 16000, '蝔餅??拙飛??,   'https://osa.dj.edu.tw/'),
+    priv('蝘??啁?蝘?憭批飛', 83000, 23000, 0.55,  5000, 16000, '?啁??拙飛??,         'https://osa.twu.edu.tw/'),
+    priv('蝘??喲陶蝘?憭批飛', 83000, 23000, 0.55,  5200, 16000, '?喲陶?拙飛??,         'https://osa.wfu.edu.tw/'),
+    priv('蝘??蝘?憭批飛', 83000, 23000, 0.55,  5000, 16000, '??拙飛??,         'https://osa.feu.edu.tw/'),
+    priv('蝘???銵飛??, 80000, 22000, 0.58,  5000, 15000, '??拙飛??,         'https://osa.hsc.edu.tw/'),
   ];
 
-  // ── 搜尋下拉 ──
+  // ?? ??銝? ??
   let selectedSchoolIdx = null;
 
   const schoolInput    = document.getElementById('school-input');
@@ -414,11 +398,11 @@
   function filterSchools() {
     const q = schoolInput.value.trim();
     const matched = q.length === 0
-      ? SCHOOLS.map((s, i) => ({ s, i })).slice(0, 20)   // 未輸入時顯示前20筆
+      ? SCHOOLS.map((s, i) => ({ s, i })).slice(0, 20)   // ?芾撓?交?憿舐內??0蝑?
       : SCHOOLS.map((s, i) => ({ s, i })).filter(({ s }) => s.name.includes(q));
 
     if (matched.length === 0) {
-      schoolDropdown.innerHTML = '<div style="padding:10px 16px;font-size:13px;color:#8c8c8c;">查無相符學校</div>';
+      schoolDropdown.innerHTML = '<div style="padding:10px 16px;font-size:13px;color:#8c8c8c;">?亦?貊泵摮豢</div>';
     } else {
       schoolDropdown.innerHTML = matched.map(({ s, i }) =>
         `<div data-idx="${i}" onmousedown="selectSchool(${i})"
@@ -434,7 +418,7 @@
   function selectSchool(idx) {
     selectedSchoolIdx = idx;
     schoolInput.value = SCHOOLS[idx].name;
-    schoolChosen.textContent = '✓ 已選擇：' + SCHOOLS[idx].name;
+    schoolChosen.textContent = '??撌脤??' + SCHOOLS[idx].name;
     schoolDropdown.style.display = 'none';
     calculate();
   }
@@ -443,7 +427,7 @@
     schoolDropdown.style.display = 'none';
   }
 
-  // ── 主計算 ──
+  // ?? 銝餉?蝞???
   function calculate() {
     const idx = selectedSchoolIdx;
     if (idx === null || idx === undefined) {
@@ -457,63 +441,63 @@
     const monthFood = Math.max(0, Number(document.getElementById('food-input').value) || 0);
     const monthInc  = Math.max(0, Number(document.getElementById('income-input').value) || 0);
 
-    // 住宿費
+    // 雿挪鞎?
     const housingYear = useDorm ? school.dormFee : school.avgRent * 10;
 
-    // 宿舍備註
+    // 摰輯??酉
     const dormNote = document.getElementById('dorm-note');
     if (useDorm) {
-      dormNote.textContent = `中籤率約 ${Math.round(school.dormRate * 100)}%，未中籤仍需租屋（月租 ${school.avgRent.toLocaleString()} 元）`;
+      dormNote.textContent = `銝剔惜?? ${Math.round(school.dormRate * 100)}%嚗銝剔惜隞?蝘?嚗?蝘?${school.avgRent.toLocaleString()} ??`;
     } else {
-      dormNote.textContent = `校外平均月租 ${school.avgRent.toLocaleString()} 元，以 10 個月計算`;
+      dormNote.textContent = `?∪?撟喳??? ${school.avgRent.toLocaleString()} ??隞?10 ??閮?`;
     }
 
-    // 一年各項
+    // 銝撟游???
     const yearTuition = school.tuition;
-    const yearFood    = monthFood * 10;           // 10 個月學期
+    const yearFood    = monthFood * 10;           // 10 ??摮豢?
     const yearTotal   = yearTuition + housingYear + yearFood;
     const yearIncome  = monthInc * 10;
     const yearNet     = yearTotal - yearIncome - school.subsidy;
 
-    // 四年
+    // ?僑
     const y4Total  = yearTotal * 4;
     const y4Income = yearIncome * 4;
     const y4Gap    = Math.max(0, yearNet * 4);
 
-    // 壓力指數 = 淨支出 / 總成本（0~1）
+    // 憯?? = 瘛冽??/ 蝮賣??穿?0~1嚗?
     const pressure = Math.min(1, Math.max(0, yearNet / yearTotal));
     const pPct     = Math.round(pressure * 100);
 
-    // 評級
+    // 閰?
     let rating, ratingClass, ratingDesc;
     if (pressure < 0.35) {
-      rating = '🟢 低壓'; ratingClass = 'badge-green';
-      ratingDesc = '財務缺口不大，維持工讀收入與現有補助，預計可順利完成學業。';
+      rating = '? 雿?'; ratingClass = 'badge-green';
+      ratingDesc = '鞎∪?蝻箏銝之嚗雁?極霈?嗅????抬????舫??拙??飛璆准?;
     } else if (pressure < 0.65) {
-      rating = '🟡 中壓'; ratingClass = 'badge-yellow';
-      ratingDesc = '財務有一定壓力，建議積極申請助學金並規劃穩定的工讀來源。';
+      rating = '? 銝剖?'; ratingClass = 'badge-yellow';
+      ratingDesc = '鞎∪???摰???撱箄降蝛扔?唾??拙飛?蒂閬?蝛拙??極霈靘???;
     } else {
-      rating = '🔴 高壓'; ratingClass = 'badge-red';
-      ratingDesc = '財務缺口偏大，強烈建議申請就學貸款、弱勢助學金，並提高工讀時數或選擇宿舍降低住宿成本。';
+      rating = '? 擃?'; ratingClass = 'badge-red';
+      ratingDesc = '鞎∪?蝻箏?之嚗撥?遣霅啁隢停摮貉硫甈整摹?Ｗ摮賊?嚗蒂??撌亥????挪??雿?摰踵??研?;
     }
 
-    // ── 更新 DOM ──
+    // ?? ?湔 DOM ??
     document.getElementById('result-section').classList.remove('hidden');
     document.getElementById('empty-state').classList.add('hidden');
 
-    // 評級
+    // 閰?
     const badge = document.getElementById('rating-badge');
     badge.textContent = rating;
     badge.className = `text-lg font-semibold px-6 py-3 border text-center shrink-0 ${ratingClass}`;
     document.getElementById('rating-desc').textContent = ratingDesc;
 
-    // 壓力條
+    // 憯?璇?
     document.getElementById('pressure-pct').textContent = pPct + '%';
     const bar = document.getElementById('pressure-bar');
     bar.style.width = pPct + '%';
     bar.style.background = pressure < 0.35 ? '#198038' : pressure < 0.65 ? '#b28600' : '#da1e28';
 
-    // 數字
+    // ?詨?
     const fmt = n => Math.round(n).toLocaleString();
     document.getElementById('s-tuition').textContent = fmt(yearTuition);
     document.getElementById('s-housing').textContent = fmt(housingYear);
@@ -523,30 +507,30 @@
     document.getElementById('s-4y-income').textContent = fmt(y4Income);
     document.getElementById('s-4y-gap').textContent    = fmt(y4Gap);
 
-    // 圓餅圖
+    // ????
     drawPie([
-      { label: '學雜費', value: yearTuition, color: '#0f62fe' },
-      { label: '住宿費', value: housingYear, color: '#393939' },
-      { label: '伙食費', value: yearFood,    color: '#8a3ffc' },
+      { label: '摮賊?鞎?, value: yearTuition, color: '#0f62fe' },
+      { label: '雿挪鞎?, value: housingYear, color: '#393939' },
+      { label: '隡?鞎?, value: yearFood,    color: '#8a3ffc' },
     ]);
 
-    // 補助清單
+    // 鋆皜
     const aidList = document.getElementById('aid-list');
     aidList.innerHTML = school.aids.map(a => `
       <div class="flex items-start justify-between gap-3 pb-3 border-b border-hairline last:border-0 last:pb-0">
         <div>
           <p class="text-sm font-medium text-ink">${a.name}</p>
-          ${a.amount > 0 ? `<p class="text-xs text-ink-subtle mt-0.5">最高 ${a.amount.toLocaleString()} 元/年</p>` : '<p class="text-xs text-ink-subtle mt-0.5">視個人情況核定</p>'}
+          ${a.amount > 0 ? `<p class="text-xs text-ink-subtle mt-0.5">?擃?${a.amount.toLocaleString()} ??撟?/p>` : '<p class="text-xs text-ink-subtle mt-0.5">閬犖???詨?</p>'}
         </div>
         <a href="${a.url}" target="_blank" rel="noopener noreferrer"
            class="text-xs text-primary shrink-0 border-b border-primary hover:text-primary-hover" style="letter-spacing:.16px;">
-          申請說明 →
+          ?唾?隤芣? ??
         </a>
       </div>
     `).join('');
   }
 
-  // ── 圓餅圖（純 SVG）──
+  // ?? ????蝝?SVG嚗??
   function drawPie(slices) {
     const svg    = document.getElementById('pie-svg');
     const legend = document.getElementById('pie-legend');
@@ -573,12 +557,12 @@
     legend.innerHTML = slices.map(sl => `
       <div class="flex items-center gap-2">
         <span class="pie-legend-dot" style="background:${sl.color}"></span>
-        <span>${sl.label}（${Math.round(sl.value / total * 100)}%）</span>
+        <span>${sl.label}嚗?{Math.round(sl.value / total * 100)}%嚗?/span>
       </div>
     `).join('');
   }
 
-  // ── Init ──
+  // ?? Init ??
   </script>
 </body>
 </html>
