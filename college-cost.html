@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>大學生存成本評估儀表板</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { plex: ['"IBM Plex Sans"','Helvetica Neue','Arial','sans-serif'] },
+          colors: {
+            primary: '#0f62fe', 'primary-hover': '#0353e9',
+            ink: '#161616', 'ink-muted': '#525252', 'ink-subtle': '#8c8c8c',
+            s1: '#f4f4f4', hairline: '#e0e0e0',
+            green: { 600: '#198038', 100: '#defbe6' },
+            yellow: { 600: '#b28600', 100: '#fdf6dd' },
+            red: { 600: '#da1e28', 100: '#fff1f1' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { font-family: 'IBM Plex Sans','Helvetica Neue',Arial,sans-serif; letter-spacing:.16px; background:#f4f4f4; color:#161616; margin:0; }
+
+    /* Carbon select */
+    .c-select {
+      width:100%; background:#ffffff; border:none; border-bottom:1px solid #8c8c8c;
+      padding:13px 40px 13px 16px; font-family:inherit; font-size:16px; color:#161616;
+      letter-spacing:.16px; outline:none; border-radius:0; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath d='M8 10L3 5h10z' fill='%23161616'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 12px center; cursor:pointer;
+    }
+    .c-select:focus { border-bottom:2px solid #0f62fe; }
+
+    /* Carbon range slider */
+    .c-range { width:100%; accent-color:#0f62fe; height:4px; cursor:pointer; }
+
+    /* Card */
+    .card { background:#ffffff; border:1px solid #e0e0e0; }
+
+    /* Stat box */
+    .stat-box { background:#f4f4f4; border:1px solid #e0e0e0; padding:16px 20px; }
+
+    /* Rating badge */
+    .badge-green  { background:#defbe6; color:#198038; border:1px solid #a7f0ba; }
+    .badge-yellow { background:#fdf6dd; color:#b28600; border:1px solid #f5cc00; }
+    .badge-red    { background:#fff1f1; color:#da1e28; border:1px solid #ffb3b8; }
+
+    /* Progress bar */
+    .bar-track { background:#e0e0e0; height:6px; width:100%; }
+    .bar-fill  { height:6px; transition:width .4s ease; }
+
+    /* Fade-in */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .fade-up { animation:fadeUp .25s ease both; }
+
+    /* Pie chart */
+    #pie-svg { transform:rotate(-90deg); }
+    .pie-legend-dot { width:10px; height:10px; border-radius:0; display:inline-block; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <header class="bg-white border-b border-hairline sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 h-12 flex items-center gap-3">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M10 2L2 7v11h6v-5h4v5h6V7z" fill="#0f62fe"/>
+      </svg>
+      <span class="font-semibold text-ink text-sm sm:text-base">大學生存成本評估儀表板</span>
+      <span class="ml-auto text-xs text-ink-subtle hidden sm:inline">College Survival Cost Calculator</span>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="bg-white border-b border-hairline">
+    <div class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+      <p class="text-xs text-primary font-medium mb-2 uppercase" style="letter-spacing:.08em;">免費工具 · 資訊透明</p>
+      <h1 class="text-3xl sm:text-4xl font-light text-ink mb-3" style="letter-spacing:-0.2px;">上大學，你準備好了嗎？</h1>
+      <p class="text-base text-ink-muted max-w-xl" style="line-height:1.6;">
+        選擇學校、設定你的每月工讀收入，系統自動計算四年財務壓力，幫你做出更好的升學決策。
+      </p>
+    </div>
+  </section>
+
+  <!-- MAIN -->
+  <main class="max-w-4xl mx-auto px-4 py-8 flex flex-col gap-6">
+
+    <!-- ── 輸入區 ── -->
+    <div class="card p-6 fade-up" style="animation-delay:0ms">
+      <h2 class="text-base font-semibold text-ink mb-5">① 選擇學校與收入設定</h2>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <!-- 學校選單 -->
+        <div>
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="school-select">選擇大學</label>
+          <div class="relative">
+            <select id="school-select" class="c-select" onchange="calculate()">
+              <option value="">— 請選擇 —</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 住宿方式 -->
+        <div>
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;">住宿方式</label>
+          <div class="flex gap-3 mt-1">
+            <label class="flex items-center gap-2 cursor-pointer text-sm text-ink">
+              <input type="radio" name="dorm" value="dorm" checked onchange="calculate()" style="accent-color:#0f62fe;" /> 住宿舍
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer text-sm text-ink">
+              <input type="radio" name="dorm" value="rent" onchange="calculate()" style="accent-color:#0f62fe;" /> 租屋外住
+            </label>
+          </div>
+          <p id="dorm-note" class="text-xs text-ink-subtle mt-2"></p>
+        </div>
+
+        <!-- 每月可負擔伙食費 -->
+        <div>
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="food-slider">
+            每月伙食費預算：<span id="food-label" class="text-ink font-semibold">5,000</span> 元
+          </label>
+          <input type="range" id="food-slider" class="c-range" min="3000" max="10000" step="500" value="5000" oninput="updateFoodLabel();calculate()" />
+          <div class="flex justify-between text-xs text-ink-subtle mt-1"><span>3,000</span><span>10,000</span></div>
+        </div>
+
+        <!-- 每月工讀收入 -->
+        <div>
+          <label class="block text-xs text-ink-muted mb-2 font-medium uppercase" style="letter-spacing:.08em;" for="income-slider">
+            每月工讀收入：<span id="income-label" class="text-ink font-semibold">6,000</span> 元
+          </label>
+          <input type="range" id="income-slider" class="c-range" min="0" max="20000" step="1000" value="6000" oninput="updateIncomeLabel();calculate()" />
+          <div class="flex justify-between text-xs text-ink-subtle mt-1"><span>0</span><span>20,000</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 結果區（初始隱藏）── -->
+    <div id="result-section" class="hidden flex flex-col gap-6">
+
+      <!-- 財務壓力評級 -->
+      <div id="rating-card" class="card p-6 fade-up" style="animation-delay:60ms">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 class="text-base font-semibold text-ink mb-1">四年財務壓力評級</h2>
+            <p id="rating-desc" class="text-sm text-ink-muted max-w-md" style="line-height:1.55;"></p>
+          </div>
+          <div id="rating-badge" class="text-2xl font-semibold px-6 py-3 border text-center shrink-0" style="min-width:120px;border-radius:0;"></div>
+        </div>
+        <!-- Pressure bar -->
+        <div class="mt-5">
+          <div class="flex justify-between text-xs text-ink-muted mb-1">
+            <span>財務壓力指數</span>
+            <span id="pressure-pct">0%</span>
+          </div>
+          <div class="bar-track">
+            <div id="pressure-bar" class="bar-fill bg-primary" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 數字摘要 -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-px bg-hairline border border-hairline fade-up" style="animation-delay:90ms">
+        <div class="stat-box">
+          <p class="text-xs text-ink-subtle mb-1">一年學雜費</p>
+          <p id="s-tuition" class="text-xl font-semibold text-ink">—</p>
+          <p class="text-xs text-ink-subtle">元</p>
+        </div>
+        <div class="stat-box">
+          <p class="text-xs text-ink-subtle mb-1">一年住宿/房租</p>
+          <p id="s-housing" class="text-xl font-semibold text-ink">—</p>
+          <p class="text-xs text-ink-subtle">元</p>
+        </div>
+        <div class="stat-box">
+          <p class="text-xs text-ink-subtle mb-1">一年伙食費</p>
+          <p id="s-food" class="text-xl font-semibold text-ink">—</p>
+          <p class="text-xs text-ink-subtle">元</p>
+        </div>
+        <div class="stat-box">
+          <p class="text-xs text-ink-subtle mb-1">一年淨支出</p>
+          <p id="s-net" class="text-xl font-semibold text-ink">—</p>
+          <p class="text-xs text-ink-subtle">元（扣除收入）</p>
+        </div>
+      </div>
+
+      <!-- 圓餅圖 + 弱勢補助 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 fade-up" style="animation-delay:120ms">
+
+        <!-- 圓餅圖 -->
+        <div class="card p-6">
+          <h3 class="text-sm font-semibold text-ink mb-4">一年支出佔比</h3>
+          <div class="flex items-center gap-6">
+            <svg id="pie-svg" width="120" height="120" viewBox="0 0 120 120" aria-hidden="true">
+              <circle cx="60" cy="60" r="50" fill="#f4f4f4"/>
+              <!-- slices drawn by JS -->
+            </svg>
+            <div id="pie-legend" class="flex flex-col gap-2 text-xs text-ink-muted"></div>
+          </div>
+        </div>
+
+        <!-- 弱勢補助 -->
+        <div class="card p-6">
+          <h3 class="text-sm font-semibold text-ink mb-4">可申請的弱勢補助</h3>
+          <div id="aid-list" class="flex flex-col gap-3"></div>
+        </div>
+      </div>
+
+      <!-- 四年總覽 -->
+      <div class="card p-6 fade-up" style="animation-delay:150ms">
+        <h3 class="text-sm font-semibold text-ink mb-4">四年財務總覽</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="stat-box">
+            <p class="text-xs text-ink-subtle mb-1">四年總成本</p>
+            <p id="s-4y-total" class="text-2xl font-light text-ink">—</p>
+            <p class="text-xs text-ink-subtle">元</p>
+          </div>
+          <div class="stat-box">
+            <p class="text-xs text-ink-subtle mb-1">四年工讀總收入</p>
+            <p id="s-4y-income" class="text-2xl font-light text-ink">—</p>
+            <p class="text-xs text-ink-subtle">元（10 個月/年）</p>
+          </div>
+          <div class="stat-box">
+            <p class="text-xs text-ink-subtle mb-1">四年需自籌</p>
+            <p id="s-4y-gap" class="text-2xl font-light text-ink">—</p>
+            <p class="text-xs text-ink-subtle">元</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /result-section -->
+
+    <!-- 空狀態 -->
+    <div id="empty-state" class="card p-12 flex flex-col items-center gap-4 text-ink-subtle fade-up" style="animation-delay:60ms">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <rect x="8" y="8" width="32" height="32" rx="0" stroke="#8c8c8c" stroke-width="2"/>
+        <path d="M16 24h16M24 16v16" stroke="#8c8c8c" stroke-width="2"/>
+      </svg>
+      <p class="text-base">請先選擇學校，開始評估財務壓力。</p>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="background:#161616;" class="mt-8">
+    <div class="max-w-4xl mx-auto px-4 py-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <p class="text-xs" style="color:#a8a8a8;letter-spacing:.16px;">資料僅供參考，實際費用依各校公告為準。</p>
+      <p class="text-xs" style="color:#6f6f6f;">以 IBM Bob AI 協助開發 · 星火學習導航</p>
+    </div>
+  </footer>
+
+  <script>
+  // ══════════════════════════════════════════════════════════════════
+  // 📌 學校資料庫 — 可自由新增 / 修改
+  //
+  //   tuition      年學雜費（元）
+  //   dormFee      宿舍一年費用（含寒暑假）
+  //   dormRate     宿舍中籤率（0~1）
+  //   avgRent      校外月租（元）
+  //   subsidy      學校弱勢補助年金額（元，保守估計）
+  //   aids         可申請補助清單 [{name, amount, url}]
+  // ══════════════════════════════════════════════════════════════════
+  const SCHOOLS = [
+    {
+      name: '國立臺灣大學',
+      tuition: 53000,
+      dormFee: 28000,
+      dormRate: 0.55,
+      avgRent: 10000,
+      subsidy: 30000,
+      aids: [
+        { name: '臺大弱勢助學金', amount: 40000, url: 'https://osa.ntu.edu.tw/scholarship' },
+        { name: '教育部助學金', amount: 36000, url: 'https://www.edu.tw/News_Content.aspx?n=829446EED325AD02&s=B3FCA1AE3FD17786' },
+        { name: '就學貸款（無息）', amount: 0, url: 'https://heloan.edu.tw/' },
+      ],
+    },
+    {
+      name: '國立成功大學',
+      tuition: 50000,
+      dormFee: 24000,
+      dormRate: 0.65,
+      avgRent: 7000,
+      subsidy: 28000,
+      aids: [
+        { name: '成大弱勢助學計畫', amount: 35000, url: 'https://osa.ncku.edu.tw/' },
+        { name: '教育部助學金', amount: 36000, url: 'https://www.edu.tw/News_Content.aspx?n=829446EED325AD02&s=B3FCA1AE3FD17786' },
+        { name: '就學貸款（無息）', amount: 0, url: 'https://heloan.edu.tw/' },
+      ],
+    },
+    {
+      name: '國立中興大學',
+      tuition: 48000,
+      dormFee: 22000,
+      dormRate: 0.70,
+      avgRent: 6500,
+      subsidy: 25000,
+      aids: [
+        { name: '興大急難救助金', amount: 20000, url: 'https://osa.nchu.edu.tw/' },
+        { name: '教育部助學金', amount: 36000, url: 'https://www.edu.tw/News_Content.aspx?n=829446EED325AD02&s=B3FCA1AE3FD17786' },
+        { name: '就學貸款（無息）', amount: 0, url: 'https://heloan.edu.tw/' },
+      ],
+    },
+    {
+      name: '私立輔仁大學',
+      tuition: 95000,
+      dormFee: 32000,
+      dormRate: 0.45,
+      avgRent: 8000,
+      subsidy: 20000,
+      aids: [
+        { name: '輔大弱勢助學獎學金', amount: 30000, url: 'https://osa.fju.edu.tw/' },
+        { name: '教育部私校助學金', amount: 36000, url: 'https://www.edu.tw/News_Content.aspx?n=829446EED325AD02&s=B3FCA1AE3FD17786' },
+        { name: '就學貸款（無息）', amount: 0, url: 'https://heloan.edu.tw/' },
+      ],
+    },
+    {
+      name: '私立東吳大學',
+      tuition: 90000,
+      dormFee: 30000,
+      dormRate: 0.40,
+      avgRent: 9500,
+      subsidy: 18000,
+      aids: [
+        { name: '東吳急難助學金', amount: 20000, url: 'https://osa.scu.edu.tw/' },
+        { name: '教育部私校助學金', amount: 36000, url: 'https://www.edu.tw/News_Content.aspx?n=829446EED325AD02&s=B3FCA1AE3FD17786' },
+        { name: '就學貸款（無息）', amount: 0, url: 'https://heloan.edu.tw/' },
+      ],
+    },
+    {
+      name: '國立屏東大學',
+      tuition: 44000,
+      dormFee: 18000,
+      dormRate: 0.80,
+      avgRent: 5000,
+      subsidy: 22000,
+      aids: [
+        { name: '屏大弱勢助學', amount: 25000, url: 'https://osa.nptu.edu.tw/' },
+        { name: '教育部助學金', amount: 36000, url: 'https://www.edu.tw/News_Content.aspx?n=829446EED325AD02&s=B3FCA1AE3FD17786' },
+        { name: '就學貸款（無息）', amount: 0, url: 'https://heloan.edu.tw/' },
+      ],
+    },
+  ];
+
+  // ── 初始化選單 ──
+  const sel = document.getElementById('school-select');
+  SCHOOLS.forEach((s, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = s.name;
+    sel.appendChild(opt);
+  });
+
+  // ── 標籤更新 ──
+  function updateFoodLabel() {
+    document.getElementById('food-label').textContent =
+      Number(document.getElementById('food-slider').value).toLocaleString();
+  }
+  function updateIncomeLabel() {
+    document.getElementById('income-label').textContent =
+      Number(document.getElementById('income-slider').value).toLocaleString();
+  }
+
+  // ── 主計算 ──
+  function calculate() {
+    const idx = sel.value;
+    if (idx === '') {
+      document.getElementById('result-section').classList.add('hidden');
+      document.getElementById('empty-state').classList.remove('hidden');
+      return;
+    }
+
+    const school    = SCHOOLS[idx];
+    const useDorm   = document.querySelector('input[name="dorm"]:checked').value === 'dorm';
+    const monthFood = Number(document.getElementById('food-slider').value);
+    const monthInc  = Number(document.getElementById('income-slider').value);
+
+    // 住宿費
+    const housingYear = useDorm ? school.dormFee : school.avgRent * 10;
+
+    // 宿舍備註
+    const dormNote = document.getElementById('dorm-note');
+    if (useDorm) {
+      dormNote.textContent = `中籤率約 ${Math.round(school.dormRate * 100)}%，未中籤仍需租屋（月租 ${school.avgRent.toLocaleString()} 元）`;
+    } else {
+      dormNote.textContent = `校外平均月租 ${school.avgRent.toLocaleString()} 元，以 10 個月計算`;
+    }
+
+    // 一年各項
+    const yearTuition = school.tuition;
+    const yearFood    = monthFood * 10;           // 10 個月學期
+    const yearTotal   = yearTuition + housingYear + yearFood;
+    const yearIncome  = monthInc * 10;
+    const yearNet     = yearTotal - yearIncome - school.subsidy;
+
+    // 四年
+    const y4Total  = yearTotal * 4;
+    const y4Income = yearIncome * 4;
+    const y4Gap    = Math.max(0, yearNet * 4);
+
+    // 壓力指數 = 淨支出 / 總成本（0~1）
+    const pressure = Math.min(1, Math.max(0, yearNet / yearTotal));
+    const pPct     = Math.round(pressure * 100);
+
+    // 評級
+    let rating, ratingClass, ratingDesc;
+    if (pressure < 0.35) {
+      rating = '🟢 低壓'; ratingClass = 'badge-green';
+      ratingDesc = '財務缺口不大，維持工讀收入與現有補助，預計可順利完成學業。';
+    } else if (pressure < 0.65) {
+      rating = '🟡 中壓'; ratingClass = 'badge-yellow';
+      ratingDesc = '財務有一定壓力，建議積極申請助學金並規劃穩定的工讀來源。';
+    } else {
+      rating = '🔴 高壓'; ratingClass = 'badge-red';
+      ratingDesc = '財務缺口偏大，強烈建議申請就學貸款、弱勢助學金，並提高工讀時數或選擇宿舍降低住宿成本。';
+    }
+
+    // ── 更新 DOM ──
+    document.getElementById('result-section').classList.remove('hidden');
+    document.getElementById('empty-state').classList.add('hidden');
+
+    // 評級
+    const badge = document.getElementById('rating-badge');
+    badge.textContent = rating;
+    badge.className = `text-lg font-semibold px-6 py-3 border text-center shrink-0 ${ratingClass}`;
+    document.getElementById('rating-desc').textContent = ratingDesc;
+
+    // 壓力條
+    document.getElementById('pressure-pct').textContent = pPct + '%';
+    const bar = document.getElementById('pressure-bar');
+    bar.style.width = pPct + '%';
+    bar.style.background = pressure < 0.35 ? '#198038' : pressure < 0.65 ? '#b28600' : '#da1e28';
+
+    // 數字
+    const fmt = n => Math.round(n).toLocaleString();
+    document.getElementById('s-tuition').textContent = fmt(yearTuition);
+    document.getElementById('s-housing').textContent = fmt(housingYear);
+    document.getElementById('s-food').textContent    = fmt(yearFood);
+    document.getElementById('s-net').textContent     = fmt(Math.max(0, yearNet));
+    document.getElementById('s-4y-total').textContent  = fmt(y4Total);
+    document.getElementById('s-4y-income').textContent = fmt(y4Income);
+    document.getElementById('s-4y-gap').textContent    = fmt(y4Gap);
+
+    // 圓餅圖
+    drawPie([
+      { label: '學雜費', value: yearTuition, color: '#0f62fe' },
+      { label: '住宿費', value: housingYear, color: '#393939' },
+      { label: '伙食費', value: yearFood,    color: '#8a3ffc' },
+    ]);
+
+    // 補助清單
+    const aidList = document.getElementById('aid-list');
+    aidList.innerHTML = school.aids.map(a => `
+      <div class="flex items-start justify-between gap-3 pb-3 border-b border-hairline last:border-0 last:pb-0">
+        <div>
+          <p class="text-sm font-medium text-ink">${a.name}</p>
+          ${a.amount > 0 ? `<p class="text-xs text-ink-subtle mt-0.5">最高 ${a.amount.toLocaleString()} 元/年</p>` : '<p class="text-xs text-ink-subtle mt-0.5">視個人情況核定</p>'}
+        </div>
+        <a href="${a.url}" target="_blank" rel="noopener noreferrer"
+           class="text-xs text-primary shrink-0 border-b border-primary hover:text-primary-hover" style="letter-spacing:.16px;">
+          申請說明 →
+        </a>
+      </div>
+    `).join('');
+  }
+
+  // ── 圓餅圖（純 SVG）──
+  function drawPie(slices) {
+    const svg    = document.getElementById('pie-svg');
+    const legend = document.getElementById('pie-legend');
+    const R = 50, CX = 60, CY = 60;
+    const total  = slices.reduce((s, d) => s + d.value, 0);
+
+    let paths = '<circle cx="60" cy="60" r="50" fill="#f4f4f4"/>';
+    let start = 0;
+    slices.forEach(sl => {
+      const pct   = sl.value / total;
+      const angle = pct * 2 * Math.PI;
+      const x1 = CX + R * Math.cos(start);
+      const y1 = CY + R * Math.sin(start);
+      const x2 = CX + R * Math.cos(start + angle);
+      const y2 = CY + R * Math.sin(start + angle);
+      const large = angle > Math.PI ? 1 : 0;
+      paths += `<path d="M${CX},${CY} L${x1},${y1} A${R},${R} 0 ${large},1 ${x2},${y2} Z" fill="${sl.color}" opacity="0.92"/>`;
+      start += angle;
+    });
+    // centre donut hole
+    paths += `<circle cx="60" cy="60" r="28" fill="#ffffff"/>`;
+    svg.innerHTML = paths;
+
+    legend.innerHTML = slices.map(sl => `
+      <div class="flex items-center gap-2">
+        <span class="pie-legend-dot" style="background:${sl.color}"></span>
+        <span>${sl.label}（${Math.round(sl.value / total * 100)}%）</span>
+      </div>
+    `).join('');
+  }
+
+  // ── Init ──
+  updateFoodLabel();
+  updateIncomeLabel();
+  </script>
+</body>
+</html>
